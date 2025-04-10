@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Joueur – Le Conseil du Lampion</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <h1>🧝 Interface Joueur – Le Conseil du Lampion</h1>
+
+  <p>Entrez votre initiative pour rejoindre le combat. Le MJ déclenchera le début de la bataille !</p>
+
+  <form id="form-joueur">
+    <input type="number" id="init-joueur" placeholder="Votre initiative" required />
+    <button type="submit">Envoyer</button>
+  </form>
+
+  <h2>📜 Ordre de combat (après validation du MJ)</h2>
+  <ul id="ordre-joueur"></ul>
+
+  <script src="js/joueur.js"></script>
+</body>
+</html>

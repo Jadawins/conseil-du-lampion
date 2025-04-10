@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>MJ – Le Conseil du Lampion</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <h1>🧙 Interface MJ – Le Conseil du Lampion</h1>
+
+  <form id="form-combat">
+    <input type="text" id="nom" placeholder="Nom du monstre" required />
+    <input type="number" id="initiative" placeholder="Initiative" required />
+    <button type="submit">Ajouter au combat</button>
+  </form>
+
+  <h2>📜 Ordre d'initiative</h2>
+  <ul id="ordre"></ul>
+
+  <div class="button-container">
+    <button id="lancer">🔥 Lancer le combat</button>
+    <button id="reset">🔄 Réinitialiser la session</button>
+  </div>
+
+  <script src="js/mj.js"></script>
+</body>
+</html>
