@@ -1,24 +1,37 @@
-<h1>🧝 Interface Joueur – Le Conseil du Lampion</h1>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Joueur – Le Conseil du Lampion</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <h1>🧝 Interface Joueur – Le Conseil du Lampion</h1>
 
-<!-- Étape 1 : rejoindre une session -->
-<div id="rejoindre-session">
-  <p>Entrez votre pseudo et le nom de la session pour rejoindre la partie.</p>
-  <input type="text" id="pseudo" placeholder="Votre pseudo" required />
-  <input type="text" id="sessionName" placeholder="Nom de la session" required />
-  <button onclick="rejoindreSession()">Rejoindre la session</button>
-  <p id="confirmation" style="color: lightgreen;"></p>
-</div>
+  <!-- Étape 1 : rejoindre une session -->
+  <div id="rejoindre-session">
+    <p>Entrez votre pseudo et le nom de la session pour rejoindre la partie.</p>
+    <input type="text" id="pseudo" placeholder="Votre pseudo" required />
+    <input type="text" id="sessionName" placeholder="Nom de la session" required />
+    <button onclick="rejoindreSession()">Rejoindre la session</button>
+    <p id="confirmation" style="color: lightgreen;"></p>
+  </div>
 
-<!-- Étape 2 : initiative -->
-<div id="initiative-section" style="display:none;">
-  <p>Entrez votre initiative. Le MJ déclenchera le début du combat !</p>
-  <form id="form-joueur">
-    <input type="number" id="init-joueur" placeholder="Votre initiative" required />
-    <button type="submit">Envoyer</button>
-  </form>
-</div>
+  <!-- Étape 2 : envoi de l’initiative -->
+  <div id="initiative-section" style="display:none;">
+    <p>Entrez votre initiative. Le MJ déclenchera le début du combat !</p>
+    <form id="form-joueur">
+      <input type="number" id="init-joueur" placeholder="Votre initiative" required />
+      <button type="submit">Envoyer</button>
+    </form>
+  </div>
 
-<h2>📜 Ordre de combat (après validation du MJ)</h2>
-<ul id="ordre-joueur"></ul>
+  <!-- Affichage de l’ordre -->
+  <h2>📜 Ordre de combat (après validation du MJ)</h2>
+  <ul id="ordre-joueur">
+    <li>En attente du MJ...</li>
+  </ul>
 
-<script src="js/joueur.js"></script>
+  <script src="js/joueur.js"></script>
+</body>
+</html>
