@@ -32,15 +32,15 @@
 
         const data = await response.json();
 
-        if (response.ok) {
+        if (response.ok && data.sessionId) {
           const sessionId = data.sessionId;
-          const url = `mj-combat.html?sessionId=${sessionId}&nomAventure=${encodeURIComponent(nomAventure)}`;
+          const url = `mj-session.html?sessionId=${sessionId}&nomAventure=${encodeURIComponent(nomAventure)}`;
           window.location.href = url;
         } else {
           document.getElementById("message").textContent = "❌ Erreur lors de la création de la session.";
         }
       } catch (error) {
-        console.error(error);
+        console.error("Erreur API :", error);
         document.getElementById("message").textContent = "❌ Impossible de contacter l’API.";
       }
     });
