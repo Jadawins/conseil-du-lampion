@@ -56,6 +56,30 @@ button:hover {
   transform: scale(1.05);
 }
 
+/* 💡 Style pour les liens en mode bouton (MJ / Joueur) */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+  margin-top: 2em;
+  flex-wrap: wrap;
+}
+
+.button {
+  background-color: #865dff;
+  color: white;
+  padding: 1em 2em;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 1.1em;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button:hover {
+  background-color: #a682ff;
+  transform: scale(1.05);
+}
+
 #confirmation {
   margin-top: 1em;
   font-weight: bold;
