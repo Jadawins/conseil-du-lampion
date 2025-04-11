@@ -69,7 +69,7 @@ async function verifierNouveauxJoueurs() {
   if (!sessionId) return;
 
   try {
-    const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession?sessionId=${sessionId}`);
+    const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
     const data = await response.json();
 
     if (data && data.joueurs) {
