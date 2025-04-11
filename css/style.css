@@ -15,6 +15,11 @@ h1 {
   text-shadow: 0 0 8px #ffd700, 0 0 12px #ffa500;
 }
 
+h2 {
+  color: #ffd95c;
+  margin-top: 2em;
+}
+
 p {
   font-size: 1.1em;
   margin-bottom: 1em;
@@ -41,9 +46,10 @@ input:focus {
   background-color: #1c1c1c;
 }
 
-.btn-style {
+button, .button {
   background-color: #865dff;
   color: white;
+  cursor: pointer;
   padding: 0.6em 1.2em;
   font-size: 1em;
   border-radius: 10px;
@@ -51,13 +57,20 @@ input:focus {
   outline: none;
   font-family: 'Georgia', serif;
   text-decoration: none;
-  cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover, .button:hover {
+  background-color: #a682ff;
+  transform: scale(1.05);
+}
+
+.btn-style {
+  background-color: #865dff;
 }
 
 .btn-style:hover {
   background-color: #a682ff;
-  transform: scale(1.05);
 }
 
 .btn-style:active {
@@ -80,21 +93,17 @@ input:focus {
   flex-wrap: wrap;
 }
 
-#confirmation {
-  margin-top: 1em;
-  font-weight: bold;
-  color: lightgreen;
-}
-
 ul#ordre-joueur,
-ul#ordre {
+ul#ordre,
+ul#log-joueurs {
   list-style: none;
   padding: 0;
   margin-top: 1.5em;
 }
 
 ul#ordre-joueur li,
-ul#ordre li {
+ul#ordre li,
+ul#log-joueurs li {
   background-color: #262626;
   padding: 0.7em 1em;
   margin: 0.5em 0;
@@ -104,8 +113,15 @@ ul#ordre li {
 }
 
 ul#ordre-joueur li:hover,
-ul#ordre li:hover {
+ul#ordre li:hover,
+ul#log-joueurs li:hover {
   background-color: #333;
+}
+
+#confirmation, #message {
+  margin-top: 1em;
+  font-weight: bold;
+  color: lightgreen;
 }
 
 @media screen and (max-width: 600px) {
