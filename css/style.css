@@ -65,18 +65,6 @@ button:hover, .button:hover {
   transform: scale(1.05);
 }
 
-.btn-style {
-  background-color: #865dff;
-}
-
-.btn-style:hover {
-  background-color: #a682ff;
-}
-
-.btn-style:active {
-  transform: scale(0.97);
-}
-
 .btn-danger {
   background-color: #ff4e4e;
 }
@@ -118,7 +106,8 @@ ul#log-joueurs li:hover {
   background-color: #333;
 }
 
-#confirmation, #message {
+#confirmation,
+#message {
   margin-top: 1em;
   font-weight: bold;
   color: lightgreen;
