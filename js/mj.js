@@ -1,7 +1,17 @@
-const form = document.getElementById("form-combat");
-const ordreUl = document.getElementById("ordre");
+// Sélectionne le bouton "Créer une session" et l'élément pour afficher l'ID de session
+const btnCreerSession = document.getElementById("btn-creer-session");
+const sessionIdParagraph = document.getElementById("session-id");
+const ordreUl = document.getElementById("ordre");  // Sélectionner l'élément <ul> pour afficher l'ordre
+const form = document.getElementById("form-combat");  // Assure-toi que le formulaire est sélectionné
 const resetBtn = document.getElementById("reset");
 const lancerBtn = document.getElementById("lancer");
+
+if (btnCreerSession) {
+    console.log("Bouton 'Créer une session' trouvé"); // Message de débogage
+    btnCreerSession.addEventListener("click", creerSession);
+} else {
+    console.log("Bouton 'Créer une session' introuvable"); // Message de débogage
+}
 
 let monstres = [];
 
@@ -59,3 +69,26 @@ lancerBtn.addEventListener("click", () => {
   localStorage.setItem("ordreFinal", JSON.stringify(total));
   alert("🔥 L'ordre de tour a été validé et envoyé aux joueurs !");
 });
+
+// Fonction pour créer une session et afficher l'ID
+async function creerSession() {
+  console.log("Demande d'une session en cours..."); // Message pour vérifier que la fonction est bien appelée
+
+  try {
+      const response = await fetch("http://localhost:7071/api/CreateSession", {
+          method: "POST"
+      });
+
+      if (response.ok) {
+          const data = await response.json();
+          console.log("Réponse de CreateSession : ", data); // Afficher la réponse complète
+          sessionIdParagraph.textContent = `🆔 Code à partager : ${data.sessionId}`;
+      } else {
+          console.log("Erreur API : ", response.status); // Afficher une erreur si la réponse est différente de 200
+          sessionIdParagraph.textContent = "❌ Erreur lors de la création de la session.";
+      }
+  } catch (error) {
+      console.log("Erreur lors de l'appel de fetch : ", error); // Afficher une erreur si fetch échoue
+      sessionIdParagraph.textContent = "❌ Impossible de communiquer avec l'API.";
+  }
+}
