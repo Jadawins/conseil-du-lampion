@@ -7,23 +7,24 @@
 </head>
 <body>
   <h1 id="titre-aventure">⚔️ Aventure</h1>
-  <p id="session-id-display" style="color:#aaa; font-style: italic;"></p>
+  <p id="session-id-display"></p>
 
   <form id="form-combat">
     <input type="text" id="nom" placeholder="Nom du monstre" required />
     <input type="number" id="initiative" placeholder="Initiative" required />
-    <button type="submit" class="btn-style">Ajouter au combat</button>
+    <button type="submit">Ajouter au combat</button>
   </form>
 
   <h2>📜 Ordre d'initiative</h2>
   <ul id="ordre"></ul>
 
-  <h2>📢 Journal de session</h2>
+  <!-- ✅ Nouveau bloc pour les messages des joueurs -->
+  <h2>📣 Journal des joueurs</h2>
   <ul id="log-joueurs"></ul>
 
   <div class="button-container">
-    <button id="lancer" class="btn-style">🔥 Lancer le combat</button>
-    <button id="reset" class="btn-style btn-danger">🔄 Réinitialiser la session</button>
+    <button id="lancer">🔥 Lancer le combat</button>
+    <button id="reset" class="btn-danger">🔄 Réinitialiser la session</button>
     <a href="mj.html" class="button">🏠 Retour à l'accueil</a>
   </div>
 
