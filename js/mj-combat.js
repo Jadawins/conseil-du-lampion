@@ -3,22 +3,18 @@ const sessionId = urlParams.get("sessionId");
 const nomAventure = urlParams.get("nomAventure");
 
 document.getElementById("titre-aventure").textContent = `⚔️ ${nomAventure}`;
-const ordreUl = document.getElementById("ordre");
+document.getElementById("session-id-display").textContent = `🆔 Session ID : ${sessionId}`;
+
 const form = document.getElementById("form-combat");
+const ordreUl = document.getElementById("ordre");
+const logJoueursUl = document.getElementById("log-joueurs");
 const resetBtn = document.getElementById("reset");
 const lancerBtn = document.getElementById("lancer");
-const logJoueurs = document.getElementById("log-joueurs");
 
 let monstres = [];
-let joueursActuels = [];
+let joueursAffiches = new Set();
 
-const sauvegardes = localStorage.getItem("monstresLampion");
-if (sauvegardes) {
-  monstres = JSON.parse(sauvegardes);
-}
-afficherOrdre();
-pollSession(); // Lancer la récupération en boucle
-
+// ➕ Ajouter un monstre manuellement
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const nom = document.getElementById("nom").value;
@@ -30,28 +26,33 @@ form.addEventListener("submit", (e) => {
   form.reset();
 });
 
+// 🔄 Réinitialiser la session
 resetBtn.addEventListener("click", () => {
   if (confirm("Es-tu sûr de vouloir tout effacer ?")) {
     monstres = [];
     localStorage.removeItem("monstresLampion");
     localStorage.removeItem("joueursLampion");
     localStorage.removeItem("ordreFinal");
-    localStorage.removeItem("joueursAffiches");
+    joueursAffiches.clear();
     afficherOrdre();
-    logJoueurs.innerHTML = "";
+    logJoueursUl.innerHTML = "";
   }
 });
 
+// 🔥 Lancer le combat → publier l'ordre final
 lancerBtn.addEventListener("click", () => {
   const joueurs = JSON.parse(localStorage.getItem("joueursLampion")) || [];
   const total = [...monstres, ...joueurs];
   total.sort((a, b) => b.initiative - a.initiative);
+
   localStorage.setItem("ordreFinal", JSON.stringify(total));
   alert("🔥 L'ordre de tour a été validé et envoyé aux joueurs !");
 });
 
+// 🧠 Afficher l'ordre d'initiative
 function afficherOrdre() {
   ordreUl.innerHTML = "";
+
   const joueurs = JSON.parse(localStorage.getItem("joueursLampion")) || [];
   const total = [...monstres, ...joueurs];
   total.sort((a, b) => b.initiative - a.initiative);
@@ -63,29 +64,43 @@ function afficherOrdre() {
   });
 }
 
-async function pollSession() {
+// 🔄 Vérifier les nouveaux joueurs dans le blob Azure
+async function verifierNouveauxJoueurs() {
   if (!sessionId) return;
 
   try {
-    const res = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession?sessionName=${sessionId}`);
-    if (!res.ok) throw new Error("Erreur API");
-    const data = await res.json();
-    const joueurs = data.joueurs || [];
+    const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession?sessionId=${sessionId}`);
+    const data = await response.json();
 
-    const nouveaux = joueurs.filter(j => !joueursActuels.find(ancien => ancien.pseudo === j.pseudo));
-    joueursActuels = joueurs;
+    if (data && data.joueurs) {
+      const joueurs = data.joueurs;
+      const joueursActuels = JSON.parse(localStorage.getItem("joueursLampion")) || [];
 
-    nouveaux.forEach(joueur => {
-      const li = document.createElement("li");
-      li.textContent = `${joueur.pseudo} a rejoint la partie`;
-      logJoueurs.appendChild(li);
-    });
+      joueurs.forEach((joueur) => {
+        if (!joueursAffiches.has(joueur.pseudo)) {
+          const li = document.createElement("li");
+          li.textContent = `🧝 ${joueur.pseudo} a rejoint la partie.`;
+          logJoueursUl.appendChild(li);
 
-    localStorage.setItem("joueursLampion", JSON.stringify(joueurs));
-    afficherOrdre();
-  } catch (error) {
-    console.error("Erreur lors de la récupération de la session :", error);
+          joueursAffiches.add(joueur.pseudo);
+          joueursActuels.push({ nom: joueur.pseudo, initiative: 0 });
+        }
+      });
+
+      localStorage.setItem("joueursLampion", JSON.stringify(joueursActuels));
+      afficherOrdre();
+    }
+  } catch (err) {
+    console.error("Erreur lors de la récupération des joueurs :", err);
   }
-
-  setTimeout(pollSession, 3000); // Réessaye dans 3 secondes
 }
+
+// 🔁 Rafraîchir toutes les 3 secondes
+setInterval(verifierNouveauxJoueurs, 3000);
+
+// 💾 Recharger les monstres existants
+const monstresSauvegardes = localStorage.getItem("monstresLampion");
+if (monstresSauvegardes) {
+  monstres = JSON.parse(monstresSauvegardes);
+}
+afficherOrdre();
