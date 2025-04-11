@@ -1,50 +1,47 @@
-// 🔁 Rafraîchir l’ordre de combat toutes les 2 secondes
-setInterval(afficherOrdre, 2000);
+const formJoueur = document.getElementById("form-joueur");
+const ordreJoueurUl = document.getElementById("ordre-joueur");
 
-// ▶️ Fonction pour rejoindre une session
+// ➕ Rejoindre une session
 async function rejoindreSession() {
   const pseudo = document.getElementById("pseudo").value.trim();
   const sessionName = document.getElementById("sessionName").value.trim();
 
   if (!pseudo || !sessionName) {
-    document.getElementById("confirmation").textContent = "Merci de remplir les deux champs.";
+    document.getElementById("confirmation").textContent = "❌ Pseudo et nom de session requis.";
     return;
   }
 
-  const response = await fetch("http://localhost:7071/api/JoinSession", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ pseudo, sessionName })
-  });
+  try {
+    const response = await fetch("https://lampion-api.azurewebsites.net/api/JoinSession", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ pseudo, sessionName })
+    });
 
-  const data = await response.json();
+    const data = await response.json();
 
-  if (response.ok) {
-    // ✅ Message côté joueur
-    document.getElementById("confirmation").textContent = data.message;
+    if (response.ok) {
+      document.getElementById("confirmation").textContent = data.message;
+      localStorage.setItem("pseudoLampion", pseudo);
+      localStorage.setItem("sessionLampion", sessionName);
 
-    // ✅ Sauvegarder le pseudo et la session localement
-    localStorage.setItem("pseudoLampion", pseudo);
-    localStorage.setItem("sessionLampion", sessionName);
-
-    // ✅ Cacher le bloc de connexion et afficher la suite
-    document.getElementById("rejoindre-session").style.display = "none";
-    document.getElementById("initiative-section").style.display = "block";
-  } else {
-    document.getElementById("confirmation").textContent = data.message || "Erreur lors de l'inscription.";
+      document.getElementById("rejoindre-session").style.display = "none";
+      document.getElementById("initiative-section").style.display = "block";
+    } else {
+      document.getElementById("confirmation").textContent = data.message || "Erreur lors de l'inscription.";
+    }
+  } catch (error) {
+    console.error(error);
+    document.getElementById("confirmation").textContent = "❌ Impossible de contacter l’API.";
   }
 }
 
-// 📤 Gestion de l’envoi d’initiative (en local pour l’instant)
-const formJoueur = document.getElementById("form-joueur");
-const ordreJoueurUl = document.getElementById("ordre-joueur");
-
+// ➕ Envoyer son initiative
 formJoueur.addEventListener("submit", (e) => {
   e.preventDefault();
   const initiative = parseInt(document.getElementById("init-joueur").value);
-
   const pseudo = localStorage.getItem("pseudoLampion") || "Joueur inconnu";
 
   const joueur = {
@@ -60,7 +57,7 @@ formJoueur.addEventListener("submit", (e) => {
   formJoueur.reset();
 });
 
-// 📜 Afficher l’ordre reçu depuis le localStorage
+// 🔄 Afficher l'ordre final dès que disponible
 function afficherOrdre() {
   const ordre = JSON.parse(localStorage.getItem("ordreFinal"));
   ordreJoueurUl.innerHTML = "";
@@ -76,3 +73,6 @@ function afficherOrdre() {
     ordreJoueurUl.appendChild(li);
   });
 }
+
+// 🔁 Mise à jour régulière (toutes les 2 sec)
+setInterval(afficherOrdre, 2000);
