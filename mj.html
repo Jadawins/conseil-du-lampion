@@ -2,32 +2,48 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>MJ – Le Conseil du Lampion</title>
+  <title>Créer une session – Le Conseil du Lampion</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <h1>🧙 Interface MJ – Le Conseil du Lampion</h1>
+  <h1>🎲 Bienvenue, Maître du Jeu</h1>
 
-  <!-- Formulaire pour créer la session -->
-  <div id="create-session">
-    <button id="btn-creer-session">Créer une session</button>
-    <p id="session-id"></p> <!-- Affichage de l'ID de session ici -->
-  </div>
+  <p>Nom de l'aventure :</p>
+  <input type="text" id="nom-aventure" placeholder="Ex : Le Tombeau du Dragon" required />
 
-  <form id="form-combat">
-    <input type="text" id="nom" placeholder="Nom du monstre" required />
-    <input type="number" id="initiative" placeholder="Initiative" required />
-    <button type="submit">Ajouter au combat</button>
-  </form>
+  <br />
+  <button id="btn-creer-session" class="btn-style">🧙 Créer la session</button>
 
-  <h2>📜 Ordre d'initiative</h2>
-  <ul id="ordre"></ul>
+  <p id="message"></p>
 
-  <div class="button-container">
-    <button id="lancer">🔥 Lancer le combat</button>
-    <button id="reset">🔄 Réinitialiser la session</button>
-  </div>
+  <script>
+    document.getElementById("btn-creer-session").addEventListener("click", async () => {
+      const nomAventure = document.getElementById("nom-aventure").value.trim();
 
-  <script src="js/mj.js"></script>
+      if (!nomAventure) {
+        document.getElementById("message").textContent = "⚠️ Merci de saisir un nom d'aventure.";
+        return;
+      }
+
+      try {
+        const response = await fetch("https://lampion-api.azurewebsites.net/api/CreateSession", {
+          method: "POST"
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          const sessionId = data.sessionId;
+          const url = `mj-combat.html?sessionId=${sessionId}&nomAventure=${encodeURIComponent(nomAventure)}`;
+          window.location.href = url;
+        } else {
+          document.getElementById("message").textContent = "❌ Erreur lors de la création de la session.";
+        }
+      } catch (error) {
+        console.error(error);
+        document.getElementById("message").textContent = "❌ Impossible de contacter l’API.";
+      }
+    });
+  </script>
 </body>
 </html>

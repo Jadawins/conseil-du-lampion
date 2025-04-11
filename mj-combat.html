@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Combat – Le Conseil du Lampion</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <h1 id="titre-aventure">⚔️ Aventure</h1>
+
+  <form id="form-combat">
+    <input type="text" id="nom" placeholder="Nom du monstre" required />
+    <input type="number" id="initiative" placeholder="Initiative" required />
+    <button type="submit" class="btn-style">Ajouter au combat</button>
+  </form>
+
+  <h2>📜 Ordre d'initiative</h2>
+  <ul id="ordre"></ul>
+
+  <div class="button-container">
+    <button id="lancer" class="btn-style">🔥 Lancer le combat</button>
+    <button id="reset" class="btn-style btn-danger">🔄 Réinitialiser la session</button>
+    <a href="mj.html" class="btn-style">🏠 Retour à l'accueil</a>
+  </div>
+
+  <script src="js/mj-combat.js"></script>
+</body>
+</html>
