@@ -12,8 +12,11 @@ const nomAventure = params.get("nomAventure");
 document.getElementById("titre-aventure").textContent = `⚔️ ${nomAventure}`;
 document.getElementById("session-code").textContent = `🆔 Code de session : ${sessionId}`;
 
-// Initialisation des monstres
+// Initialisation
 let monstres = [];
+let joueursConnus = []; // Pour stocker les joueurs déjà connus
+const logJoueurs = document.createElement("ul");
+document.body.appendChild(logJoueurs);
 
 // Charger les monstres enregistrés localement
 const monstresSauvegardes = localStorage.getItem("monstresLampion");
@@ -55,7 +58,9 @@ resetBtn.addEventListener("click", () => {
     localStorage.removeItem("monstresLampion");
     localStorage.removeItem("joueursLampion");
     localStorage.removeItem("ordreFinal");
+    joueursConnus = [];
     afficherOrdre();
+    logJoueurs.innerHTML = ""; // Réinitialise l'affichage des logs
   }
 });
 
@@ -68,3 +73,29 @@ lancerBtn.addEventListener("click", () => {
   localStorage.setItem("ordreFinal", JSON.stringify(total));
   alert("🔥 L'ordre de tour a été validé et envoyé aux joueurs !");
 });
+
+// Fonction pour interroger l’API GetSession régulièrement
+async function verifierNouveauxJoueurs() {
+  try {
+    const res = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession?sessionId=${sessionId}`);
+    if (res.ok) {
+      const data = await res.json();
+      const nouveauxJoueurs = data.joueurs.filter(j => !joueursConnus.includes(j.pseudo));
+
+      nouveauxJoueurs.forEach(j => {
+        joueursConnus.push(j.pseudo);
+        const li = document.createElement("li");
+        li.textContent = `🎉 ${j.pseudo} a rejoint la partie !`;
+        logJoueurs.appendChild(li);
+      });
+
+      localStorage.setItem("joueursLampion", JSON.stringify(data.joueurs));
+      afficherOrdre();
+    }
+  } catch (err) {
+    console.error("Erreur lors de la récupération de la session :", err);
+  }
+}
+
+// Vérifie toutes les 3 secondes
+setInterval(verifierNouveauxJoueurs, 3000);
