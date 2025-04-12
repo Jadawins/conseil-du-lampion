@@ -22,14 +22,18 @@
   </div>
   
 
-  <!-- ➕ Ajouter un monstre -->
-  <form id="form-combat">
-    <div class="input-row">
-      <input type="text" id="nom" placeholder="🧌 Nom du monstre" required />
-      <input type="number" id="initiative" placeholder="⚔️ Initiative" required />
-    </div>
-    <button type="submit" class="btn-style">Ajouter au combat</button>
-  </form>
+  <!-- 🔮 Ajouter un monstre -->
+<form id="form-combat">
+  <div class="input-row">
+    <input type="text" id="nom-monstre" placeholder="👹 Nom du monstre" required />
+    <input type="number" id="initiative-monstre" placeholder="⚔️ Initiative" required />
+  </div>
+  <button type="submit" class="btn-style">➕ Ajouter au combat</button>
+</form>
+
+<!-- 🧟‍♂️ Liste temporaire des monstres -->
+<div id="liste-monstres" class="temp-list"></div>
+
 
   <!-- 📜 Ordre d'initiative -->
   <h2 id="ordre-titre" style="display:none;">📜 Ordre d'initiative</h2>

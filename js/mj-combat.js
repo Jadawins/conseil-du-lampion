@@ -1,3 +1,4 @@
+// 📜 Paramètres d'URL
 const urlParams = new URLSearchParams(window.location.search);
 const sessionId = urlParams.get("sessionId");
 const nomAventure = urlParams.get("nomAventure");
@@ -7,99 +8,132 @@ document.getElementById("session-id-display").textContent = `🆔 Session ID : $
 
 const form = document.getElementById("form-combat");
 const ordreUl = document.getElementById("ordre");
+const listeMonstresDiv = document.getElementById("liste-monstres");
+const ordreTitre = document.getElementById("ordre-titre");
 const resetBtn = document.getElementById("reset");
 const lancerBtn = document.getElementById("lancer");
-const ordreTitre = document.getElementById("ordre-titre");
 
 let monstres = JSON.parse(localStorage.getItem("monstresLampion")) || [];
 let joueursAffiches = new Set();
 let combatLance = false;
 
-function afficherOrdre() {
-  ordreUl.innerHTML = "";
+// 🧟‍♂️ Afficher les monstres temporairement
+function afficherListeTemporaire() {
+  listeMonstresDiv.innerHTML = "";
 
-  const joueurs = JSON.parse(localStorage.getItem("joueursLampion")) || [];
-  const total = [...monstres];
-
-  if (combatLance) {
-    total.push(...joueurs.filter(p => typeof p.initiative === "number" && p.initiative > 0));
-  }
-
-  total.sort((a, b) => b.initiative - a.initiative);
-
-  total.forEach((p, index) => {
-    const li = document.createElement("li");
-    const isMonstre = monstres.findIndex(m => m.nom === p.nom) !== -1;
-    li.innerHTML = `
-      <strong>${p.nom}</strong> – Initiative : ${
-        isMonstre
-          ? `<input type="number" value="${p.initiative}" data-index="${index}" class="initiative-input" style="width: 60px;" />`
-          : `<span>${p.initiative}</span>`
-      }
-      ${isMonstre ? `<button class="btn-danger" data-suppr="${index}">🗑️</button>` : ""}
+  monstres.forEach((m, index) => {
+    const div = document.createElement("div");
+    div.className = "monstre-item";
+    div.innerHTML = `
+      <span><strong>${m.nom}</strong> – ⚔️ <input type="number" value="${m.initiative}" data-index="${index}" class="initiative-input" /></span>
+      <button class="btn-danger" data-suppr="${index}">🗑️</button>
     `;
-    ordreUl.appendChild(li);
+    listeMonstresDiv.appendChild(div);
   });
 
-  ordreUl.querySelectorAll(".initiative-input").forEach(input => {
+  // Mise à jour des initiatives
+  listeMonstresDiv.querySelectorAll(".initiative-input").forEach(input => {
     input.addEventListener("change", (e) => {
       const i = parseInt(e.target.dataset.index);
       monstres[i].initiative = parseInt(e.target.value);
       localStorage.setItem("monstresLampion", JSON.stringify(monstres));
-      afficherOrdre();
     });
   });
 
-  ordreUl.querySelectorAll(".btn-danger").forEach(btn => {
+  // Suppression de monstre
+  listeMonstresDiv.querySelectorAll(".btn-danger").forEach(btn => {
     btn.addEventListener("click", (e) => {
       const i = parseInt(e.target.dataset.suppr);
       monstres.splice(i, 1);
       localStorage.setItem("monstresLampion", JSON.stringify(monstres));
-      afficherOrdre();
+      afficherListeTemporaire();
     });
   });
 }
 
+// 🧠 Afficher ordre final
+function afficherOrdre() {
+  ordreUl.innerHTML = "";
+
+  const joueurs = JSON.parse(localStorage.getItem("joueursLampion")) || [];
+  const total = [...monstres, ...joueurs.filter(j => j.initiative > 0)];
+  total.sort((a, b) => b.initiative - a.initiative);
+
+  total.forEach(p => {
+    const li = document.createElement("li");
+    li.textContent = `${p.nom} – Initiative : ${p.initiative}`;
+    ordreUl.appendChild(li);
+  });
+}
+
+// ➕ Ajouter un monstre
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  const nom = document.getElementById("nom").value.trim();
-  const initiative = parseInt(document.getElementById("initiative").value);
+  const nom = document.getElementById("nom-monstre").value.trim();
+  const initiative = parseInt(document.getElementById("initiative-monstre").value);
   if (!nom || isNaN(initiative)) return;
 
   monstres.push({ nom, initiative });
   localStorage.setItem("monstresLampion", JSON.stringify(monstres));
   form.reset();
-  if (combatLance) afficherOrdre();
+  if (!combatLance) afficherListeTemporaire();
 });
 
+// 🔄 Réinitialiser
 resetBtn.addEventListener("click", () => {
-  if (confirm("Réinitialiser la session ?")) {
+  if (confirm("❗ Réinitialiser tous les monstres et joueurs ?")) {
     monstres = [];
     localStorage.removeItem("monstresLampion");
     localStorage.removeItem("joueursLampion");
     localStorage.removeItem("ordreFinal");
-    joueursAffiches.clear();
+    combatLance = false;
     ordreUl.innerHTML = "";
     ordreTitre.style.display = "none";
-    combatLance = false;
+    listeMonstresDiv.innerHTML = "";
+    joueursAffiches.clear();
   }
 });
 
+// 🔥 Lancer le combat
 lancerBtn.addEventListener("click", () => {
   const joueurs = JSON.parse(localStorage.getItem("joueursLampion")) || [];
-  const total = [...monstres, ...joueurs.filter(p => typeof p.initiative === "number" && p.initiative > 0)];
+  const total = [...monstres, ...joueurs.filter(j => j.initiative > 0)];
   total.sort((a, b) => b.initiative - a.initiative);
-
   localStorage.setItem("ordreFinal", JSON.stringify(total));
+
   ordreTitre.style.display = "block";
+  listeMonstresDiv.style.display = "none";
   combatLance = true;
   afficherOrdre();
-  alert("🔥 Ordre de tour validé !");
 });
 
-// Si des monstres ont déjà été ajoutés mais combat pas lancé, on n'affiche pas encore
-if (localStorage.getItem("ordreFinal")) {
-  ordreTitre.style.display = "block";
-  combatLance = true;
-  afficherOrdre();
+// 🔁 Vérifier nouveaux joueurs (toutes les 3s)
+async function verifierNouveauxJoueurs() {
+  if (!sessionId || combatLance) return;
+
+  try {
+    const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+    const data = await response.json();
+
+    if (data?.joueurs) {
+      const joueursActuels = JSON.parse(localStorage.getItem("joueursLampion")) || [];
+
+      data.joueurs.forEach((joueur) => {
+        if (!joueursAffiches.has(joueur.pseudo)) {
+          joueursAffiches.add(joueur.pseudo);
+          joueursActuels.push({ nom: joueur.pseudo, initiative: 0 });
+        }
+      });
+
+      localStorage.setItem("joueursLampion", JSON.stringify(joueursActuels));
+    }
+  } catch (err) {
+    console.error("Erreur récupération joueurs :", err);
+  }
+}
+setInterval(verifierNouveauxJoueurs, 3000);
+
+// 🔄 Init au chargement
+if (!combatLance) {
+  afficherListeTemporaire();
 }
