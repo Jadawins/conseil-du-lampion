@@ -42,6 +42,38 @@ h2 {
   transform: scale(1.05);
 }
 
+/* 🔴 Bouton rouge spécial (ex: Réinitialiser) */
+.btn-reset {
+  background-color: #e63946;
+  color: white;
+  padding: 1em 2em;
+  border-radius: 12px;
+  font-size: 1.1em;
+  font-family: 'Georgia', serif;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-reset:hover {
+  background-color: #ff5e63;
+  transform: scale(1.05);
+}
+
+/* 🌞 Thème clair → version du bouton rouge */
+body[data-theme='light'] .btn-reset {
+  background-color: #d62828;
+  color: white;
+}
+
+body[data-theme='light'] .btn-reset:hover {
+  background-color: #f94144;
+}
+
+
 /* 📝 Champs de texte élégants */
 input[type="text"],
 input[type="number"],
@@ -60,6 +92,31 @@ textarea {
   box-sizing: border-box;
   transition: all 0.3s ease;
   box-shadow: 0 0 8px rgba(134, 93, 255, 0.1);
+}
+
+/* 🧩 Mise en ligne des champs sur grand écran */
+.input-row {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+  margin-bottom: 1.5em;
+}
+
+.input-row input {
+  flex: 1;
+  min-width: 150px;
+  max-width: 250px;
+}
+
+@media screen and (max-width: 600px) {
+  .input-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .input-row input {
+    max-width: 100%;
+  }
 }
 
 input[type="text"]:focus,
@@ -240,4 +297,3 @@ input:checked + .slider .icon-moon {
 input:checked + .slider .icon-sun {
   opacity: 1;
 }
-

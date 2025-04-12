@@ -24,8 +24,10 @@
 
   <!-- ➕ Ajouter un monstre -->
   <form id="form-combat">
-    <input type="text" id="nom" placeholder="Nom du monstre" required />
-    <input type="number" id="initiative" placeholder="Initiative" required />
+    <div class="input-row">
+      <input type="text" id="nom" placeholder="🧌 Nom du monstre" required />
+      <input type="number" id="initiative" placeholder="⚔️ Initiative" required />
+    </div>
     <button type="submit" class="btn-style">Ajouter au combat</button>
   </form>
 
@@ -36,8 +38,8 @@
   <!-- 🛠️ Actions -->
   <div class="button-container">
     <button id="lancer" class="btn-style">🔥 Lancer le combat</button>
-    <button id="reset" class="btn-style">🔄 Réinitialiser</button>
-    <a href="mj.html" class="button">🏠 Accueil</a>
+    <button id="reset" class="btn-reset">🔄 Réinitialiser</button>
+    <a href="mj.html" class="btn-style">🏠 Accueil</a>
   </div>
 
   <!-- Scripts -->
