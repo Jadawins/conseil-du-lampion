@@ -6,19 +6,19 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <h1>🕯️ Le Conseil du Lampion</h1>
-
-  <!-- 🔁 Toggle clair/sombre -->
-  <div class="theme-switch">
-    <label>
-      <input type="checkbox" id="theme-toggle" />
-      🌙 / ☀️
+  <div class="theme-toggle">
+    <label class="switch">
+      <input type="checkbox" id="theme-switch">
+      <span class="slider round"></span>
     </label>
+    <span class="emoji">🌙 / ☀️</span>
   </div>
 
+  <h1>🕯️ Le Conseil du Lampion</h1>
+
   <div class="button-container">
-    <a href="mj.html" class="button">👑 Maître du Jeu</a>
-    <a href="joueur.html" class="button">🧝 Joueur</a>
+    <a href="mj.html" class="btn-style">👑 Maître du Jeu</a>
+    <a href="joueur.html" class="btn-style">🧝 Joueur</a>
   </div>
 
   <script src="js/theme.js"></script>
