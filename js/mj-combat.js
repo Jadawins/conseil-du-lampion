@@ -7,12 +7,12 @@ document.getElementById("session-id-display").textContent = `🆔 Session ID : $
 
 const form = document.getElementById("form-combat");
 const ordreUl = document.getElementById("ordre");
-const logJoueursUl = document.getElementById("log-joueurs");
 const resetBtn = document.getElementById("reset");
 const lancerBtn = document.getElementById("lancer");
 
 let monstres = [];
 let joueursAffiches = new Set();
+let joueursSession = []; // Ne plus stocker en localStorage
 
 // ➕ Ajouter un monstre manuellement
 form.addEventListener("submit", (e) => {
@@ -31,18 +31,16 @@ resetBtn.addEventListener("click", () => {
   if (confirm("Es-tu sûr de vouloir tout effacer ?")) {
     monstres = [];
     localStorage.removeItem("monstresLampion");
-    localStorage.removeItem("joueursLampion");
     localStorage.removeItem("ordreFinal");
     joueursAffiches.clear();
+    joueursSession = [];
     afficherOrdre();
-    logJoueursUl.innerHTML = "";
   }
 });
 
 // 🔥 Lancer le combat → publier l'ordre final
 lancerBtn.addEventListener("click", () => {
-  const joueurs = JSON.parse(localStorage.getItem("joueursLampion")) || [];
-  const total = [...monstres, ...joueurs];
+  const total = [...monstres, ...joueursSession];
   total.sort((a, b) => b.initiative - a.initiative);
 
   localStorage.setItem("ordreFinal", JSON.stringify(total));
@@ -53,8 +51,7 @@ lancerBtn.addEventListener("click", () => {
 function afficherOrdre() {
   ordreUl.innerHTML = "";
 
-  const joueurs = JSON.parse(localStorage.getItem("joueursLampion")) || [];
-  const total = [...monstres, ...joueurs];
+  const total = [...monstres, ...joueursSession];
   total.sort((a, b) => b.initiative - a.initiative);
 
   total.forEach((p) => {
@@ -73,21 +70,14 @@ async function verifierNouveauxJoueurs() {
     const data = await response.json();
 
     if (data && data.joueurs) {
-      const joueurs = data.joueurs;
-      const joueursActuels = JSON.parse(localStorage.getItem("joueursLampion")) || [];
-
-      joueurs.forEach((joueur) => {
-        if (!joueursAffiches.has(joueur.pseudo)) {
-          const li = document.createElement("li");
-          li.textContent = `🧝 ${joueur.pseudo} a rejoint la partie.`;
-          logJoueursUl.appendChild(li);
-
-          joueursAffiches.add(joueur.pseudo);
-          joueursActuels.push({ nom: joueur.pseudo, initiative: 0 });
-        }
+      const nouveaux = data.joueurs.filter(joueur => !joueursAffiches.has(joueur.pseudo));
+      
+      nouveaux.forEach(joueur => {
+        console.log(`🧝 ${joueur.pseudo} a rejoint la partie.`);
+        joueursAffiches.add(joueur.pseudo);
+        joueursSession.push({ nom: joueur.pseudo, initiative: null }); // Initiative null tant que non défini
       });
 
-      localStorage.setItem("joueursLampion", JSON.stringify(joueursActuels));
       afficherOrdre();
     }
   } catch (err) {

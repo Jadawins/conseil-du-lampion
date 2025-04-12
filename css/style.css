@@ -25,7 +25,7 @@ p {
   margin-bottom: 1em;
 }
 
-input {
+input, select {
   font-size: 1em;
   padding: 0.6em 1em;
   margin: 0.5em;
@@ -38,10 +38,10 @@ input {
   background-color: #2a2a2a;
   color: #f0e6d2;
   border: 1px solid #444;
-  transition: border 0.3s ease;
+  transition: border 0.3s ease, background-color 0.3s ease;
 }
 
-input:focus {
+input:focus, select:focus {
   border: 1px solid #865dff;
   background-color: #1c1c1c;
 }
@@ -63,6 +63,10 @@ button, .button {
 button:hover, .button:hover {
   background-color: #a682ff;
   transform: scale(1.05);
+}
+
+button:active, .button:active {
+  transform: scale(0.97);
 }
 
 .btn-danger {
@@ -115,7 +119,8 @@ ul#log-joueurs li:hover {
 
 @media screen and (max-width: 600px) {
   input[type="text"],
-  input[type="number"] {
+  input[type="number"],
+  select {
     width: 90%;
   }
 
