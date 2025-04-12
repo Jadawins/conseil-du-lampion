@@ -3,17 +3,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const toggle = document.getElementById("theme-toggle");
     const body = document.body;
   
-    // Appliquer le thème sauvegardé au chargement
+    // 🌙 Thème sombre par défaut
     const savedTheme = localStorage.getItem("theme") || "dark";
     body.setAttribute("data-theme", savedTheme);
-  
+    
     if (toggle) {
+      // Mettre à jour l’état du bouton
       toggle.checked = savedTheme === "light";
   
       toggle.addEventListener("change", () => {
-        const theme = toggle.checked ? "light" : "dark";
-        body.setAttribute("data-theme", theme);
-        localStorage.setItem("theme", theme);
+        const newTheme = toggle.checked ? "light" : "dark";
+        body.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
       });
     }
   });

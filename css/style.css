@@ -162,3 +162,30 @@ body {
 input, h1, h2, p, .btn-style, .button, ul li, a {
   transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
 }
+
+/* 🌞/🌙 Icônes dynamiques dans le switch */
+.icon-moon,
+.icon-sun {
+  position: absolute;
+  font-size: 0.9em;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.icon-moon {
+  opacity: 1;
+  left: 8px;
+}
+
+.icon-sun {
+  opacity: 0;
+  right: 8px;
+}
+
+input:checked + .slider .icon-moon {
+  opacity: 0;
+}
+
+input:checked + .slider .icon-sun {
+  opacity: 1;
+}
