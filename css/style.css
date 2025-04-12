@@ -167,21 +167,25 @@ input, h1, h2, p, .btn-style, .button, ul li, a {
 .icon-moon,
 .icon-sun {
   position: absolute;
+  top: 4px;
   font-size: 0.9em;
   pointer-events: none;
   transition: opacity 0.3s ease;
 }
 
+/* 🌙 Lune à droite quand le bouton est désactivé */
 .icon-moon {
+  right: 6px;
   opacity: 1;
-  left: 8px;
 }
 
+/* 🌞 Soleil à gauche quand le bouton est activé */
 .icon-sun {
+  left: 6px;
   opacity: 0;
-  right: 8px;
 }
 
+/* 👇 Quand le bouton est activé (checked) */
 input:checked + .slider .icon-moon {
   opacity: 0;
 }
