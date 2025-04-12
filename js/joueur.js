@@ -39,11 +39,18 @@ async function rejoindreSession() {
 }
 
 // ➕ Envoyer son initiative
-formJoueur.addEventListener("submit", (e) => {
+formJoueur.addEventListener("submit", async (e) => {
   e.preventDefault();
   const initiative = parseInt(document.getElementById("init-joueur").value);
-  const pseudo = localStorage.getItem("pseudoLampion") || "Joueur inconnu";
+  const pseudo = localStorage.getItem("pseudoLampion");
+  const sessionName = localStorage.getItem("sessionLampion");
 
+  if (!pseudo || !sessionName) {
+    ordreJoueurUl.innerHTML = "<li>Erreur : session non trouvée.</li>";
+    return;
+  }
+
+  // Optionnel : tu pourrais créer une API dédiée pour envoyer l’initiative
   const joueur = {
     nom: pseudo,
     initiative: initiative

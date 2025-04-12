@@ -7,14 +7,15 @@ document.getElementById("session-id-display").textContent = `🆔 Session ID : $
 
 const form = document.getElementById("form-combat");
 const ordreUl = document.getElementById("ordre");
+const initiativeSection = document.getElementById("initiative-section");
 const resetBtn = document.getElementById("reset");
 const lancerBtn = document.getElementById("lancer");
 
 let monstres = [];
 let joueursAffiches = new Set();
-let joueursSession = []; // Ne plus stocker en localStorage
+let joueursSession = [];
 
-// ➕ Ajouter un monstre manuellement
+// ➕ Ajouter un monstre
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const nom = document.getElementById("nom").value;
@@ -22,7 +23,6 @@ form.addEventListener("submit", (e) => {
 
   monstres.push({ nom, initiative });
   localStorage.setItem("monstresLampion", JSON.stringify(monstres));
-  afficherOrdre();
   form.reset();
 });
 
@@ -30,31 +30,29 @@ form.addEventListener("submit", (e) => {
 resetBtn.addEventListener("click", () => {
   if (confirm("Es-tu sûr de vouloir tout effacer ?")) {
     monstres = [];
+    joueursSession = [];
+    joueursAffiches.clear();
     localStorage.removeItem("monstresLampion");
     localStorage.removeItem("ordreFinal");
-    joueursAffiches.clear();
-    joueursSession = [];
-    afficherOrdre();
+    ordreUl.innerHTML = "";
+    initiativeSection.style.display = "none";
   }
 });
 
-// 🔥 Lancer le combat → publier l'ordre final
+// 🔥 Lancer le combat → Affiche la section et l’ordre
 lancerBtn.addEventListener("click", () => {
-  const total = [...monstres, ...joueursSession];
+  initiativeSection.style.display = "block";
+  const total = [...monstres, ...joueursSession].filter(p => p.initiative !== null);
   total.sort((a, b) => b.initiative - a.initiative);
-
   localStorage.setItem("ordreFinal", JSON.stringify(total));
+  afficherOrdre(total);
   alert("🔥 L'ordre de tour a été validé et envoyé aux joueurs !");
 });
 
-// 🧠 Afficher l'ordre d'initiative
-function afficherOrdre() {
+// 🧠 Afficher l'ordre passé en paramètre
+function afficherOrdre(participants) {
   ordreUl.innerHTML = "";
-
-  const total = [...monstres, ...joueursSession];
-  total.sort((a, b) => b.initiative - a.initiative);
-
-  total.forEach((p) => {
+  participants.forEach((p) => {
     const li = document.createElement("li");
     li.textContent = `${p.nom} - Initiative : ${p.initiative}`;
     ordreUl.appendChild(li);
@@ -71,14 +69,12 @@ async function verifierNouveauxJoueurs() {
 
     if (data && data.joueurs) {
       const nouveaux = data.joueurs.filter(joueur => !joueursAffiches.has(joueur.pseudo));
-      
+
       nouveaux.forEach(joueur => {
         console.log(`🧝 ${joueur.pseudo} a rejoint la partie.`);
         joueursAffiches.add(joueur.pseudo);
-        joueursSession.push({ nom: joueur.pseudo, initiative: null }); // Initiative null tant que non défini
+        joueursSession.push({ nom: joueur.pseudo, initiative: null });
       });
-
-      afficherOrdre();
     }
   } catch (err) {
     console.error("Erreur lors de la récupération des joueurs :", err);
@@ -88,9 +84,8 @@ async function verifierNouveauxJoueurs() {
 // 🔁 Rafraîchir toutes les 3 secondes
 setInterval(verifierNouveauxJoueurs, 3000);
 
-// 💾 Recharger les monstres existants
+// 💾 Recharger les monstres
 const monstresSauvegardes = localStorage.getItem("monstresLampion");
 if (monstresSauvegardes) {
   monstres = JSON.parse(monstresSauvegardes);
 }
-afficherOrdre();
