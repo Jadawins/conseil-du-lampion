@@ -33,15 +33,13 @@ input, select {
   border: none;
   outline: none;
   font-family: 'Georgia', serif;
-  width: 60%;
-  max-width: 300px;
   background-color: #2a2a2a;
   color: #f0e6d2;
   border: 1px solid #444;
-  transition: border 0.3s ease, background-color 0.3s ease;
+  transition: border 0.3s ease;
 }
 
-input:focus, select:focus {
+input:focus {
   border: 1px solid #865dff;
   background-color: #1c1c1c;
 }
@@ -65,7 +63,15 @@ button:hover, .button:hover {
   transform: scale(1.05);
 }
 
-button:active, .button:active {
+.btn-style {
+  background-color: #865dff;
+}
+
+.btn-style:hover {
+  background-color: #a682ff;
+}
+
+.btn-style:active {
   transform: scale(0.97);
 }
 
@@ -85,6 +91,12 @@ button:active, .button:active {
   flex-wrap: wrap;
 }
 
+#confirmation, #message {
+  margin-top: 1em;
+  font-weight: bold;
+  color: lightgreen;
+}
+
 ul#ordre-joueur,
 ul#ordre,
 ul#log-joueurs {
@@ -102,6 +114,9 @@ ul#log-joueurs li {
   border-radius: 8px;
   box-shadow: 0 0 5px #333;
   transition: background-color 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 ul#ordre-joueur li:hover,
@@ -110,17 +125,20 @@ ul#log-joueurs li:hover {
   background-color: #333;
 }
 
-#confirmation,
-#message {
-  margin-top: 1em;
-  font-weight: bold;
-  color: lightgreen;
+.initiative-input {
+  background-color: #1c1c1c;
+  color: #f0e6d2;
+  border: 1px solid #865dff;
+  border-radius: 8px;
+  padding: 0.3em;
+  margin-left: 1em;
+  text-align: center;
+  width: 60px;
 }
 
 @media screen and (max-width: 600px) {
   input[type="text"],
-  input[type="number"],
-  select {
+  input[type="number"] {
     width: 90%;
   }
 
