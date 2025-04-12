@@ -1,3 +1,27 @@
+/* 🌙 Thème général */
+body {
+  background-color: #121212;
+  color: #f0e6d2;
+  font-family: 'Georgia', serif;
+  padding: 2em;
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.4em;
+  color: #ffe680;
+  margin-bottom: 1em;
+  text-shadow: 0 0 8px #ffd700, 0 0 12px #ffa500;
+}
+
+h2 {
+  color: #ffd95c;
+  margin-top: 2em;
+}
+
+/* 💡 Boutons */
 .btn-style, .button {
   background-color: #865dff;
   color: white;
@@ -18,7 +42,16 @@
   transform: scale(1.05);
 }
 
-/* Toggle du thème */
+/* 🟦 Conteneur des boutons */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+  margin-top: 2em;
+  flex-wrap: wrap;
+}
+
+/* 🎚️ Toggle thème */
 .theme-toggle-container {
   position: absolute;
   top: 1em;
@@ -68,4 +101,16 @@ input:checked + .slider {
 
 input:checked + .slider:before {
   transform: translateX(22px);
+}
+
+/* 📱 Responsive */
+@media screen and (max-width: 600px) {
+  .button-container {
+    flex-direction: column;
+  }
+
+  .btn-style, .button {
+    width: 100%;
+    max-width: 300px;
+  }
 }
