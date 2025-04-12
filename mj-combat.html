@@ -31,22 +31,30 @@
   <button type="submit" class="btn-style">➕ Ajouter au combat</button>
 </form>
 
-<!-- 🧟‍♂️ Liste temporaire des monstres -->
-<div id="liste-monstres" class="temp-list"></div>
+<!-- 🎲 Liste temporaire -->
+<div id="zone-liste-temporaire">
+  <!-- Monstres -->
+  <h2>👹 Monstres à combattre</h2>
+  <div id="liste-monstres" class="temp-list"></div>
+
+  <!-- Joueurs -->
+  <h2>🧝 Joueurs dans la partie</h2>
+  <div id="liste-joueurs" class="temp-list"></div>
+</div>
 
 
-  <!-- 📜 Ordre d'initiative -->
+<!-- 📜 Ordre d'initiative -->
   <h2 id="ordre-titre" style="display:none;">📜 Ordre d'initiative</h2>
   <ul id="ordre"></ul>
 
-  <!-- 🛠️ Actions -->
+<!-- 🛠️ Actions -->
   <div class="button-container">
     <button id="lancer" class="btn-style">🔥 Lancer le combat</button>
     <button id="reset" class="btn-reset">🔄 Réinitialiser</button>
     <a href="mj.html" class="btn-style">🏠 Accueil</a>
   </div>
 
-  <!-- Scripts -->
+<!-- Scripts -->
   <script src="js/theme.js"></script>
   <script src="js/mj-combat.js"></script>
 </body>
