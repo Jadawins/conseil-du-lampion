@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <title>Accueil – Le Conseil du Lampion</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <div class="theme-toggle">
-    <label class="switch">
-      <input type="checkbox" id="theme-switch">
-      <span class="slider round"></span>
+<body data-theme="dark">
+  <!-- 🌗 Toggle clair/sombre -->
+  <div class="theme-toggle-wrapper">
+    <label>
+      <input type="checkbox" id="theme-toggle" />
+      🌙 / ☀️
     </label>
-    <span class="emoji">🌙 / ☀️</span>
   </div>
 
   <h1>🕯️ Le Conseil du Lampion</h1>
 
   <div class="button-container">
-    <a href="mj.html" class="btn-style">👑 Maître du Jeu</a>
-    <a href="joueur.html" class="btn-style">🧝 Joueur</a>
+    <a href="mj.html" class="button">👑 Maître du Jeu</a>
+    <a href="joueur.html" class="button">🧝 Joueur</a>
   </div>
 
-  <script src="js/theme.js"></script>
+  <script src="theme.js"></script>
 </body>
 </html>
