@@ -23,20 +23,19 @@ function afficherListeTemporaire() {
   listeMonstresDiv.innerHTML = "";
   listeJoueursDiv.innerHTML = "";
 
-  // Crée le tableau pour les monstres
-  const table = document.createElement("table");
-  table.className = "table-monstres";
-  const thead = document.createElement("thead");
-  thead.innerHTML = `
+  // Tableau des monstres
+  const tableMonstres = document.createElement("table");
+  tableMonstres.className = "table-monstres";
+  const theadM = document.createElement("thead");
+  theadM.innerHTML = `
     <tr>
       <th>🧟 Monstre</th>
       <th>⚔️ Initiative</th>
       <th>🗑️ Action</th>
     </tr>
   `;
-  table.appendChild(thead);
-
-  const tbody = document.createElement("tbody");
+  tableMonstres.appendChild(theadM);
+  const tbodyM = document.createElement("tbody");
 
   monstres.forEach((m, index) => {
     const tr = document.createElement("tr");
@@ -61,20 +60,43 @@ function afficherListeTemporaire() {
     tr.appendChild(tdNom);
     tr.appendChild(tdInit);
     tr.appendChild(tdAction);
-    tbody.appendChild(tr);
+    tbodyM.appendChild(tr);
   });
 
-  table.appendChild(tbody);
-  listeMonstresDiv.appendChild(table);
+  tableMonstres.appendChild(tbodyM);
+  listeMonstresDiv.appendChild(tableMonstres);
 
-  // Affiche les joueurs
+  // Tableau des joueurs
   const joueurs = JSON.parse(localStorage.getItem("joueursLampion")) || [];
-  joueurs.forEach(j => {
-    const div = document.createElement("div");
-    div.className = "joueur-item";
-    div.innerHTML = `<strong>${j.nom}</strong> – Initiative : ${j.initiative}`;
-    listeJoueursDiv.appendChild(div);
-  });
+  if (joueurs.length > 0) {
+    const tableJoueurs = document.createElement("table");
+    tableJoueurs.className = "table-monstres";
+    const theadJ = document.createElement("thead");
+    theadJ.innerHTML = `
+      <tr>
+        <th>🧝 Joueur</th>
+        <th>⚔️ Initiative</th>
+      </tr>
+    `;
+    tableJoueurs.appendChild(theadJ);
+    const tbodyJ = document.createElement("tbody");
+
+    joueurs.forEach(j => {
+      const tr = document.createElement("tr");
+      const tdNom = document.createElement("td");
+      tdNom.textContent = j.nom;
+
+      const tdInit = document.createElement("td");
+      tdInit.textContent = j.initiative;
+
+      tr.appendChild(tdNom);
+      tr.appendChild(tdInit);
+      tbodyJ.appendChild(tr);
+    });
+
+    tableJoueurs.appendChild(tbodyJ);
+    listeJoueursDiv.appendChild(tableJoueurs);
+  }
 }
 
 // 🧠 Afficher l'ordre d'initiative (après lancement)
