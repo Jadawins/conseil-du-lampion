@@ -23,38 +23,51 @@ function afficherListeTemporaire() {
   listeMonstresDiv.innerHTML = "";
   listeJoueursDiv.innerHTML = "";
 
-  // Monstres
+  // Crée le tableau pour les monstres
+  const table = document.createElement("table");
+  table.className = "table-monstres";
+  const thead = document.createElement("thead");
+  thead.innerHTML = `
+    <tr>
+      <th>🧟 Monstre</th>
+      <th>⚔️ Initiative</th>
+      <th>🗑️ Action</th>
+    </tr>
+  `;
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+
   monstres.forEach((m, index) => {
-    const div = document.createElement("div");
-    div.className = "monstre-item";
-    div.innerHTML = `
-      <span class="nom-monstre"><strong>${m.nom}</strong></span>
-      <input type="number" value="${m.initiative}" data-index="${index}" class="initiative-input" />
-    <button class="btn-danger" data-suppr="${index}">🗑️</button>
-`   ;
-    listeMonstresDiv.appendChild(div);
-  });
+    const tr = document.createElement("tr");
 
-  // Mise à jour des initiatives
-  listeMonstresDiv.querySelectorAll(".initiative-input").forEach(input => {
-    input.addEventListener("change", (e) => {
-      const i = parseInt(e.target.dataset.index);
-      monstres[i].initiative = parseInt(e.target.value);
-      localStorage.setItem("monstresLampion", JSON.stringify(monstres));
-    });
-  });
+    const tdNom = document.createElement("td");
+    tdNom.textContent = m.nom;
 
-  // Suppression
-  listeMonstresDiv.querySelectorAll(".btn-danger").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      const i = parseInt(e.target.dataset.suppr);
-      monstres.splice(i, 1);
+    const tdInit = document.createElement("td");
+    tdInit.textContent = m.initiative;
+
+    const tdAction = document.createElement("td");
+    const deleteBtn = document.createElement("button");
+    deleteBtn.innerHTML = "🗑️";
+    deleteBtn.className = "btn-danger";
+    deleteBtn.addEventListener("click", () => {
+      monstres.splice(index, 1);
       localStorage.setItem("monstresLampion", JSON.stringify(monstres));
       afficherListeTemporaire();
     });
+    tdAction.appendChild(deleteBtn);
+
+    tr.appendChild(tdNom);
+    tr.appendChild(tdInit);
+    tr.appendChild(tdAction);
+    tbody.appendChild(tr);
   });
 
-  // Joueurs
+  table.appendChild(tbody);
+  listeMonstresDiv.appendChild(table);
+
+  // Affiche les joueurs
   const joueurs = JSON.parse(localStorage.getItem("joueursLampion")) || [];
   joueurs.forEach(j => {
     const div = document.createElement("div");
@@ -83,13 +96,13 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
   const nom = document.getElementById("nom-monstre").value.trim();
   const initiative = parseInt(document.getElementById("initiative-monstre").value);
-  // Vérifie si le nom existe déjà
-const existeDeja = monstres.some(monstre => monstre.nom.toLowerCase() === nom.toLowerCase());
-if (existeDeja) {
-  alert("⚠️ Un monstre avec ce nom existe déjà !");
-  return;
-}
   if (!nom || isNaN(initiative)) return;
+
+  const existeDeja = monstres.some(monstre => monstre.nom.toLowerCase() === nom.toLowerCase());
+  if (existeDeja) {
+    alert("⚠️ Un monstre avec ce nom existe déjà !");
+    return;
+  }
 
   monstres.push({ nom, initiative });
   localStorage.setItem("monstresLampion", JSON.stringify(monstres));

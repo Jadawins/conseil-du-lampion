@@ -443,3 +443,55 @@ body[data-theme='light'] .monstre-item input.initiative-input:focus {
   margin: 0;             /* Réinitialise les marges */
   align-self: center;    /* Centre verticalement */
 }
+
+/* 🎨 Style du nom du monstre dans la liste */
+.nom-monstre {
+  justify-self: start;
+  text-align: left;
+  padding-left: 0.5em;
+  font-size: 1.05em;
+  color: #f0e6d2;
+  font-family: 'Georgia', serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 🧾 Tableau des monstres */
+.table-monstres {
+  width: 100%;
+  max-width: 600px;
+  margin: 1em auto;
+  border-collapse: collapse;
+  font-family: 'Georgia', serif;
+  color: #f0e6d2;
+  box-shadow: 0 0 8px rgba(134, 93, 255, 0.1);
+}
+
+.table-monstres th,
+.table-monstres td {
+  border: 1px solid #444;
+  padding: 0.6em 1em;
+  text-align: center;
+}
+
+.table-monstres th {
+  background-color: #292929;
+  color: #ffe680;
+  text-shadow: 0 0 6px #865dff;
+}
+
+.table-monstres td {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+body[data-theme='light'] .table-monstres th {
+  background-color: #ececec;
+  color: #6a00ff;
+}
+
+body[data-theme='light'] .table-monstres td {
+  background-color: #ffffff;
+  color: #121212;
+  border-color: #ccc;
+}
