@@ -495,3 +495,26 @@ body[data-theme='light'] .table-monstres td {
   color: #121212;
   border-color: #ccc;
 }
+
+.plus-icone {
+  color: #15ff00; /* Couleur personnalisée */
+  margin-right: 0.5em;
+  font-size: 1.2em;
+  vertical-align: middle;
+}
+
+body[data-theme='light'] .plus-icone {
+  color: #6a00ff;
+}
+
+/* ✅ Correction prioritaire pour le bouton ➕ */
+button.btn-style .plus-icone {
+  color: #00ffcc !important;
+  font-size: 1.2em;
+  margin-right: 0.5em;
+  vertical-align: middle;
+}
+
+body[data-theme='light'] button.btn-style .plus-icone {
+  color: #6a00ff !important;
+}
