@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body data-theme="dark">
+  <!-- 🌗 Bouton de thème -->
   <div class="theme-toggle-container">
     <label class="switch">
       <input type="checkbox" id="theme-toggle" />
@@ -15,19 +16,20 @@
       </span>
     </label>
   </div>
-  
 
   <h1>🎲 Bienvenue, Maître du Jeu</h1>
 
-  <p>Nom de l'aventure :</p>
-  <input type="text" id="nom-aventure" placeholder="Ex : Le Tombeau du Dragon" required />
+  <!-- 🎯 Champ de texte stylisé -->
+  <div class="input-wrapper">
+    <span class="input-icon">🪄</span>
+    <input type="text" id="nom-aventure" placeholder="Nom de l'aventure" required />
+  </div>
 
-  <br />
   <button id="btn-creer-session" class="btn-style">🧙 Créer la session</button>
 
   <p id="message"></p>
 
-    <script src="js/theme.js"></script>
+  <script src="js/theme.js"></script>
   <script>
     document.getElementById("btn-creer-session").addEventListener("click", async () => {
       const nomAventure = document.getElementById("nom-aventure").value.trim();
