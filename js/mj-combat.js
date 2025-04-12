@@ -28,11 +28,10 @@ function afficherListeTemporaire() {
     const div = document.createElement("div");
     div.className = "monstre-item";
     div.innerHTML = `
-      <span><strong>${m.nom}</strong> – ⚔️ 
-        <input type="number" value="${m.initiative}" data-index="${index}" class="initiative-input" />
-      </span>
-      <button class="btn-danger" data-suppr="${index}">🗑️</button>
-    `;
+      <span class="nom-monstre"><strong>${m.nom}</strong></span>
+      <input type="number" value="${m.initiative}" data-index="${index}" class="initiative-input" />
+    <button class="btn-danger" data-suppr="${index}">🗑️</button>
+`   ;
     listeMonstresDiv.appendChild(div);
   });
 
@@ -84,6 +83,12 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
   const nom = document.getElementById("nom-monstre").value.trim();
   const initiative = parseInt(document.getElementById("initiative-monstre").value);
+  // Vérifie si le nom existe déjà
+const existeDeja = monstres.some(monstre => monstre.nom.toLowerCase() === nom.toLowerCase());
+if (existeDeja) {
+  alert("⚠️ Un monstre avec ce nom existe déjà !");
+  return;
+}
   if (!nom || isNaN(initiative)) return;
 
   monstres.push({ nom, initiative });
