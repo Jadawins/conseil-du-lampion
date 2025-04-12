@@ -6,6 +6,13 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <div class="theme-toggle-container">
+    <label class="switch">
+      <input type="checkbox" id="theme-toggle" />
+      <span class="slider round"></span>
+    </label>
+  </div>
+
   <h1>🧝 Interface Joueur – Le Conseil du Lampion</h1>
 
   <!-- Étape 1 : rejoindre une session -->
@@ -13,8 +20,8 @@
     <p>Entrez votre pseudo et le nom de la session pour rejoindre la partie.</p>
     <input type="text" id="pseudo" placeholder="Votre pseudo" required />
     <input type="text" id="sessionName" placeholder="Nom de la session" required />
-    <button onclick="rejoindreSession()">Rejoindre la session</button>
-    <p id="confirmation" style="color: lightgreen;"></p>
+    <button class="btn-style" onclick="rejoindreSession()">Rejoindre la session</button>
+    <p id="confirmation"></p>
   </div>
 
   <!-- Étape 2 : envoi de l’initiative -->
@@ -22,7 +29,7 @@
     <p>Entrez votre initiative. Le MJ déclenchera le début du combat !</p>
     <form id="form-joueur">
       <input type="number" id="init-joueur" placeholder="Votre initiative" required />
-      <button type="submit">Envoyer</button>
+      <button type="submit" class="btn-style">Envoyer</button>
     </form>
   </div>
 
@@ -32,6 +39,7 @@
     <li>En attente du MJ...</li>
   </ul>
 
+  <script src="js/theme.js"></script>
   <script src="js/joueur.js"></script>
 </body>
 </html>

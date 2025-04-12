@@ -45,21 +45,26 @@ formJoueur.addEventListener("submit", async (e) => {
   const pseudo = localStorage.getItem("pseudoLampion");
   const sessionName = localStorage.getItem("sessionLampion");
 
-  if (!pseudo || !sessionName) {
-    ordreJoueurUl.innerHTML = "<li>Erreur : session non trouvée.</li>";
+  if (!pseudo || !sessionName || isNaN(initiative)) {
+    ordreJoueurUl.innerHTML = "<li>Erreur : informations incomplètes.</li>";
     return;
   }
 
-  // Optionnel : tu pourrais créer une API dédiée pour envoyer l’initiative
+  // Stockage local (sera utilisé uniquement côté joueur)
   const joueur = {
     nom: pseudo,
     initiative: initiative
   };
 
   const joueursActuels = JSON.parse(localStorage.getItem("joueursLampion")) || [];
-  joueursActuels.push(joueur);
-  localStorage.setItem("joueursLampion", JSON.stringify(joueursActuels));
+  const index = joueursActuels.findIndex(j => j.nom === pseudo);
+  if (index >= 0) {
+    joueursActuels[index] = joueur; // mise à jour
+  } else {
+    joueursActuels.push(joueur);
+  }
 
+  localStorage.setItem("joueursLampion", JSON.stringify(joueursActuels));
   ordreJoueurUl.innerHTML = "<li>Initiative envoyée ! Attendez le MJ.</li>";
   formJoueur.reset();
 });
@@ -83,3 +88,8 @@ function afficherOrdre() {
 
 // 🔁 Mise à jour régulière (toutes les 2 sec)
 setInterval(afficherOrdre, 2000);
+
+// 🌙 Mode sombre clair auto
+if (localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark");
+}

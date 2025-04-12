@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Combat – Le Conseil du Lampion</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
@@ -9,21 +10,35 @@
   <h1 id="titre-aventure">⚔️ Aventure</h1>
   <p id="session-id-display"></p>
 
+  <!-- 🌗 Toggle thème clair/sombre -->
+  <div id="theme-toggle-container">
+    <label class="theme-switch">
+      <input type="checkbox" id="theme-toggle">
+      <span class="slider"></span>
+    </label>
+    <span id="theme-label">Mode Sombre</span>
+  </div>
+
+  <!-- ➕ Ajouter un monstre -->
   <form id="form-combat">
     <input type="text" id="nom" placeholder="Nom du monstre" required />
     <input type="number" id="initiative" placeholder="Initiative" required />
-    <button type="submit">Ajouter au combat</button>
+    <button type="submit" class="btn-style">Ajouter au combat</button>
   </form>
 
+  <!-- 📜 Ordre d'initiative -->
   <h2 id="ordre-titre" style="display:none;">📜 Ordre d'initiative</h2>
   <ul id="ordre"></ul>
 
+  <!-- 🛠️ Actions -->
   <div class="button-container">
-    <button id="lancer">🔥 Lancer le combat</button>
+    <button id="lancer" class="btn-style">🔥 Lancer le combat</button>
     <button id="reset" class="btn-danger">🔄 Réinitialiser</button>
     <a href="mj.html" class="button">🏠 Accueil</a>
   </div>
 
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
   <script src="js/mj-combat.js"></script>
 </body>
 </html>

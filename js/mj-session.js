@@ -9,6 +9,7 @@ const btnDemarrer = document.getElementById("btn-demarrer");
 
 const joueursAffiches = new Set();
 
+// 🎯 Initialisation
 function init() {
   if (titreEl) titreEl.textContent = `⚔️ ${nomAventure}`;
   if (sessionIdEl) sessionIdEl.textContent = `🆔 Session ID : ${sessionId}`;
@@ -20,9 +21,11 @@ function init() {
     });
   }
 
-  setInterval(verifierJoueurs, 3000); // ⏱️ Rafraîchit toutes les 3 sec
+  // ⏱️ Rafraîchit toutes les 3 secondes
+  setInterval(verifierJoueurs, 3000);
 }
 
+// 🧙 Vérifie les joueurs ayant rejoint
 async function verifierJoueurs() {
   if (!sessionId) return;
 
@@ -36,8 +39,7 @@ async function verifierJoueurs() {
         if (!joueursAffiches.has(joueur.pseudo)) {
           const li = document.createElement("li");
           li.textContent = `🧝 ${joueur.pseudo} a rejoint la partie.`;
-          li.style.color = "#aaffaa";
-          li.style.fontWeight = "bold";
+          li.classList.add("log-joueur");
           logJoueursUl.appendChild(li);
           joueursAffiches.add(joueur.pseudo);
         }
