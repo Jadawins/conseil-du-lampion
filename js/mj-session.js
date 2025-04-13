@@ -6,13 +6,13 @@ const nomAventure = urlParams.get("nomAventure");
 // 🔹 Mise à jour du titre de l'aventure avec l'icône du dé 20
 const titreAventure = document.getElementById("titre-aventure");
 if (titreAventure && nomAventure) {
-  titreAventure.innerHTML = `<img src="assets/img/d20.png" class="title-icon" alt="d20"> ${nomAventure}`;
+  titreAventure.textContent = nomAventure;
 }
 
 // 🏷️ Affichage de l'ID de session dans l'en-tête
 const sessionIdDisplay = document.getElementById("session-id-display");
 if (sessionIdDisplay && sessionId) {
-  sessionIdDisplay.textContent = `🄐 Session ID : ${sessionId}`;
+  sessionIdDisplay.textContent = `Session ID : ${sessionId}`;
 }
 
 // 🧝‍♂️ Journal des joueurs connectés à la session
