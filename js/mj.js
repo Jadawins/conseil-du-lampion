@@ -1,3 +1,4 @@
+// ⚙️ mj.js – version corrigée avec gestion d’erreur JSON robuste
 const btnCreerSession = document.getElementById("btn-creer-session");
 
 btnCreerSession.addEventListener("click", async () => {
@@ -18,19 +19,25 @@ btnCreerSession.addEventListener("click", async () => {
       body: JSON.stringify({ nomAventure }) // ✅ Envoi dans le corps
     });
 
-    const data = await response.json();
+    // 🔍 Gestion intelligente des erreurs (texte ou JSON)
+    const isJson = response.headers.get("content-type")?.includes("application/json");
+    const data = isJson ? await response.json() : await response.text();
 
-    if (!response.ok || !data.sessionId) {
-      throw new Error("Réponse API invalide");
+    if (!response.ok) {
+      throw new Error(isJson ? (data.error || JSON.stringify(data)) : data);
     }
 
-    // ✅ Sauvegarde optionnelle
+    if (!data.sessionId) {
+      throw new Error("Réponse API invalide (sessionId manquant)");
+    }
+
+    // ✅ Sauvegarde minimale
     localStorage.setItem("sessionId", data.sessionId);
 
-    // ✅ Redirection avec l'ID uniquement (le nom sera récupéré via GetSession)
+    // ✅ Redirection vers la session MJ (le nom sera récupéré depuis GetSession)
     window.location.href = `mj-session.html?sessionId=${data.sessionId}`;
   } catch (error) {
-    console.error("❌ Erreur de communication avec l’API :", error);
-    messageEl.textContent = "❌ Impossible de contacter l’API.";
+    console.error("❌ Erreur API :", error);
+    messageEl.textContent = "❌ " + error.message;
   }
 });
