@@ -21,7 +21,7 @@ form.addEventListener("submit", async (e) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        sessionName: sessionId,
+        sessionId: sessionId, // ✅ le bon nom !
         pseudo: pseudo
       })
     });
