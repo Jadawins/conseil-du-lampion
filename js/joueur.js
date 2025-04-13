@@ -30,7 +30,7 @@ form.addEventListener("submit", async (e) => {
       // Affichage du message de bienvenue et masquage du formulaire
       form.style.display = "none";
       instruction.style.display = "none";
-      titre.innerHTML = `<img src=\"assets/img/d20.png\" class=\"title-icon\" alt=\"d20\"> Bienvenue ${pseudo} <img src=\"assets/img/d20.png\" class=\"title-icon\" alt=\"d20\">`;
+      titre.innerHTML = `<img src="assets/img/d20.png" class="title-icon" alt="d20"> Bienvenue ${pseudo} <img src="assets/img/d20.png" class="title-icon" alt="d20">`;
 
       messageAccueil.innerHTML = `⏳ Merci d'avoir rejoint l'aventure "${nomAventure}". Veuillez patienter jusqu'à ce que le MJ démarre la session...`;
       messageAccueil.style.display = "block";
