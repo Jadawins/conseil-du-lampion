@@ -1,112 +1,41 @@
-// 🌙 Gestion du thème clair/sombre
-if (localStorage.getItem("theme") === "light") {
-  document.body.setAttribute("data-theme", "light");
-} else {
-  document.body.setAttribute("data-theme", "dark");
-}
+// ✅ joueur.js – gestion de l'entrée joueur
 
-const formJoueur = document.getElementById("form-joueur");
-const ordreJoueurUl = document.getElementById("ordre-joueur");
+// Récupération des éléments du DOM
+const form = document.getElementById("join-form");
+const messageAccueil = document.getElementById("message-accueil");
+const instruction = document.getElementById("instruction");
+const titre = document.getElementById("titre-principal");
 
-// ➕ Rejoindre une session via API
-async function rejoindreSession() {
-  const pseudo = document.getElementById("pseudo").value.trim();
-  const sessionId = document.getElementById("sessionName").value.trim(); // correspond bien à l'ID
-
-  if (!pseudo || !sessionId) {
-    document.getElementById("confirmation").textContent = "❌ Pseudo et ID de session requis.";
-    return;
-  }
-
-  try {
-    const body = {
-      sessionName: sessionId,
-      pseudo: pseudo
-    };
-
-    const response = await fetch("https://lampion-api.azurewebsites.net/api/JoinSession", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      localStorage.setItem("pseudoLampion", pseudo);
-      localStorage.setItem("sessionLampion", sessionId);
-
-      // 👋 Masquer formulaire et afficher message d'accueil personnalisé
-      document.getElementById("rejoindre-session").style.display = "none";
-      document.getElementById("initiative-section").style.display = "block";
-
-      document.getElementById("message-bienvenue").textContent = `Merci ${pseudo} d’avoir rejoint l’aventure "${data.nomAventure}" !`;
-      document.getElementById("message-accueil").style.display = "block";
-
-    } else {
-      document.getElementById("confirmation").textContent = data.message || "❌ Erreur lors de l'inscription.";
-    }
-
-  } catch (error) {
-    console.error("Erreur d’envoi :", error);
-    document.getElementById("confirmation").textContent = "❌ Impossible de contacter l’API.";
-  }
-}
-
-// ➕ Envoyer son initiative
-formJoueur.addEventListener("submit", async (e) => {
+// Lors de la soumission du formulaire
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const initiative = parseInt(document.getElementById("init-joueur").value);
-  const pseudo = localStorage.getItem("pseudoLampion");
-  const sessionId = localStorage.getItem("sessionLampion");
+  const pseudo = document.getElementById("pseudo").value.trim();
+  const sessionId = document.getElementById("sessionId").value.trim();
 
-  if (!pseudo || !sessionId || isNaN(initiative)) {
-    ordreJoueurUl.innerHTML = "<li>❌ Informations manquantes.</li>";
-    return;
-  }
-
-  const body = {
-    sessionName: sessionId,
-    pseudo: pseudo,
-    initiative: initiative
-  };
+  if (!pseudo || !sessionId) return;
 
   try {
-    const response = await fetch("https://lampion-api.azurewebsites.net/api/JoinSession", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    });
+    const url = `https://lampion-api.azurewebsites.net/api/JoinSession/${sessionId}?pseudo=${encodeURIComponent(pseudo)}`;
+    const response = await fetch(url, { method: "POST" });
 
     if (response.ok) {
-      ordreJoueurUl.innerHTML = `<li>🎲 Initiative enregistrée ! En attente du MJ...</li>`;
-      formJoueur.reset();
+      // Affichage du message de bienvenue et masquage du formulaire
+      form.style.display = "none";
+      instruction.style.display = "none";
+      titre.textContent = `Bienvenue ${pseudo}`;
+
+      messageAccueil.innerHTML = `⏳ Merci d'avoir rejoint l'aventure. Veuillez patienter jusqu'à ce que le MJ démarre la session...`;
+      messageAccueil.style.display = "block";
+
+      // Stockage en local pour la suite
+      localStorage.setItem("pseudo", pseudo);
+      localStorage.setItem("sessionId", sessionId);
     } else {
-      ordreJoueurUl.innerHTML = "<li>❌ Erreur lors de l’envoi de l’initiative.</li>";
+      alert("Erreur lors de l'inscription à la session. Veuillez vérifier l'ID.");
     }
   } catch (err) {
-    console.error("Erreur lors de l’envoi :", err);
-    ordreJoueurUl.innerHTML = "<li>❌ Erreur réseau.</li>";
+    console.error("Erreur réseau :", err);
+    alert("Impossible de rejoindre la session. Problème de connexion.");
   }
 });
-
-// 📜 Affichage régulier de l’ordre (quand disponible)
-function afficherOrdre() {
-  const ordre = JSON.parse(localStorage.getItem("ordreFinal"));
-  ordreJoueurUl.innerHTML = "";
-
-  if (!ordre) {
-    ordreJoueurUl.innerHTML = "<li>⏳ En attente du MJ...</li>";
-    return;
-  }
-
-  ordre.forEach((p) => {
-    const li = document.createElement("li");
-    li.textContent = `${p.nom} – Initiative : ${p.initiative}`;
-    ordreJoueurUl.appendChild(li);
-  });
-}
-
-// 🔁 Rafraîchissement toutes les 2 secondes
-setInterval(afficherOrdre, 2000);
