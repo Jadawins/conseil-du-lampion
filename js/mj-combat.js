@@ -3,6 +3,10 @@ const urlParams = new URLSearchParams(window.location.search);
 const sessionId = urlParams.get("sessionId");
 const nomAventure = urlParams.get("nomAventure");
 
+const joueursKey = `joueursLampion-${sessionId}`;
+const monstresKey = `monstresLampion-${sessionId}`;
+const ordreKey = `ordreFinal-${sessionId}`;
+
 document.getElementById("titre-aventure").textContent = `⚔️ ${nomAventure}`;
 document.getElementById("session-id-display").textContent = `🆔 Session ID : ${sessionId}`;
 
@@ -21,12 +25,12 @@ const editConfirm = document.getElementById("edit-confirm");
 const editCancel = document.getElementById("edit-cancel");
 let monstreIndexAModifier = null;
 
-let monstres = JSON.parse(localStorage.getItem("monstresLampion")) || [];
+let monstres = JSON.parse(localStorage.getItem(monstresKey)) || [];
 let joueursAffiches = new Set();
 let combatLance = false;
 
 function afficherListeTemporaire() {
-  monstres = JSON.parse(localStorage.getItem("monstresLampion")) || [];
+  monstres = JSON.parse(localStorage.getItem(monstresKey)) || [];
   listeMonstresDiv.innerHTML = "";
   listeJoueursDiv.innerHTML = "";
 
@@ -71,7 +75,7 @@ function afficherListeTemporaire() {
     deleteBtn.className = "btn-danger icon-only";
     deleteBtn.addEventListener("click", () => {
       monstres.splice(index, 1);
-      localStorage.setItem("monstresLampion", JSON.stringify(monstres));
+      localStorage.setItem(monstresKey, JSON.stringify(monstres));
       afficherListeTemporaire();
     });
     tdAction.appendChild(deleteBtn);
@@ -86,8 +90,7 @@ function afficherListeTemporaire() {
   tableMonstres.appendChild(tbodyM);
   listeMonstresDiv.appendChild(tableMonstres);
 
-  // 🎲 Affichage du tableau des joueurs
-  const joueurs = JSON.parse(localStorage.getItem("joueursLampion")) || [];
+  const joueurs = JSON.parse(localStorage.getItem(joueursKey)) || [];
   if (joueurs.length > 0) {
     const tableJoueurs = document.createElement("table");
     tableJoueurs.className = "table-monstres";
@@ -127,7 +130,7 @@ editConfirm.addEventListener("click", () => {
       nom: newName,
       initiative: newInit
     };
-    localStorage.setItem("monstresLampion", JSON.stringify(monstres));
+    localStorage.setItem(monstresKey, JSON.stringify(monstres));
     afficherListeTemporaire();
     editModal.classList.add("hidden");
     monstreIndexAModifier = null;
@@ -140,7 +143,7 @@ editCancel.addEventListener("click", () => {
 
 function afficherOrdre() {
   ordreUl.innerHTML = "";
-  const joueurs = JSON.parse(localStorage.getItem("joueursLampion")) || [];
+  const joueurs = JSON.parse(localStorage.getItem(joueursKey)) || [];
   const total = [...monstres, ...joueurs.filter(j => j.initiative > 0)];
   total.sort((a, b) => b.initiative - a.initiative);
 
@@ -164,7 +167,7 @@ form.addEventListener("submit", (e) => {
   }
 
   monstres.push({ nom, initiative });
-  localStorage.setItem("monstresLampion", JSON.stringify(monstres));
+  localStorage.setItem(monstresKey, JSON.stringify(monstres));
   form.reset();
   if (!combatLance) afficherListeTemporaire();
 });
@@ -172,9 +175,9 @@ form.addEventListener("submit", (e) => {
 resetBtn.addEventListener("click", () => {
   if (confirm("❗ Réinitialiser tous les monstres et joueurs ?")) {
     monstres = [];
-    localStorage.removeItem("monstresLampion");
-    localStorage.removeItem("joueursLampion");
-    localStorage.removeItem("ordreFinal");
+    localStorage.removeItem(monstresKey);
+    localStorage.removeItem(joueursKey);
+    localStorage.removeItem(ordreKey);
     combatLance = false;
     ordreUl.innerHTML = "";
     ordreTitre.style.display = "none";
@@ -186,10 +189,10 @@ resetBtn.addEventListener("click", () => {
 });
 
 lancerBtn.addEventListener("click", () => {
-  const joueurs = JSON.parse(localStorage.getItem("joueursLampion")) || [];
+  const joueurs = JSON.parse(localStorage.getItem(joueursKey)) || [];
   const total = [...monstres, ...joueurs.filter(j => j.initiative > 0)];
   total.sort((a, b) => b.initiative - a.initiative);
-  localStorage.setItem("ordreFinal", JSON.stringify(total));
+  localStorage.setItem(ordreKey, JSON.stringify(total));
 
   ordreTitre.style.display = "block";
   document.getElementById("zone-liste-temporaire").style.display = "none";
@@ -205,17 +208,16 @@ async function verifierNouveauxJoueurs() {
     const data = await response.json();
 
     if (data?.joueurs) {
-      const joueursActuels = JSON.parse(localStorage.getItem("joueursLampion")) || [];
+      const joueursActuels = JSON.parse(localStorage.getItem(joueursKey)) || [];
 
       data.joueurs.forEach((joueur) => {
-        const existeDeja = joueursActuels.some(j => j.nom === joueur.pseudo);
-        if (!existeDeja) {
+        if (!joueursAffiches.has(joueur.pseudo)) {
           joueursAffiches.add(joueur.pseudo);
           joueursActuels.push({ nom: joueur.pseudo, initiative: 0 });
         }
       });
 
-      localStorage.setItem("joueursLampion", JSON.stringify(joueursActuels));
+      localStorage.setItem(joueursKey, JSON.stringify(joueursActuels));
       if (!combatLance) afficherListeTemporaire();
     }
   } catch (err) {
