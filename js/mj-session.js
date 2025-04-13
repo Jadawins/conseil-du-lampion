@@ -53,3 +53,11 @@ async function verifierJoueurs() {
 }
 
 setInterval(verifierJoueurs, 3000);
+
+const btnDemarrerCombat = document.getElementById("btn-demarrer-combat");
+
+if (btnDemarrerCombat && sessionId) {
+  btnDemarrerCombat.addEventListener("click", () => {
+    window.location.href = `mj-combat.html?sessionId=${sessionId}`;
+  });
+}
