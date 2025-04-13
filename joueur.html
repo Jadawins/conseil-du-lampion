@@ -1,48 +1,55 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Joueur – Le Conseil du Lampion</title>
-    <link rel="stylesheet" href="css/theme.css" />
-    <link rel="stylesheet" href="css/ui.css" />
-  </head>
 
-  <body data-theme="dark">
-    <!-- 🌗 Toggle clair/sombre -->
-    <div class="theme-toggle-container">
-      <span class="theme-icon moon">🌙</span>
-      <label class="switch">
-        <input type="checkbox" id="theme-toggle" />
-        <span class="slider"></span>
-      </label>
-      <span class="theme-icon sun">🌞</span>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🧝 Joueur – Le Conseil du Lampion</title>
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/ui.css" />
+</head>
 
-    <main>
-      <p id="instruction-text">Entrez votre pseudo et l'ID de session pour rejoindre la partie.</p>
+<body>
+  <div class="theme-toggle-container">
+    <span class="theme-icon sun">🌞</span>
+    <label class="switch">
+      <input type="checkbox" id="theme-toggle" />
+      <span class="slider"></span>
+    </label>
+    <span class="theme-icon moon">🌙</span>
+  </div>
 
-      <!-- 🧝 Formulaire pour rejoindre la session -->
-      <div id="rejoindre-session">
-        <input type="text" id="pseudo" placeholder="Votre pseudo" required />
-        <input type="text" id="sessionName" placeholder="ID de session" required />
-        <button onclick="rejoindreSession()" class="btn-style">🎲 Rejoindre</button>
-      </div>
+  <main>
+    <h1><img src="assets/img/d20.png" class="title-icon" alt="d20" /> Interface Joueur</h1>
 
+    <section id="rejoindre-session">
+      <p>Entrez votre pseudo et l'identifiant de la session :</p>
+      <input type="text" id="pseudo" placeholder="Votre pseudo" required />
+      <input type="text" id="sessionName" placeholder="ID de session" required />
+      <button onclick="rejoindreSession()" class="btn-style">Rejoindre</button>
+      
       <!-- ✅ Message de confirmation -->
       <p id="confirmation" style="margin-top: 1em; font-size: 1.2em;"></p>
 
-      <!-- 📥 Section Initiative (cachée au début) -->
-      <div id="initiative-section" style="display: none; margin-top: 2em;">
-        <form id="form-joueur">
-          <input type="number" id="init-joueur" placeholder="Votre initiative" required />
-          <button class="btn-style">📥 Valider</button>
-        </form>
-        <ul id="ordre-joueur" style="margin-top: 1em;"></ul>
+      <!-- 👋 Message d’accueil après connexion -->
+      <div id="message-accueil" style="display: none; margin-top: 2em;">
+        <h2 id="message-bienvenue" style="font-size: 1.4em; color: #FFD700;"></h2>
+        <p style="font-size: 1.1em;">⏳ Attendez que le MJ lance la session...</p>
       </div>
-    </main>
+    </section>
 
-    <script src="js/theme.js"></script>
-    <script src="js/joueur.js"></script>
-  </body>
+    <section id="initiative-section" style="display: none;">
+      <form id="form-joueur">
+        <input type="number" id="init-joueur" placeholder="Votre initiative" required />
+        <button type="submit" class="btn-style">Envoyer</button>
+      </form>
+    </section>
+
+    <ul id="ordre-joueur"></ul>
+  </main>
+
+  <script src="js/theme.js"></script>
+  <script src="js/joueur.js"></script>
+</body>
+
 </html>

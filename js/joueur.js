@@ -19,7 +19,6 @@ async function rejoindreSession() {
   }
 
   try {
-    // ✅ Formatté comme attendu par la function Azure
     const body = {
       sessionName: sessionId,
       pseudo: pseudo
@@ -37,9 +36,13 @@ async function rejoindreSession() {
       localStorage.setItem("pseudoLampion", pseudo);
       localStorage.setItem("sessionLampion", sessionId);
 
-      document.getElementById("confirmation").textContent = `Bienvenue ${pseudo} !`;
+      // 👋 Masquer formulaire et afficher message d'accueil personnalisé
       document.getElementById("rejoindre-session").style.display = "none";
       document.getElementById("initiative-section").style.display = "block";
+
+      document.getElementById("message-bienvenue").textContent = `Merci ${pseudo} d’avoir rejoint l’aventure "${data.nomAventure}" !`;
+      document.getElementById("message-accueil").style.display = "block";
+
     } else {
       document.getElementById("confirmation").textContent = data.message || "❌ Erreur lors de l'inscription.";
     }
