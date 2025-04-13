@@ -16,7 +16,7 @@
     }
   </script>
 
-  <!-- 🌗 Toggle thème clair/sombre -->
+  <!-- 🌗 Toggle clair/sombre -->
   <div class="theme-toggle-container">
     <span class="theme-icon sun">🌞</span>
     <label class="switch">
@@ -27,20 +27,20 @@
   </div>
 
   <main>
-    <!-- 🎲 Titre avec icône -->
+    <!-- 🎲 Titre avec nom d'aventure -->
     <h1>
-      <img src="assets/img/d20.png" class="title-icon" alt="Dé 20" />
-      Session MJ – <span id="titre-session">Le Conseil du Lampion</span>
+      <img src="assets/img/de20.png" class="title-icon" alt="Dé 20" />
+      <span id="titre-aventure"></span>
     </h1>
 
-    <!-- 🔢 ID de session -->
-    <h2>ID de la session : <span id="session-id"></span></h2>
+    <!-- 🔢 ID de la session -->
+    <h2><span id="session-id-display"></span></h2>
 
     <!-- 👥 Journal des joueurs -->
     <h2>🎭 Journal des joueurs</h2>
     <ul id="log-joueurs"></ul>
 
-    <!-- 🚀 Lancer combat -->
+    <!-- 🚀 Bouton démarrer -->
     <button id="btn-demarrer-combat" class="btn-style">🚀 Démarrer la session</button>
   </main>
 
