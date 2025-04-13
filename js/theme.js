@@ -1,37 +1,28 @@
-// theme.js
 document.addEventListener("DOMContentLoaded", () => {
-  const toggle = document.getElementById("theme-toggle");
-  const body = document.body;
-
+  const themeToggle = document.getElementById("theme-toggle");
   const moonIcon = document.querySelector(".icon-moon");
   const sunIcon = document.querySelector(".icon-sun");
 
-  // Appliquer le thème sauvegardé au chargement
   const savedTheme = localStorage.getItem("theme") || "dark";
-  body.setAttribute("data-theme", savedTheme);
-  if (toggle) toggle.checked = savedTheme === "light";
+  document.body.setAttribute("data-theme", savedTheme);
 
-  // Appliquer visuellement les bonnes icônes
-  if (savedTheme === "light") {
-    moonIcon.style.opacity = "0";
-    sunIcon.style.opacity = "1";
-  } else {
-    moonIcon.style.opacity = "1";
-    sunIcon.style.opacity = "0";
-  }
+  if (themeToggle) {
+    themeToggle.checked = savedTheme === "light";
 
-  toggle.addEventListener("change", () => {
-    const theme = toggle.checked ? "light" : "dark";
-    body.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-
-    // Mettre à jour les icônes en fonction du thème
-    if (theme === "light") {
-      moonIcon.style.opacity = "0";
-      sunIcon.style.opacity = "1";
-    } else {
-      moonIcon.style.opacity = "1";
-      sunIcon.style.opacity = "0";
+    if (moonIcon && sunIcon) {
+      moonIcon.style.opacity = savedTheme === "light" ? "0" : "1";
+      sunIcon.style.opacity = savedTheme === "light" ? "1" : "0";
     }
-  });
+
+    themeToggle.addEventListener("change", () => {
+      const theme = themeToggle.checked ? "light" : "dark";
+      document.body.setAttribute("data-theme", theme);
+      localStorage.setItem("theme", theme);
+
+      if (moonIcon && sunIcon) {
+        moonIcon.style.opacity = theme === "light" ? "0" : "1";
+        sunIcon.style.opacity = theme === "light" ? "1" : "0";
+      }
+    });
+  }
 });

@@ -1,3 +1,10 @@
+// 🌙 Mode sombre / clair automatique avec data-theme
+if (localStorage.getItem("theme") === "light") {
+  document.body.setAttribute("data-theme", "light");
+} else {
+  document.body.setAttribute("data-theme", "dark");
+}
+
 const formJoueur = document.getElementById("form-joueur");
 const ordreJoueurUl = document.getElementById("ordre-joueur");
 
@@ -88,8 +95,3 @@ function afficherOrdre() {
 
 // 🔁 Mise à jour régulière (toutes les 2 sec)
 setInterval(afficherOrdre, 2000);
-
-// 🌙 Mode sombre clair auto
-if (localStorage.getItem("theme") === "dark") {
-  document.body.classList.add("dark");
-}

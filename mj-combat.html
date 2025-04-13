@@ -4,61 +4,62 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Combat – Le Conseil du Lampion</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/ui.css" />
 </head>
 <body data-theme="dark">
-  <h1 id="titre-aventure">⚔️ Aventure</h1>
-  <p id="session-id-display"></p>
-
-  <!-- 🌗 Toggle thème clair/sombre -->
+  <!-- 🌗 Bouton thème -->
   <div class="theme-toggle-container">
+    <span class="theme-icon sun">🌞</span>
     <label class="switch">
       <input type="checkbox" id="theme-toggle" />
-      <span class="slider">
-        <span class="icon-moon">🌙</span>
-        <span class="icon-sun">🌞</span>
-      </span>
+      <span class="slider"></span>
     </label>
-  </div>
-  
-
-  <!-- 🔮 Ajouter un monstre -->
-<form id="form-combat">
-  <div class="input-row">
-    <input type="text" id="nom-monstre" placeholder="👹 Nom du monstre" required />
-    <input type="number" id="initiative-monstre" placeholder="⚔️ Initiative" required />
-  </div>
-  <button type="submit" class="btn-style">
-     Ajouter au combat
-  </button>
-</form>
-
-<!-- 🎲 Liste temporaire -->
-<div id="zone-liste-temporaire">
-  <!-- Monstres -->
-  <h2>👹 Monstres à combattre</h2>
-  
-  <div id="liste-monstres" class="temp-list"></div>
-
-  <!-- Joueurs -->
-  <h2>🧝 Joueurs dans la partie</h2>
-  <div id="liste-joueurs" class="temp-list"></div>
-</div>
-
-
-<!-- 📜 Ordre d'initiative -->
-  <h2 id="ordre-titre" style="display:none;">📜 Ordre d'initiative</h2>
-  <ul id="ordre"></ul>
-
-<!-- 🛠️ Actions -->
-  <div class="button-container">
-    <button id="lancer" class="btn-style">🔥 Lancer le combat</button>
-    <button id="reset" class="btn-reset">🔄 Réinitialiser</button>
-    <a href="mj.html" class="btn-style">🏠 Accueil</a>
+    <span class="theme-icon moon">🌙</span>
   </div>
 
-<!-- Scripts -->
+  <!-- 🎯 CONTENU CENTRALISÉ -->
+  <main>
+    <!-- 🎲 Titre -->
+    <h1>
+      <img src="assets/img/d20.png" alt="Dé 20" class="title-icon" />
+      ⚔️ Aventure
+    </h1>
+
+    <!-- 🆔 ID session -->
+    <p id="session-id-display"></p>
+
+    <!-- 🔮 Formulaire -->
+    <form id="form-combat">
+      <div class="input-row">
+        <input type="text" id="nom-monstre" placeholder="👹 Nom du monstre" required />
+        <input type="number" id="initiative-monstre" placeholder="⚔️ Initiative" required />
+        <button type="submit" class="btn-style">Ajouter au combat</button>
+      </div>
+    </form>
+
+    <!-- 📋 Listes -->
+    <div id="zone-liste-temporaire">
+      <h2>👹 Monstres à combattre</h2>
+      <div id="liste-monstres" class="temp-list"></div>
+
+      <h2>🧝 Joueurs dans la partie</h2>
+      <div id="liste-joueurs" class="temp-list"></div>
+    </div>
+
+    <!-- 🧮 Ordre d'initiative -->
+    <h2 id="ordre-titre" style="display:none;">📜 Ordre d'initiative</h2>
+    <ul id="ordre"></ul>
+
+    <!-- ⚙️ Boutons -->
+    <div class="button-container">
+      <button id="lancer" class="btn-style">🔥 Lancer le combat</button>
+      <button id="reset" class="btn-reset">🔄 Réinitialiser</button>
+      <a href="mj.html" class="btn-style">🏠 Accueil</a>
+    </div>
+  </main>
+
+  <!-- Scripts -->
   <script src="js/theme.js"></script>
   <script src="js/mj-combat.js"></script>
 </body>
-</html>

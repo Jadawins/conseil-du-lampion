@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <title>Accueil – Le Conseil du Lampion</title>
-  <link rel="stylesheet" href="css/style.css" />
-</head>
-<body data-theme="dark">
-  <div class="theme-toggle-container">
-    <label class="switch">
-      <input type="checkbox" id="theme-toggle" />
-      <span class="slider">
-        <span class="icon-moon">🌙</span>
-        <span class="icon-sun">🌞</span>
-      </span>
-    </label>
-  </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Le Conseil du Lampion</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/ui.css" />
+  </head>
+  <body data-theme="dark">
+    <div class="theme-toggle-container">
+      <span class="theme-icon sun">🌞</span>
+      <label class="switch">
+        <input type="checkbox" id="theme-toggle" />
+        <span class="slider"></span>
+      </label>
+      <span class="theme-icon moon">🌙</span>
+    </div>
 
-  <h1>🕯️ Le Conseil du Lampion</h1>
+    <main>
+      <h1>
+        <img src="assets/img/d20.png" alt="Dé 20" class="title-icon" />
+        Le Conseil du Lampion
+      </h1>
+      <div class="button-group">
+        <a href="mj.html" class="btn-style">👑 Maître du Jeu</a>
+        <a href="joueur.html" class="btn-style">🧝 Joueur</a>
+      </div>
+    </main>
 
-  <div class="button-container">
-    <a href="mj.html" class="btn-style">👑 Maître du Jeu</a>
-    <a href="joueur.html" class="btn-style">🧝 Joueur</a>
-  </div>
-
-  <script src="js/theme.js"></script>
-</body>
+    <script src="js/theme.js"></script>
+  </body>
 </html>

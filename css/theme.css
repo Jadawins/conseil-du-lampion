@@ -1,0 +1,175 @@
+/* =============================================================
+   🌙 THÈME SOMBRE : Styles spécifiques au mode sombre
+   ============================================================= */
+
+   body[data-theme="dark"] {
+    background: url("../assets/img/fond-bibliotheque-sombre.png") no-repeat center center fixed;
+    background-size: cover;
+    background-color: #141414; /* Couleur de secours */
+    color: #f9f9f9;
+    font-family: 'Georgia', serif;
+    padding: 2em;
+  }
+  
+  body[data-theme="dark"] h1,
+  body[data-theme="dark"] h2,
+  body[data-theme="dark"] li,
+  body[data-theme="dark"] p,
+  body[data-theme="dark"] span,
+  body[data-theme="dark"] label {
+    color: #FFD700;
+    text-shadow: 0 0 5px #f5e960;
+  }
+  
+  
+  
+  /* =============================================================
+     ☀️ THÈME CLAIR : Styles spécifiques au mode clair
+     ============================================================= */
+  
+  body[data-theme="light"] {
+    background: url("../assets/img/fond-bibliotheque-clair.png") no-repeat center center fixed;
+    background-size: cover;
+    background-color: #ffffff; /* Couleur de secours */
+    color: #2b0040;
+    font-family: 'Georgia', serif;
+    padding: 2em;
+  }
+  
+  body[data-theme="light"] h1,
+  body[data-theme="light"] h2,
+  body[data-theme="light"] li,
+  body[data-theme="light"] p,
+  body[data-theme="light"] span,
+  body[data-theme="light"] label {
+    color: #2b0040;
+    text-shadow: 0 0 3px #ffffff;
+  }
+  
+  body[data-theme="light"] input::placeholder {
+    color: #4b2c6a;
+    text-shadow: 0 0 2px #ffffff;
+  }
+  
+  /* =============================================================
+     ✨ TRANSITIONS FLUIDES ENTRE THÈMES
+     ============================================================= */
+
+  body {
+      transition: background-color 0.6s ease, color 0.6s ease, background-image 0.6s ease;
+    }
+    
+    h1, h2, p, span, li, label {
+      transition: color 0.6s ease, text-shadow 0.6s ease;
+    }
+    
+    .title-icon {
+      transition: filter 0.6s ease, box-shadow 0.6s ease;
+    }
+  
+  /* =============================================================
+     🎯 CENTRAGE GLOBAL ET TITRE
+     ============================================================= */
+  
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3rem;
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  h1 {
+    font-size: 2.5em;
+    margin-bottom: 1em;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+  }
+  
+  .title-icon {
+    width: 64px;
+    height: auto;
+    margin-right: 0.6em;
+    vertical-align: middle;
+    border-radius: 8px;
+    animation: rotate-slow 10s linear infinite;
+  }
+  
+  @keyframes rotate-slow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* =============================================================
+     🌗 TOGGLE CLAIR/SOMBRE
+     ============================================================= */
+  
+  .theme-toggle-container {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+  
+  .theme-icon {
+    font-size: 1rem;
+    transition: opacity 0.3s ease;
+  }
+  
+  .sun { opacity: 0; }
+  .moon { opacity: 1; }
+  
+  body[data-theme="light"] .sun { opacity: 1; }
+  body[data-theme="light"] .moon { opacity: 0.2; }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: #ccc;
+    border-radius: 34px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: background-color 0.3s ease;
+  }
+  
+  .slider::before {
+    content: "";
+    position: absolute;
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+  
+  .switch input:checked + .slider {
+    background-color: #865dff;
+  }
+  
+  .switch input:checked + .slider::before {
+    transform: translateX(24px);
+  }
+  

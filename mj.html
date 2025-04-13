@@ -3,31 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <title>Créer une session – Le Conseil du Lampion</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/ui.css" />
 </head>
 <body data-theme="dark">
+  <script>
+    if (localStorage.getItem("theme") === "light") {
+      document.body.setAttribute("data-theme", "light");
+    } else {
+      document.body.setAttribute("data-theme", "dark");
+    }
+  </script>
+
   <!-- 🌗 Bouton de thème -->
   <div class="theme-toggle-container">
+    <span class="theme-icon sun">🌞</span>
     <label class="switch">
       <input type="checkbox" id="theme-toggle" />
-      <span class="slider">
-        <span class="icon-moon">🌙</span>
-        <span class="icon-sun">🌞</span>
-      </span>
+      <span class="slider"></span>
     </label>
+    <span class="theme-icon moon">🌙</span>
   </div>
 
-  <h1>🎲 Bienvenue, Maître du Jeu</h1>
+  <main>
+    <!-- 🎲 Titre avec icône animée -->
+    <h1>
+      <img src="assets/img/d20.png" class="title-icon" alt="Dé 20" />
+      Bienvenue, Maître du Jeu
+    </h1>
 
-  <!-- 🎯 Champ de texte stylisé -->
-  <div class="input-wrapper">
-    <span class="input-icon">🪄</span>
-    <input type="text" id="nom-aventure" placeholder="Nom de l'aventure" required />
-  </div>
+    <!-- 🎯 Champ pour nom d'aventure -->
+    <div class="input-wrapper">
+      <span class="input-icon">🪄</span>
+      <input type="text" id="nom-aventure" class="input-style" placeholder="Nom de l'aventure" required />
+    </div>
 
-  <button id="btn-creer-session" class="btn-style">🧙 Créer la session</button>
-
-  <p id="message"></p>
+    <button id="btn-creer-session" class="btn-style">🧙 Créer la session</button>
+    <p id="message" class="instructions"></p>
+  </main>
 
   <script src="js/theme.js"></script>
   <script>
