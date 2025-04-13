@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test API Lampion</title>
+</head>
+<body>
+  <h1>Créer une session</h1>
+  <input type="text" id="nom-aventure" placeholder="Nom de l'aventure">
+  <button id="btn">Créer</button>
+  <pre id="resultat"></pre>
+
+  <script>
+    document.getElementById("btn").addEventListener("click", async () => {
+      const nomAventure = document.getElementById("nom-aventure").value.trim();
+      const output = document.getElementById("resultat");
+
+      console.log("📤 Envoi avec :", nomAventure);
+
+      try {
+        const response = await fetch("https://lampion-api.azurewebsites.net/api/CreateSession", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          mode: "cors",
+          body: JSON.stringify({ nomAventure })
+        });
+
+        const raw = await response.text();
+        output.textContent = raw;
+        console.log("📥 Réponse API :", raw);
+      } catch (err) {
+        output.textContent = "❌ Erreur : " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
