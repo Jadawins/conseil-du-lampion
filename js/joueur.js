@@ -11,7 +11,7 @@ const ordreJoueurUl = document.getElementById("ordre-joueur");
 // ➕ Rejoindre une session via API
 async function rejoindreSession() {
   const pseudo = document.getElementById("pseudo").value.trim();
-  const sessionId = document.getElementById("sessionName").value.trim(); // en réalité c'est bien l'ID
+  const sessionId = document.getElementById("sessionName").value.trim(); // correspond bien à l'ID
 
   if (!pseudo || !sessionId) {
     document.getElementById("confirmation").textContent = "❌ Pseudo et ID de session requis.";
@@ -19,12 +19,10 @@ async function rejoindreSession() {
   }
 
   try {
+    // ✅ Formatté comme attendu par la function Azure
     const body = {
-      sessionId,
-      joueur: {
-        pseudo,
-        initiative: 0
-      }
+      sessionName: sessionId,
+      pseudo: pseudo
     };
 
     const response = await fetch("https://lampion-api.azurewebsites.net/api/JoinSession", {
@@ -36,11 +34,9 @@ async function rejoindreSession() {
     const data = await response.json();
 
     if (response.ok) {
-      // ✅ Stockage local pour utilisation ultérieure
       localStorage.setItem("pseudoLampion", pseudo);
       localStorage.setItem("sessionLampion", sessionId);
 
-      // 🎉 Confirmation & passage à l'étape suivante
       document.getElementById("confirmation").textContent = `Bienvenue ${pseudo} !`;
       document.getElementById("rejoindre-session").style.display = "none";
       document.getElementById("initiative-section").style.display = "block";
@@ -68,11 +64,9 @@ formJoueur.addEventListener("submit", async (e) => {
   }
 
   const body = {
-    sessionId,
-    joueur: {
-      pseudo,
-      initiative
-    }
+    sessionName: sessionId,
+    pseudo: pseudo,
+    initiative: initiative
   };
 
   try {
