@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Initiative Joueur – Le Conseil du Lampion</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/ui.css" />
+  </head>
+  <body data-theme="dark">
+    <div class="theme-toggle-container">
+      <span class="theme-icon moon">🌙</span>
+      <label class="switch">
+        <input type="checkbox" id="theme-toggle" />
+        <span class="slider"></span>
+      </label>
+      <span class="theme-icon sun">🌞</span>
+    </div>
+
+    <main>
+        <h1>
+            <img src="assets/img/d20.png" class="title-icon" alt="Dé 20" />
+            Veuillez saisir votre initiative !
+          </h1>
+      
+        <form id="initiative-form">
+          <input type="number" id="initiative-input" placeholder="Votre initiative" required />
+          <button class="btn-style">Valider</button>
+        </form>
+      
+        <p id="confirmation-message" style="display:none; font-size: 1.2em; color: #FFD700; margin-top: 1em;">
+          ✅ Initiative enregistrée ! En attente du MJ...
+        </p>
+      </main>
+      
+
+    <script src="js/theme.js"></script>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const sessionId = urlParams.get('sessionId');
+      const pseudo = urlParams.get('pseudo');
+
+      document.getElementById('initiative-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const initiative = parseInt(document.getElementById('initiative-input').value);
+        if (isNaN(initiative)) return;
+
+        try {
+          await fetch(`https://lampion-api.azurewebsites.net/api/SetInitiative`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sessionId,
+              pseudo,
+              initiative
+            })
+          });
+
+          document.getElementById('initiative-form').style.display = 'none';
+          document.getElementById('initiative-title').style.display = 'none';
+          document.getElementById('confirmation-message').style.display = 'block';
+        } catch (err) {
+          alert("Erreur lors de l'enregistrement de l'initiative.");
+        }
+      });
+    </script>
+  </body>
+</html>

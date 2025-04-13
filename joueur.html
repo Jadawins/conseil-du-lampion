@@ -1,51 +1,51 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <title>Joueur – Le Conseil du Lampion</title>
-  <link rel="stylesheet" href="css/theme.css" />
-  <link rel="stylesheet" href="css/ui.css" />
-</head>
-<body data-theme="dark">
-  <!-- 🌗 Toggle clair/sombre -->
-  <div class="theme-toggle-container">
-    <span class="theme-icon sun">🌞</span>
-    <label class="switch">
-      <input type="checkbox" id="theme-toggle" />
-      <span class="slider"></span>
-    </label>
-    <span class="theme-icon moon">🌙</span>
-  </div>
-
-  <main>
-    <h1>🧝 Interface Joueur – Le Conseil du Lampion</h1>
-
-    <!-- Étape 1 : rejoindre une session -->
-    <div id="rejoindre-session">
-      <p>Entrez votre pseudo et le nom de la session pour rejoindre la partie.</p>
-      <input type="text" id="pseudo" class="input-style" placeholder="Votre pseudo" required />
-      <input type="text" id="sessionName" class="input-style" placeholder="Nom de la session" required />
-      <button class="btn-style" onclick="rejoindreSession()">Rejoindre la session</button>
-      <p id="confirmation"></p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Joueur – Le Conseil du Lampion</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/ui.css" />
+  </head>
+  <body data-theme="dark">
+    <div class="theme-toggle-container">
+      <span class="theme-icon moon">🌙</span>
+      <label class="switch">
+        <input type="checkbox" id="theme-toggle" />
+        <span class="slider"></span>
+      </label>
+      <span class="theme-icon sun">🌞</span>
     </div>
 
-    <!-- Étape 2 : envoi de l’initiative -->
-    <div id="initiative-section" style="display:none;">
-      <p>Entrez votre initiative. Le MJ déclenchera le début du combat !</p>
-      <form id="form-joueur">
-        <input type="number" id="init-joueur" class="input-style" placeholder="Votre initiative" required />
-        <button type="submit" class="btn-style">Envoyer</button>
+    <main>
+      <p id="instruction-text">Entrez votre pseudo et l'id de la session pour rejoindre la partie.</p>
+
+      <form id="join-form" class="form-inline">
+        <input type="text" id="pseudo" placeholder="Votre pseudo" required />
+        <input type="text" id="session-id" placeholder="ID de session" required />
+        <button type="submit" class="btn-style">🎲 Rejoindre la session</button>
       </form>
-    </div>
 
-    <!-- Affichage de l’ordre -->
-    <h2>📜 Ordre de combat (après validation du MJ)</h2>
-    <ul id="ordre-joueur">
-      <li>En attente du MJ...</li>
-    </ul>
-  </main>
+      <h2 id="player-greeting" style="display:none; margin-top: 1em; color: #FFD700;"></h2>
+      <p id="waiting-message" style="display:none; margin-top: 1em; font-size: 1.2em; color: #FFD700;">⏳ Veuillez attendre que le MJ démarre la session...</p>
+    </main>
 
-  <script src="js/theme.js"></script>
-  <script src="js/joueur.js"></script>
-</body>
+    <script src="js/theme.js"></script>
+    <script>
+      document.getElementById('join-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const pseudo = document.getElementById('pseudo').value.trim();
+
+        document.getElementById('join-form').style.display = 'none';
+        document.getElementById('instruction-text').style.display = 'none';
+        const title = document.getElementById('welcome-title');
+        if (title) title.style.display = 'none';
+
+        document.getElementById('player-greeting').style.display = 'block';
+        document.getElementById('player-greeting').textContent = `Bienvenue ${pseudo} !`;
+        document.getElementById('waiting-message').style.display = 'block';
+      });
+    </script>
+    <script src="js/joueur.js"></script>
+  </body>
 </html>
