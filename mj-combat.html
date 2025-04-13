@@ -59,7 +59,21 @@
     </div>
   </main>
 
+  <!-- 🪄 Modale de modification -->
+  <div id="edit-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Modifier le monstre</h3>
+      <input type="text" id="edit-nom" placeholder="Nom du monstre">
+      <input type="number" id="edit-initiative" placeholder="Initiative">
+      <div class="modal-buttons">
+        <button id="edit-confirm" class="btn-style">✅ Valider</button>
+        <button id="edit-cancel" class="btn-danger">❌ Annuler</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="js/theme.js"></script>
   <script src="js/mj-combat.js"></script>
 </body>
+</html>
