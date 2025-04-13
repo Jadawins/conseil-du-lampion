@@ -1,14 +1,29 @@
-// 📜 Paramètres d'URL
+// 🔄 mj-combat.js – nom de l'aventure via API
 const urlParams = new URLSearchParams(window.location.search);
-const sessionId = urlParams.get("sessionId");
-const nomAventure = urlParams.get("nomAventure");
+const sessionId = urlParams.get("sessionId") || localStorage.getItem("sessionId");
+
+async function recupererSessionDepuisAPI(sessionId) {
+  try {
+    const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+    if (response.ok) {
+      return await response.json();
+    }
+  } catch (e) {
+    console.error("Erreur API:", e);
+  }
+  return null;
+}
+
+(async () => {
+  const data = await recupererSessionDepuisAPI(sessionId);
+  const nomAventure = data?.nomAventure || "(Aventure mystère)";
+  document.getElementById("titre-aventure").textContent = `⚔️ ${nomAventure}`;
+  document.getElementById("session-id-display").textContent = `🆔 Session ID : ${sessionId}`;
+})();
 
 const joueursKey = `joueursLampion-${sessionId}`;
 const monstresKey = `monstresLampion-${sessionId}`;
 const ordreKey = `ordreFinal-${sessionId}`;
-
-document.getElementById("titre-aventure").textContent = `⚔️ ${nomAventure}`;
-document.getElementById("session-id-display").textContent = `🆔 Session ID : ${sessionId}`;
 
 const form = document.getElementById("form-combat");
 const listeMonstresDiv = document.getElementById("liste-monstres");

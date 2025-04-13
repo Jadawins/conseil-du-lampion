@@ -11,7 +11,11 @@ btnCreerSession.addEventListener("click", async () => {
 
   try {
     const response = await fetch("https://lampion-api.azurewebsites.net/api/CreateSession", {
-      method: "POST"
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ nomAventure }) // ✅ On envoie le nom d'aventure dans le corps
     });
 
     const data = await response.json();
@@ -20,10 +24,11 @@ btnCreerSession.addEventListener("click", async () => {
       throw new Error("Réponse API invalide");
     }
 
+    // On stocke uniquement l’ID, le nom sera récupéré plus tard via GetSession
     localStorage.setItem("sessionId", data.sessionId);
-    localStorage.setItem("nomAventure", nomAventure);
 
-    window.location.href = `mj-session.html?sessionId=${data.sessionId}&nomAventure=${encodeURIComponent(nomAventure)}`;
+    // Redirection vers mj-session.html avec uniquement le sessionId
+    window.location.href = `mj-session.html?sessionId=${data.sessionId}`;
   } catch (error) {
     console.error("❌ Erreur de communication avec l’API :", error);
     messageEl.textContent = "❌ Impossible de créer la session. Vérifie ta connexion ou l’API.";
