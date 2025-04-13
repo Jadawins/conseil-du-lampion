@@ -1,12 +1,10 @@
 // ✅ joueur.js – gestion de l'entrée joueur
 
-// Récupération des éléments du DOM
 const form = document.getElementById("join-form");
 const messageAccueil = document.getElementById("message-accueil");
 const instruction = document.querySelector(".instruction");
 const titre = document.getElementById("titre-principal");
 
-// Lors de la soumission du formulaire
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -16,36 +14,36 @@ form.addEventListener("submit", async (e) => {
   if (!pseudo || !sessionId) return;
 
   try {
-    // Nettoyage du pseudo pour éviter les erreurs (remplace les caractères spéciaux)
-    const cleanedPseudo = encodeURIComponent(pseudo.replace(/[^a-zA-Z0-9-_]/g, "_"));
-    const url = `https://lampion-api.azurewebsites.net/api/JoinSession/${sessionId}?pseudo=${cleanedPseudo}`;
-    console.log("Requête vers :", url);
-
-    // Envoi de la demande d'inscription à la session (POST)
-    const response = await fetch(url, { method: "POST" });
+    // 🔄 Nouvelle méthode : POST avec JSON body
+    const response = await fetch("https://lampion-api.azurewebsites.net/api/JoinSession", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        sessionName: sessionId,
+        pseudo: pseudo
+      })
+    });
 
     if (response.ok) {
-      // Stockage en local pour la suite
+      // Sauvegarde locale
       localStorage.setItem("pseudo", pseudo);
       localStorage.setItem("sessionId", sessionId);
 
-      // Attendre un court délai pour s'assurer que le fichier est bien dispo
-      await new Promise(resolve => setTimeout(resolve, 800)); // 800ms
-
-      // Requête GET pour récupérer le nom de l’aventure
-      const sessionUrl = `https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`;
-      const sessionRes = await fetch(sessionUrl);
-      let nomAventure = "(Nom inconnu)";
+      // 🎯 Récupération du nom d’aventure
+      await new Promise(resolve => setTimeout(resolve, 800));
+      let nomAventure = "(Aventure mystère)";
+      const sessionRes = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
       if (sessionRes.ok) {
-        const sessionData = await sessionRes.json();
-        nomAventure = sessionData?.nomAventure || nomAventure;
+        const data = await sessionRes.json();
+        nomAventure = data?.nomAventure || nomAventure;
       }
 
-      // Affichage du message et mise à jour UI
+      // 🎉 Affichage personnalisé
       form.style.display = "none";
       instruction.style.display = "none";
       titre.innerHTML = `<img src="assets/img/d20.png" class="title-icon" alt="d20"> Bienvenue ${pseudo} <img src="assets/img/d20.png" class="title-icon" alt="d20">`;
-
       messageAccueil.innerHTML = `⏳ Merci d'avoir rejoint l'aventure "<strong>${nomAventure}</strong>". Veuillez patienter jusqu'à ce que le MJ démarre la session...`;
       messageAccueil.style.display = "block";
     } else {
@@ -56,3 +54,4 @@ form.addEventListener("submit", async (e) => {
     alert("Impossible de rejoindre la session. Problème de connexion.");
   }
 });
+
