@@ -16,28 +16,34 @@ form.addEventListener("submit", async (e) => {
   if (!pseudo || !sessionId) return;
 
   try {
-    // Tentative avec une majuscule dans l'URL pour correspondre à la fonction Azure
+    // Envoi de la demande d'inscription à la session (POST)
     const url = `https://lampion-api.azurewebsites.net/api/JoinSession/${sessionId}?pseudo=${encodeURIComponent(pseudo)}`;
     const response = await fetch(url, { method: "POST" });
 
     if (response.ok) {
-      // Récupérer les infos de la session pour afficher le nom de l'aventure
+      // Stockage en local pour la suite
+      localStorage.setItem("pseudo", pseudo);
+      localStorage.setItem("sessionId", sessionId);
+
+      // Attendre un court délai pour s'assurer que le fichier est bien dispo
+      await new Promise(resolve => setTimeout(resolve, 800)); // 800ms
+
+      // Requête GET pour récupérer le nom de l’aventure
       const sessionUrl = `https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`;
       const sessionRes = await fetch(sessionUrl);
-      const sessionData = await sessionRes.json();
-      const nomAventure = sessionData?.nomAventure || "(Nom inconnu)";
+      let nomAventure = "(Nom inconnu)";
+      if (sessionRes.ok) {
+        const sessionData = await sessionRes.json();
+        nomAventure = sessionData?.nomAventure || nomAventure;
+      }
 
-      // Affichage du message de bienvenue et masquage du formulaire
+      // Affichage du message et mise à jour UI
       form.style.display = "none";
       instruction.style.display = "none";
       titre.innerHTML = `<img src="assets/img/d20.png" class="title-icon" alt="d20"> Bienvenue ${pseudo} <img src="assets/img/d20.png" class="title-icon" alt="d20">`;
 
-      messageAccueil.innerHTML = `⏳ Merci d'avoir rejoint l'aventure "${nomAventure}". Veuillez patienter jusqu'à ce que le MJ démarre la session...`;
+      messageAccueil.innerHTML = `⏳ Merci d'avoir rejoint l'aventure "<strong>${nomAventure}</strong>". Veuillez patienter jusqu'à ce que le MJ démarre la session...`;
       messageAccueil.style.display = "block";
-
-      // Stockage en local pour la suite
-      localStorage.setItem("pseudo", pseudo);
-      localStorage.setItem("sessionId", sessionId);
     } else {
       alert("Erreur lors de l'inscription à la session. Veuillez vérifier l'ID.");
     }
