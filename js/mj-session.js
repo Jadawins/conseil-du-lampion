@@ -5,7 +5,7 @@ const nomAventure = urlParams.get("nomAventure");
 const titreEl = document.getElementById("titre-aventure");
 const sessionIdEl = document.getElementById("session-id-display");
 const logJoueursUl = document.getElementById("log-joueurs");
-const btnDemarrer = document.getElementById("btn-demarrer");
+const btnDemarrer = document.getElementById("btn-demarrer-combat");
 
 const joueursAffiches = new Set();
 
