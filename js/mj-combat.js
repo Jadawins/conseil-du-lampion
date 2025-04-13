@@ -17,7 +17,7 @@ async function recupererSessionDepuisAPI(sessionId) {
 (async () => {
   const data = await recupererSessionDepuisAPI(sessionId);
   const nomAventure = data?.nomAventure || "(Aventure mystère)";
-  document.getElementById("titre-aventure").textContent = `⚔️ ${nomAventure}`;
+  document.getElementById("titre-aventure").textContent = `${nomAventure}`;
   document.getElementById("session-id-display").textContent = `🆔 Session ID : ${sessionId}`;
 })();
 
@@ -74,11 +74,14 @@ function afficherListeTemporaire() {
     const tdEdit = document.createElement("td");
     const editBtn = document.createElement("button");
     editBtn.textContent = "🪄";
-    editBtn.className = "btn-style icon-only";
-    editBtn.addEventListener("click", () => {
-      monstreIndexAModifier = index;
-      editNomInput.value = m.nom;
-      editInitInput.value = m.initiative;
+    editBtn.className = "icon-btn";
+    editBtn.title = "Modifier ce monstre";
+    editBtn.dataset.index = index;
+    editBtn.addEventListener("click", (e) => {
+      const idx = e.currentTarget.dataset.index;
+      monstreIndexAModifier = idx;
+      editNomInput.value = monstres[idx].nom;
+      editInitInput.value = monstres[idx].initiative;
       editModal.classList.remove("hidden");
     });
     tdEdit.appendChild(editBtn);
@@ -86,7 +89,8 @@ function afficherListeTemporaire() {
     const tdAction = document.createElement("td");
     const deleteBtn = document.createElement("button");
     deleteBtn.innerHTML = "🔥";
-    deleteBtn.className = "btn-danger icon-only";
+    deleteBtn.className = "icon-btn";
+    deleteBtn.title = "Supprimer ce monstre";
     deleteBtn.addEventListener("click", () => {
       monstres.splice(index, 1);
       localStorage.setItem(monstresKey, JSON.stringify(monstres));
