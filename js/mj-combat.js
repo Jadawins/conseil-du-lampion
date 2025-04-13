@@ -208,7 +208,8 @@ async function verifierNouveauxJoueurs() {
       const joueursActuels = JSON.parse(localStorage.getItem("joueursLampion")) || [];
 
       data.joueurs.forEach((joueur) => {
-        if (!joueursAffiches.has(joueur.pseudo)) {
+        const existeDeja = joueursActuels.some(j => j.nom === joueur.pseudo);
+        if (!existeDeja) {
           joueursAffiches.add(joueur.pseudo);
           joueursActuels.push({ nom: joueur.pseudo, initiative: 0 });
         }
