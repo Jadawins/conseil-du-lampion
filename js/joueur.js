@@ -16,10 +16,22 @@ form.addEventListener("submit", async (e) => {
   if (!pseudo || !sessionId) return;
 
   try {
-    const url = `https://lampion-api.azurewebsites.net/api/JoinSession/${sessionId}?pseudo=${encodeURIComponent(pseudo)}`;
-    const response = await fetch(url, { method: "POST" });
+    const url = `https://lampion-api.azurewebsites.net/api/JoinSession`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        sessionName: sessionId,
+        pseudo: pseudo
+      })
+    });
 
     if (response.ok) {
+      const data = await response.json();
+
       // Affichage du message de bienvenue et masquage du formulaire
       form.style.display = "none";
       instruction.style.display = "none";
@@ -32,7 +44,8 @@ form.addEventListener("submit", async (e) => {
       localStorage.setItem("pseudo", pseudo);
       localStorage.setItem("sessionId", sessionId);
     } else {
-      alert("Erreur lors de l'inscription à la session. Veuillez vérifier l'ID.");
+      const err = await response.json();
+      alert(err.message || "Erreur lors de l'inscription à la session. Veuillez vérifier l'ID.");
     }
   } catch (err) {
     console.error("Erreur réseau :", err);
