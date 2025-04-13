@@ -26,7 +26,6 @@ const editCancel = document.getElementById("edit-cancel");
 let monstreIndexAModifier = null;
 
 let monstres = JSON.parse(localStorage.getItem(monstresKey)) || [];
-let joueursAffiches = new Set();
 let combatLance = false;
 
 function afficherListeTemporaire() {
@@ -184,7 +183,6 @@ resetBtn.addEventListener("click", () => {
     document.getElementById("zone-liste-temporaire").style.display = "block";
     listeMonstresDiv.innerHTML = "";
     listeJoueursDiv.innerHTML = "";
-    joueursAffiches.clear();
   }
 });
 
@@ -211,8 +209,8 @@ async function verifierNouveauxJoueurs() {
       const joueursActuels = JSON.parse(localStorage.getItem(joueursKey)) || [];
 
       data.joueurs.forEach((joueur) => {
-        if (!joueursAffiches.has(joueur.pseudo)) {
-          joueursAffiches.add(joueur.pseudo);
+        const existeDeja = joueursActuels.some(j => j.nom === joueur.pseudo);
+        if (!existeDeja) {
           joueursActuels.push({ nom: joueur.pseudo, initiative: 0 });
         }
       });
