@@ -8,7 +8,16 @@
   <link rel="stylesheet" href="css/ui.css" />
 </head>
 <body data-theme="dark">
-  <!-- 🌗 Bouton thème -->
+  <!-- 🌗 Appliquer le thème au chargement -->
+  <script>
+    if (localStorage.getItem("theme") === "light") {
+      document.body.setAttribute("data-theme", "light");
+    } else {
+      document.body.setAttribute("data-theme", "dark");
+    }
+  </script>
+
+  <!-- 🌙 Toggle thème -->
   <div class="theme-toggle-container">
     <span class="theme-icon sun">🌞</span>
     <label class="switch">
@@ -20,16 +29,13 @@
 
   <!-- 🎯 CONTENU CENTRALISÉ -->
   <main>
-    <!-- 🎲 Titre -->
     <h1>
       <img src="assets/img/d20.png" class="title-icon" alt="Dé 20" />
       <span id="titre-aventure"></span>
     </h1>
 
-    <!-- 🆔 ID session -->
     <p id="session-id-display"></p>
 
-    <!-- 🔮 Formulaire -->
     <form id="form-combat">
       <div class="input-row">
         <input type="text" id="nom-monstre" placeholder="👹 Nom du monstre" required />
@@ -38,7 +44,6 @@
       </div>
     </form>
 
-    <!-- 📋 Listes -->
     <div id="zone-liste-temporaire">
       <h2>👹 Monstres à combattre</h2>
       <div id="liste-monstres" class="temp-list"></div>
@@ -47,11 +52,9 @@
       <div id="liste-joueurs" class="temp-list"></div>
     </div>
 
-    <!-- 🧮 Ordre d'initiative -->
     <h2 id="ordre-titre" style="display:none;">📜 Ordre d'initiative</h2>
     <ul id="ordre"></ul>
 
-    <!-- ⚙️ Boutons -->
     <div class="button-container">
       <button id="lancer" class="btn-style">🔥 Lancer le combat</button>
       <button id="reset" class="btn-reset">🔄 Réinitialiser</button>
@@ -59,7 +62,6 @@
     </div>
   </main>
 
-  <!-- 🪄 Modale de modification -->
   <div id="edit-modal" class="modal hidden">
     <div class="modal-content">
       <h3>Modifier le monstre</h3>

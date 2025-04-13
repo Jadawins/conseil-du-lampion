@@ -1,25 +1,44 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MJ - Créer une session</title>
-  <link rel="stylesheet" href="css/theme.css">
-  <link rel="stylesheet" href="css/ui.css">
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/ui.css" />
 </head>
 <body data-theme="dark">
+  <!-- 🌓 Appliquer le thème dès le chargement -->
+  <script>
+    if (localStorage.getItem("theme") === "light") {
+      document.body.setAttribute("data-theme", "light");
+    } else {
+      document.body.setAttribute("data-theme", "dark");
+    }
+  </script>
+
+  <!-- 🌗 Toggle clair/sombre -->
+  <div class="theme-toggle-container">
+    <span class="theme-icon sun">🌞</span>
+    <label class="switch">
+      <input type="checkbox" id="theme-toggle" />
+      <span class="slider"></span>
+    </label>
+    <span class="theme-icon moon">🌙</span>
+  </div>
+
   <div class="container">
     <h1 class="title">Créer une session</h1>
 
     <label for="nom-aventure">Nom de l'aventure :</label>
-    <input type="text" id="nom-aventure" class="input-text" placeholder="Ex: La crypte oubliée">
+    <input type="text" id="nom-aventure" class="input-text" placeholder="Ex: La crypte oubliée" />
 
     <button id="btn-creer-session" class="btn-style violet">Créer la session</button>
     <p id="message" class="message"></p>
   </div>
 
-  <!-- ✅ Script JS externe (à placer dans js/mj-v2.js) -->
-  <script src="js/mj-v2.js"></script>
+  <!-- ✅ Scripts JS -->
   <script src="js/theme.js"></script>
+  <script src="js/mj-v2.js"></script>
 </body>
 </html>
