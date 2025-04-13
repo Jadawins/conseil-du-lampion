@@ -1,3 +1,4 @@
+// ⚙️ mj.js – version finale corrigée avec envoi JSON garanti
 const btnCreerSession = document.getElementById("btn-creer-session");
 
 btnCreerSession.addEventListener("click", async () => {
@@ -15,6 +16,7 @@ btnCreerSession.addEventListener("click", async () => {
       headers: {
         "Content-Type": "application/json"
       },
+      mode: "cors", // ✅ pour s'assurer que les headers CORS sont respectés côté navigateur
       body: JSON.stringify({ nomAventure })
     });
 
@@ -24,7 +26,7 @@ btnCreerSession.addEventListener("click", async () => {
     try {
       data = JSON.parse(rawText);
     } catch {
-      throw new Error(rawText); // pas du JSON ? Affiche le texte brut
+      throw new Error(rawText); // si ce n'est pas du JSON, on affiche le texte brut
     }
 
     if (!response.ok) {
@@ -32,7 +34,7 @@ btnCreerSession.addEventListener("click", async () => {
     }
 
     if (!data.sessionId) {
-      throw new Error("Réponse API invalide (sessionId manquant)");
+      throw new Error("Erreur lors de la création de la session (sessionId manquant).");
     }
 
     localStorage.setItem("sessionId", data.sessionId);
