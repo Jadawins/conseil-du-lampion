@@ -16,8 +16,12 @@ form.addEventListener("submit", async (e) => {
   if (!pseudo || !sessionId) return;
 
   try {
+    // Nettoyage du pseudo pour éviter les erreurs (remplace les caractères spéciaux)
+    const cleanedPseudo = encodeURIComponent(pseudo.replace(/[^a-zA-Z0-9-_]/g, "_"));
+    const url = `https://lampion-api.azurewebsites.net/api/JoinSession/${sessionId}?pseudo=${cleanedPseudo}`;
+    console.log("Requête vers :", url);
+
     // Envoi de la demande d'inscription à la session (POST)
-    const url = `https://lampion-api.azurewebsites.net/api/JoinSession/${sessionId}?pseudo=${encodeURIComponent(pseudo)}`;
     const response = await fetch(url, { method: "POST" });
 
     if (response.ok) {
