@@ -15,7 +15,7 @@ btnCreerSession.addEventListener("click", async () => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ nomAventure }) // ✅ On envoie le nom d'aventure dans le corps
+      body: JSON.stringify({ nomAventure }) // ✅ Envoi dans le corps
     });
 
     const data = await response.json();
@@ -24,13 +24,13 @@ btnCreerSession.addEventListener("click", async () => {
       throw new Error("Réponse API invalide");
     }
 
-    // On stocke uniquement l’ID, le nom sera récupéré plus tard via GetSession
+    // ✅ Sauvegarde optionnelle
     localStorage.setItem("sessionId", data.sessionId);
 
-    // Redirection vers mj-session.html avec uniquement le sessionId
+    // ✅ Redirection avec l'ID uniquement (le nom sera récupéré via GetSession)
     window.location.href = `mj-session.html?sessionId=${data.sessionId}`;
   } catch (error) {
     console.error("❌ Erreur de communication avec l’API :", error);
-    messageEl.textContent = "❌ Impossible de créer la session. Vérifie ta connexion ou l’API.";
+    messageEl.textContent = "❌ Impossible de contacter l’API.";
   }
 });
