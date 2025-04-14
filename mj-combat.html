@@ -27,12 +27,10 @@
     <span class="theme-icon moon">🌙</span>
   </div>
 
-  <!-- 🎯 CONTENU CENTRALISÉ -->
   <main>
     <h1>
       <img src="assets/img/d20.png" class="title-icon" alt="Dé 20" />
       <span id="titre-aventure"></span>
-      <img src="assets/img/d20.png" class="title-icon" alt="Dé 20" />
     </h1>
 
     <p id="session-id-display"></p>
@@ -40,6 +38,7 @@
     <form id="form-combat">
       <div class="input-row">
         <input type="text" id="nom-monstre" placeholder="👹 Nom du monstre" required />
+        <input type="number" id="pv-monstre" placeholder="❤️ PV" required />
         <input type="number" id="initiative-monstre" placeholder="⚔️ Initiative" required />
         <button type="submit" class="btn-style">Ajouter au combat</button>
       </div>
@@ -65,8 +64,9 @@
   <div id="edit-modal" class="modal hidden">
     <div class="modal-content">
       <h3>Modifier le monstre</h3>
-      <input type="text" id="edit-nom" placeholder="Nom du monstre">
-      <input type="number" id="edit-initiative" placeholder="Initiative">
+      <input type="text" id="edit-nom" placeholder="Nom du monstre" />
+      <input type="number" id="edit-pv" placeholder="PV" />
+      <input type="number" id="edit-initiative" placeholder="Initiative" />
       <div class="modal-buttons">
         <button id="edit-confirm" class="btn-style">✅ Valider</button>
         <button id="edit-cancel" class="btn-danger">❌ Annuler</button>

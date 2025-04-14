@@ -36,12 +36,53 @@ const lancerBtn = document.getElementById("lancer");
 const editModal = document.getElementById("edit-modal");
 const editNomInput = document.getElementById("edit-nom");
 const editInitInput = document.getElementById("edit-initiative");
+const editPVInput = document.getElementById("edit-pv");
 const editConfirm = document.getElementById("edit-confirm");
 const editCancel = document.getElementById("edit-cancel");
 let monstreIndexAModifier = null;
 
 let monstres = JSON.parse(localStorage.getItem(monstresKey)) || [];
 let combatLance = false;
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const nom = document.getElementById("nom-monstre").value.trim();
+  const pv = parseInt(document.getElementById("pv-monstre").value);
+  const initiative = parseInt(document.getElementById("initiative-monstre").value);
+
+  if (!nom || isNaN(pv) || isNaN(initiative)) return;
+
+  const existeDeja = monstres.some(monstre => monstre.nom.toLowerCase() === nom.toLowerCase());
+  if (existeDeja) {
+    alert("⚠️ Un monstre avec ce nom existe déjà !");
+    return;
+  }
+
+  monstres.push({ nom, pv, initiative });
+  localStorage.setItem(monstresKey, JSON.stringify(monstres));
+  form.reset();
+
+  if (!combatLance) afficherListeTemporaire();
+});
+
+editConfirm.addEventListener("click", () => {
+  const newName = editNomInput.value.trim();
+  const newInit = parseInt(editInitInput.value);
+  const newPV = parseInt(editPVInput.value);
+
+  if (newName && !isNaN(newInit) && !isNaN(newPV) && monstreIndexAModifier !== null) {
+    monstres[monstreIndexAModifier] = {
+      nom: newName,
+      initiative: newInit,
+      pv: newPV
+    };
+    localStorage.setItem(monstresKey, JSON.stringify(monstres));
+    afficherListeTemporaire();
+    editModal.classList.add("hidden");
+    monstreIndexAModifier = null;
+  }
+});
 
 function afficherListeTemporaire() {
   monstres = JSON.parse(localStorage.getItem(monstresKey)) || [];
@@ -54,6 +95,7 @@ function afficherListeTemporaire() {
   theadM.innerHTML = `
     <tr>
       <th>🧟 Monstre</th>
+      <th>❤️ PV</th>
       <th>⚔️ Initiative</th>
       <th>🪄 Modifier</th>
       <th>🔥 Supprimer</th>
@@ -67,6 +109,9 @@ function afficherListeTemporaire() {
 
     const tdNom = document.createElement("td");
     tdNom.textContent = m.nom;
+
+    const tdPV = document.createElement("td");
+    tdPV.textContent = m.pv;
 
     const tdInit = document.createElement("td");
     tdInit.textContent = m.initiative;
@@ -82,6 +127,7 @@ function afficherListeTemporaire() {
       monstreIndexAModifier = idx;
       editNomInput.value = monstres[idx].nom;
       editInitInput.value = monstres[idx].initiative;
+      editPVInput.value = monstres[idx].pv;
       editModal.classList.remove("hidden");
     });
     tdEdit.appendChild(editBtn);
@@ -99,6 +145,7 @@ function afficherListeTemporaire() {
     tdAction.appendChild(deleteBtn);
 
     tr.appendChild(tdNom);
+    tr.appendChild(tdPV);
     tr.appendChild(tdInit);
     tr.appendChild(tdEdit);
     tr.appendChild(tdAction);
