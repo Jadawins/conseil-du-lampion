@@ -223,3 +223,30 @@ body[data-theme='light'] textarea:focus {
   margin-bottom: 0.5em;
   font-size: 1.6em;
 }
+
+/* 🧾 Harmonisation des tableaux joueurs/monstres */
+.table-monstres {
+  width: 100%;
+  max-width: 700px;
+  margin: 1em auto;
+  border-collapse: collapse;
+}
+
+.table-monstres th,
+.table-monstres td {
+  padding: 0.6em 1em;
+  font-size: 1.1em;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 🌞 Amélioration visibilité en thème clair */
+body[data-theme='light'] .table-monstres th,
+body[data-theme='light'] .table-monstres td {
+  color: #2b1d38;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+body[data-theme='light'] .table-monstres th {
+  color: #4a148c;
+}
