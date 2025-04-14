@@ -31,6 +31,7 @@
     <h1>
       <img src="assets/img/d20.png" class="title-icon" alt="Dé 20" />
       <span id="titre-aventure"></span>
+      <img src="assets/img/d20.png" class="title-icon" alt="Dé 20" />
     </h1>
 
     <p id="session-id-display"></p>
@@ -45,11 +46,15 @@
     </form>
 
     <div id="zone-liste-temporaire">
-      <h2>👹 Monstres à combattre</h2>
-      <div id="liste-monstres" class="temp-list"></div>
+      <div class="table-section">
+        <h2>😈 Monstres à combattre</h2>
+        <div id="liste-monstres"></div>
+      </div>
 
-      <h2>🧝 Joueurs dans la partie</h2>
-      <div id="liste-joueurs" class="temp-list"></div>
+      <div class="table-section">
+        <h2>🧝 Joueurs dans la partie</h2>
+        <div id="liste-joueurs"></div>
+      </div>
     </div>
 
     <h2 id="ordre-titre" style="display:none;">📜 Ordre d'initiative</h2>
@@ -81,6 +86,6 @@
   <div class="bottom-nav">
     <a href="index.html" class=".btn-accueil-bottom">🏠 Accueil</a>
   </div>
-  
+
 </body>
 </html>

@@ -211,3 +211,15 @@ body[data-theme='light'] textarea:focus {
   font-size: 1.2em;
   color: #f0e6d2;
 }
+
+/* 🎨 Sections de tableaux (monstres et joueurs) */
+.table-section {
+  margin-top: 3em;
+  text-align: center;
+}
+
+.table-section h2 {
+  color: #FFD700;
+  margin-bottom: 0.5em;
+  font-size: 1.6em;
+}
