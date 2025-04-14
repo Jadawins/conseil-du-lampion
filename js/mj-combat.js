@@ -159,38 +159,48 @@ function afficherListeTemporaire() {
   tableMonstres.appendChild(tbodyM);
   listeMonstresDiv.appendChild(tableMonstres);
 
-  const joueurs = JSON.parse(localStorage.getItem(joueursKey)) || [];
-  if (joueurs.length > 0) {
-    const tableJoueurs = document.createElement("table");
-    tableJoueurs.className = "table-monstres";
-    const theadJ = document.createElement("thead");
-    theadJ.innerHTML = `
-      <tr>
-        <th>🧝 Joueur</th>
-        <th>⚔️ Initiative</th>
-      </tr>
-    `;
-    tableJoueurs.appendChild(theadJ);
-
-    const tbodyJ = document.createElement("tbody");
-    joueurs.forEach(j => {
-      const tr = document.createElement("tr");
-      const tdNom = document.createElement("td");
-      tdNom.textContent = j.nom;
-
-      const tdInit = document.createElement("td");
-      tdInit.textContent = j.initiative;
-
-      tr.appendChild(tdNom);
-      tr.appendChild(tdInit);
-      tbodyJ.appendChild(tr);
-    });
-
-    tableJoueurs.appendChild(tbodyJ);
-    listeJoueursDiv.appendChild(tableJoueurs);
-  }
+  recupererSessionDepuisAPI(sessionId).then(data => {
+    const joueurs = data?.joueurs || [];
+    if (joueurs.length > 0) {
+      const tableJoueurs = document.createElement("table");
+      tableJoueurs.className = "table-monstres";
+      const theadJ = document.createElement("thead");
+      theadJ.innerHTML = `
+        <tr>
+          <th>🧝 Joueur</th>
+          <th>⚔️ Initiative</th>
+          <th>❤️ PV</th>
+        </tr>
+      `;
+      tableJoueurs.appendChild(theadJ);
+  
+      const tbodyJ = document.createElement("tbody");
+      joueurs.forEach(j => {
+        const tr = document.createElement("tr");
+        const tdNom = document.createElement("td");
+        tdNom.textContent = j.pseudo;
+  
+        const tdInit = document.createElement("td");
+        tdInit.textContent = j.initiative || "-";
+  
+        const tdPV = document.createElement("td");
+        tdPV.textContent = j.pv || "-";
+  
+        tr.appendChild(tdNom);
+        tr.appendChild(tdInit);
+        tr.appendChild(tdPV);
+        tbodyJ.appendChild(tr);
+      });
+  
+      tableJoueurs.appendChild(tbodyJ);
+      listeJoueursDiv.appendChild(tableJoueurs);
+    }
+  });
 }
 
+  // ✅ À mettre à la toute fin du fichier :
 if (!combatLance) {
   afficherListeTemporaire();
 }
+
+ 
