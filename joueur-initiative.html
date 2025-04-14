@@ -35,7 +35,16 @@
       </h1>
 
       <form id="initiative-form">
-        <input type="number" id="initiative-input" placeholder="Votre initiative" required />
+        <div class="input-group">
+          <span>⚔️</span>
+          <input type="number" id="initiative-input" placeholder="Votre initiative" required />
+        </div>
+      
+        <div class="input-group">
+          <span>❤️‍🩹</span>
+          <input type="number" id="pv-input" placeholder="Vos points de vie (ex: 100)" required />
+        </div>
+      
         <button class="btn-style">Valider</button>
       </form>
 
@@ -49,19 +58,22 @@
       const urlParams = new URLSearchParams(window.location.search);
       const sessionId = urlParams.get('sessionId');
       const pseudo = localStorage.getItem("pseudo");
-
+    
       document.getElementById('initiative-form').addEventListener('submit', async (e) => {
         e.preventDefault();
+    
         const initiative = parseInt(document.getElementById('initiative-input').value);
-        if (isNaN(initiative)) return;
-
+        const pv = parseInt(document.getElementById('pv-input').value);
+    
+        if (isNaN(initiative) || isNaN(pv)) return;
+    
         try {
           await fetch(`https://lampion-api.azurewebsites.net/api/SetInitiative`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sessionId, pseudo, initiative })
+            body: JSON.stringify({ sessionId, pseudo, initiative, pv }) // ✅ tout est là
           });
-
+    
           document.getElementById('initiative-form').style.display = 'none';
           document.getElementById('initiative-title').style.display = 'none';
           document.getElementById('confirmation-message').style.display = 'block';

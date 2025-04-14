@@ -201,3 +201,13 @@ body[data-theme='light'] textarea:focus {
   align-items: center;
   justify-content: center;
 }
+
+/* 🧩 Groupe d’entrée avec icône */
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 1em;
+  font-size: 1.2em;
+  color: #f0e6d2;
+}
