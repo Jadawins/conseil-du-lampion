@@ -55,3 +55,18 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
+async function verifierDemarrageSession() {
+  try {
+    const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+    const data = await response.json();
+
+    if (data?.sessionActive === true) {
+      window.location.href = `joueur-initiative.html?sessionId=${sessionId}`;
+    }
+  } catch (err) {
+    console.error("Erreur lors de la vérification du démarrage :", err);
+  }
+}
+
+// 🔁 Vérifie toutes les 3 secondes si la session a démarré
+setInterval(verifierDemarrageSession, 3000);

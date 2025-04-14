@@ -57,7 +57,27 @@ setInterval(verifierJoueurs, 3000);
 const btnDemarrerCombat = document.getElementById("btn-demarrer-combat");
 
 if (btnDemarrerCombat && sessionId) {
-  btnDemarrerCombat.addEventListener("click", () => {
-    window.location.href = `mj-combat.html?sessionId=${sessionId}`;
+  btnDemarrerCombat.addEventListener("click", async () => {
+    try {
+      const response = await fetch("https://lampion-api.azurewebsites.net/api/UpdateSession", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          sessionId,
+          sessionActive: true
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de l'activation de la session.");
+      }
+
+      window.location.href = `mj-combat.html?sessionId=${sessionId}`;
+    } catch (err) {
+      console.error("❌ Erreur lors de la mise à jour de la session :", err);
+      alert("Impossible de démarrer la session.");
+    }
   });
 }

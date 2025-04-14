@@ -4,7 +4,8 @@
 /* 🎭 Boutons */
 
 /* 🔵 Boutons violets stylisés */
-.btn-style {
+.btn-style,
+.btn-accueil-bottom {
   background-color: #3b0a52;
   color: white;
   padding: 1em 2em;
@@ -19,11 +20,30 @@
   align-items: center;
   gap: 0.5em;
   text-align: center;
+  box-shadow: 0 0 15px rgba(134, 93, 255, 0.6);
 }
 
-.btn-style:hover {
+.btn-style:hover,
+.btn-accueil-bottom:hover {
   background-color: #501266;
   transform: scale(1.05);
+}
+
+/* Accueil texte sans fond mais bien visible */
+.bottom-nav a {
+  color: #ffcc00;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-decoration: none;
+  font-family: 'Georgia', serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.bottom-nav a:hover {
+  text-decoration: underline;
+  color: #ffd700;
 }
 
 /* 🔴 Boutons rouges (ex: suppression) */
@@ -45,7 +65,13 @@
   background-color: #e74c3c;
 }
 
-
+/* 🔷 Position bas de page */
+.bottom-nav {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}
 
 /* ------------------------------------------------------------------- */
 /* 📝 Champs de saisie */
@@ -107,21 +133,22 @@ body[data-theme='light'] textarea:focus {
   transform: scale(1.2);
 }
 
-/* 🪄 Fenêtre modale */
+/* ------------------------------------------------------------------- */
+/* 🪤 Fenêtre modale */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
   width: 100vw;
-  background-color: rgba(0, 0, 0, 0.6); /* fond assombri */
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-/* 🧱 Contenu centré du modal */
+/* 🪡 Contenu centré du modal */
 .modal-content {
   background-color: var(--background-color);
   padding: 2rem;
@@ -132,7 +159,6 @@ body[data-theme='light'] textarea:focus {
   animation: popup 0.2s ease-in-out;
 }
 
-/* ✨ Animation d’apparition */
 @keyframes popup {
   from {
     transform: scale(0.9);
@@ -144,12 +170,10 @@ body[data-theme='light'] textarea:focus {
   }
 }
 
-/* 🚫 Caché par défaut */
 .hidden {
   display: none !important;
 }
 
-* ✅ Style uniforme pour tous les boutons dans un modal */
 .modal-buttons .btn-style,
 .modal-buttons .btn-danger {
   display: flex;
