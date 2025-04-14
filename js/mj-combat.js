@@ -168,8 +168,8 @@ function afficherListeTemporaire() {
       theadJ.innerHTML = `
         <tr>
           <th>🧝 Joueur</th>
-          <th>⚔️ Initiative</th>
           <th>❤️ PV</th>
+          <th>⚔️ Initiative</th>
         </tr>
       `;
       tableJoueurs.appendChild(theadJ);
@@ -187,8 +187,8 @@ function afficherListeTemporaire() {
         tdPV.textContent = typeof j.pv === "number" ? j.pv : "-";
   
         tr.appendChild(tdNom);
-        tr.appendChild(tdInit);
         tr.appendChild(tdPV);
+        tr.appendChild(tdInit);
         tbodyJ.appendChild(tr);
       });
   
