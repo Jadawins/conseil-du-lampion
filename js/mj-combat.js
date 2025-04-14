@@ -84,6 +84,10 @@ editConfirm.addEventListener("click", () => {
   }
 });
 
+editCancel.addEventListener("click", () => {
+  editModal.classList.add("hidden");
+});
+
 function afficherListeTemporaire() {
   monstres = JSON.parse(localStorage.getItem(monstresKey)) || [];
   listeMonstresDiv.innerHTML = "";
