@@ -181,10 +181,10 @@ function afficherListeTemporaire() {
         tdNom.textContent = j.pseudo;
   
         const tdInit = document.createElement("td");
-        tdInit.textContent = j.initiative || "-";
+        tdInit.textContent = typeof j.initiative === "number" ? j.initiative : "-";
   
         const tdPV = document.createElement("td");
-        tdPV.textContent = j.pv || "-";
+        tdPV.textContent = typeof j.pv === "number" ? j.pv : "-";
   
         tr.appendChild(tdNom);
         tr.appendChild(tdInit);
