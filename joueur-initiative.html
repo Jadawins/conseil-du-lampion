@@ -48,7 +48,7 @@
     <script>
       const urlParams = new URLSearchParams(window.location.search);
       const sessionId = urlParams.get('sessionId');
-      const pseudo = urlParams.get('pseudo');
+      const pseudo = localStorage.getItem("pseudo");
 
       document.getElementById('initiative-form').addEventListener('submit', async (e) => {
         e.preventDefault();
