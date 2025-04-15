@@ -32,7 +32,7 @@ function afficherOrdreCombat() {
   ordreUl.innerHTML = "";
   ordreCombat.forEach((entite, index) => {
     const li = document.createElement("li");
-    li.textContent = `${entite.nom} (${entite.initiative})`;
+    li.textContent = `${entite.pseudo || entite.nom} (${entite.initiative})`;
     if (index === currentTurnIndex) {
       li.classList.add("tour-actuel");
     }
@@ -43,7 +43,7 @@ function afficherOrdreCombat() {
 function afficherTourActuel() {
   const entite = ordreCombat[currentTurnIndex];
   if (entite) {
-    messageTour.textContent = `🎯 C'est au tour de ${entite.nom} de jouer.`;
+    messageTour.textContent = `🎯 C'est au tour de ${entite.pseudo || entite.nom} de jouer.`;
 
     // Si c'est un monstre → MJ peut agir
     const estMonstre = !entite.id; // Si pas d'ID, c'est un monstre
