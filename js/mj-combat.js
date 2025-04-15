@@ -269,8 +269,10 @@ lancerBtn.addEventListener("click", async () => {
     body: JSON.stringify({
       sessionId,
       ordreTour: total,
-      indexTour: 0
+      indexTour: 0,
+      combatEnCours: true // ✅ cette ligne est bien, il faut juste ajouter une virgule avant
     })
+    
   });
   // 💬 Log de vérification
 const resText = await response.text();
