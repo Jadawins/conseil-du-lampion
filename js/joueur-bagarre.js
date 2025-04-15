@@ -21,17 +21,21 @@ async function recupererSession() {
 }
 
 function afficherEtat(pv, pvMax, joueurActif) {
-  pvAffichage.textContent = `❤️ ${pv} / ${pvMax} PV`;
-  if ((joueurActif?.pseudo || joueurActif?.nom) === pseudo) {
-    messageTour.textContent = "🗡️ C’est votre tour !";
-    actionSection.style.display = "block";
-    attenteSection.style.display = "none";
-  } else {
-    messageTour.textContent = `⏳ En attente du tour de ${joueurActif?.pseudo || joueurActif?.nom || "..."}`;
-    actionSection.style.display = "none";
-    attenteSection.style.display = "block";
+    pvAffichage.textContent = `❤️ ${pv} / ${pvMax} PV`;
+  
+    const estMonTour = (joueurActif?.pseudo || joueurActif?.nom) === pseudo;
+  
+    if (estMonTour) {
+      messageTour.textContent = "🗡️ C’est votre tour !";
+      actionSection.style.display = "block";
+      attenteSection.style.display = "none";
+    } else {
+      messageTour.textContent = `🎯 C'est au tour de ${joueurActif?.pseudo || joueurActif?.nom || "..." } de jouer.`;
+      actionSection.style.display = "none";
+      attenteSection.style.display = "block";
+    }
   }
-}
+  
 
 async function verifierTour() {
   const data = await recupererSession();
