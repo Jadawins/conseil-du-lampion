@@ -7,6 +7,38 @@ const titre = document.getElementById("titre-principal");
 
 let intervalId; // 🔁 Pour contrôler le check de session
 
+window.addEventListener("DOMContentLoaded", async () => {
+  const pseudo = localStorage.getItem("pseudo");
+  const sessionId = localStorage.getItem("sessionId");
+
+  if (pseudo && sessionId) {
+    // On cache le formulaire et affiche le message d’attente
+    form.style.display = "none";
+    instruction.style.display = "none";
+    titre.innerHTML = `<img src="assets/img/d20.png" class="title-icon" alt="d20"> Bienvenue ${pseudo} <img src="assets/img/d20.png" class="title-icon" alt="d20">`;
+
+    // Récupérer le nom d’aventure depuis l’API
+    let nomAventure = "(Aventure mystère)";
+    try {
+      const sessionRes = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+      if (sessionRes.ok) {
+        const data = await sessionRes.json();
+        nomAventure = data?.nomAventure || nomAventure;
+      }
+    } catch (e) {
+      console.error("Erreur récupération aventure après reload :", e);
+    }
+
+    messageAccueil.innerHTML = `⏳ Merci d'avoir rejoint l'aventure "<strong>${nomAventure}</strong>". Veuillez patienter jusqu'à ce que le MJ démarre la session...`;
+    messageAccueil.style.display = "block";
+
+    // ✅ Lancement unique
+    if (!intervalId) {
+      intervalId = setInterval(verifierDemarrageSession, 3000);
+    }
+  }
+});
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -25,6 +57,10 @@ form.addEventListener("submit", async (e) => {
     });
 
     if (response.ok) {
+      if (!intervalId) {
+        intervalId = setInterval(verifierDemarrageSession, 3000);
+      }
+
       localStorage.setItem("pseudo", pseudo);
       localStorage.setItem("sessionId", sessionId);
 
@@ -42,8 +78,6 @@ form.addEventListener("submit", async (e) => {
       messageAccueil.innerHTML = `⏳ Merci d'avoir rejoint l'aventure "<strong>${nomAventure}</strong>". Veuillez patienter jusqu'à ce que le MJ démarre la session...`;
       messageAccueil.style.display = "block";
 
-      // ✅ Lancement du check après inscription
-      intervalId = setInterval(verifierDemarrageSession, 3000);
     } else {
       alert("Erreur lors de l'inscription à la session. Veuillez vérifier l'ID.");
     }
