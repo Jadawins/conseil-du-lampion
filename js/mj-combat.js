@@ -111,6 +111,12 @@ editJoueurConfirm.addEventListener("click", async () => {
     initiative: newInit
   };
 
+  // ✅ Log juste avant l'envoi
+console.log("📦 Données envoyées :", JSON.stringify({
+  sessionId,
+  joueurs: data.joueurs
+}, null, 2));
+
   // ✅ Envoi au backend
   const response = await fetch("https://lampion-api.azurewebsites.net/api/UpdateSession", {
     method: "POST",
@@ -127,6 +133,7 @@ editJoueurConfirm.addEventListener("click", async () => {
   editJoueurModal.classList.add("hidden");
   afficherListeTemporaire();
 });
+  
 
 function afficherListeTemporaire() {
   monstres = JSON.parse(localStorage.getItem(monstresKey)) || [];
