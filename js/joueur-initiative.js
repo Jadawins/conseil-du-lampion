@@ -48,3 +48,20 @@ form.addEventListener('submit', async (e) => {
     alert("Erreur lors de l'enregistrement de l'initiative.");
   }
 });
+
+async function verifierDebutCombat() {
+  const sessionId = localStorage.getItem("sessionId");
+  if (!sessionId) return;
+
+  const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+  if (response.ok) {
+    const data = await response.json();
+    if (data.combatEnCours) {
+      // 🎯 Redirection vers la page de combat
+      window.location.href = `joueur-bagarre.html?sessionId=${sessionId}`;
+    }
+  }
+}
+
+// 👁️‍🗨️ Vérifie toutes les 3 secondes
+setInterval(verifierDebutCombat, 3000);
