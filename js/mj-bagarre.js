@@ -12,20 +12,21 @@ let currentTurnIndex = 0;
 let ordreCombat = [];
 
 async function fetchOrdreCombat() {
-  try {
-    const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetOrdre/${sessionId}`);
-    if (response.ok) {
-      const data = await response.json();
-      ordreCombat = data?.ordre || [];
-      afficherOrdreCombat();
-      afficherTourActuel();
-    } else {
-      console.error("Erreur récupération ordre combat");
+    try {
+      const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+      if (response.ok) {
+        const data = await response.json();
+        ordreCombat = data?.ordreTour || [];
+        currentTurnIndex = data?.indexTour || 0;
+        afficherOrdreCombat();
+        afficherTourActuel();
+      } else {
+        console.error("Erreur récupération session combat");
+      }
+    } catch (err) {
+      console.error("Erreur réseau:", err);
     }
-  } catch (err) {
-    console.error("Erreur réseau:", err);
   }
-}
 
 function afficherOrdreCombat() {
   ordreUl.innerHTML = "";
@@ -58,3 +59,5 @@ boutonPasser.addEventListener("click", () => {
 });
 
 fetchOrdreCombat();
+
+setInterval(fetchOrdreCombat, 3000);
