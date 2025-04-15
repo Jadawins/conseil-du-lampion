@@ -263,7 +263,7 @@ lancerBtn.addEventListener("click", async () => {
   localStorage.setItem("indexTour-" + sessionId, "0");
 
   // ✅ Ajout de l'envoi vers Azure
-  await fetch("https://lampion-api.azurewebsites.net/api/SetOrdre", {
+  const response = await fetch("https://lampion-api.azurewebsites.net/api/SetOrdre", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -272,6 +272,9 @@ lancerBtn.addEventListener("click", async () => {
       indexTour: 0
     })
   });
+  // 💬 Log de vérification
+const resText = await response.text();
+console.log("📨 Réponse SetOrdre :", response.status, resText);
 
   // Redirection vers mj-bagarre
   window.location.href = `mj-bagarre.html?sessionId=${sessionId}`;
