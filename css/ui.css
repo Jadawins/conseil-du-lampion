@@ -289,33 +289,35 @@ body[data-theme='light'] .table-monstres th {
 
 .table-ordre {
   width: 100%;
-  max-width: 600px;
-  margin: 1rem auto;
+  max-width: 500px;
+  margin: 1em auto;
   border-collapse: collapse;
-  font-size: 1.1em;
-  text-align: center;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-}
-
-.table-ordre th,
-.table-ordre td {
-  padding: 0.8em 1em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: 'Georgia', serif;
 }
 
 .table-ordre th {
-  background-color: #3b0a52;
+  background-color: #2e004f;
+  color: #ffdd57;
+  font-size: 1.1em;
+  padding: 0.6em;
+}
+
+.table-ordre td {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: white;
+  text-align: center;
+  padding: 0.5em;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.highlight-row {
+  background-color: rgba(255, 255, 255, 0.1);
   color: #ffd700;
   font-weight: bold;
 }
 
-.highlight-row {
-  background-color: rgba(134, 93, 255, 0.15); /* violet doux et transparent */
-  font-weight: bold;
-  border-left: 4px solid #865dff; /* petite bande violette à gauche */
-}
 
 @keyframes pulseRow {
   from {
