@@ -162,6 +162,7 @@ function afficherListeTemporaire() {
   listeMonstresDiv.appendChild(tableMonstres);
 
   recupererSessionDepuisAPI(sessionId).then(data => {
+    console.log("📦 Données reçues depuis l’API :", data);
     const joueurs = data?.joueurs || [];
     const tableJoueurs = document.createElement("table");
     tableJoueurs.className = "table-monstres";
