@@ -117,7 +117,52 @@ editJoueurConfirm.addEventListener("click", async () => {
 function afficherListeTemporaire() {
   monstres = JSON.parse(localStorage.getItem(monstresKey)) || [];
   listeMonstresDiv.innerHTML = "";
-  listeJoueursDiv.innerHTML = "";
+  function afficherJoueurs(joueurs) {
+    const tableExistante = listeJoueursDiv.querySelector("table");
+    if (!tableExistante) {
+      // Créer la table au premier affichage
+      const table = document.createElement("table");
+      table.className = "table-monstres";
+  
+      const thead = document.createElement("thead");
+      thead.innerHTML = `
+        <tr>
+          <th>🧝 Joueur</th>
+          <th>❤️ PV</th>
+          <th>⚔️ Initiative</th>
+          <th>🪄 Modifier</th>
+        </tr>
+      `;
+      table.appendChild(thead);
+  
+      const tbody = document.createElement("tbody");
+      table.appendChild(tbody);
+      listeJoueursDiv.appendChild(table);
+    }
+  
+    const tbody = listeJoueursDiv.querySelector("table tbody");
+    tbody.innerHTML = ""; // <--- uniquement le contenu, pas tout le tableau
+  
+    joueurs.forEach((j, index) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${j.pseudo}</td>
+        <td>${typeof j.pv === "number" ? j.pv : "-"}</td>
+        <td>${typeof j.initiative === "number" ? j.initiative : "-"}</td>
+        <td><button class="icon-btn" title="Modifier" data-index="${index}">🪄</button></td>
+      `;
+  
+      tr.querySelector('[title="Modifier"]').addEventListener("click", () => {
+        joueurIndexAModifier = index;
+        editJoueurNomInput.value = j.pseudo;
+        editJoueurPVInput.value = j.pv || 0;
+        editJoueurInitInput.value = j.initiative || 0;
+        editJoueurModal.classList.remove("hidden");
+      });
+  
+      tbody.appendChild(tr);
+    });
+  }
 
   const tableMonstres = document.createElement("table");
   tableMonstres.className = "table-monstres";
@@ -162,47 +207,9 @@ function afficherListeTemporaire() {
   listeMonstresDiv.appendChild(tableMonstres);
 
   recupererSessionDepuisAPI(sessionId).then(data => {
-    console.log("📦 Données reçues depuis l’API :", data);
     const joueurs = data?.joueurs || [];
-    const tableJoueurs = document.createElement("table");
-    tableJoueurs.className = "table-monstres";
-    const theadJ = document.createElement("thead");
-    theadJ.innerHTML = `
-      <tr>
-        <th>🧝 Joueur</th>
-        <th>❤️ PV</th>
-        <th>⚔️ Initiative</th>
-        <th>🪄 Modifier</th>
-      </tr>
-    `;
-    tableJoueurs.appendChild(theadJ);
-    const tbodyJ = document.createElement("tbody");
-
-    joueurs.forEach((j, index) => {
-      console.log("👤 Joueur analysé :", j);
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${j.pseudo}</td>
-        <td>${typeof j.pv === "number" ? j.pv : "-"}</td>
-        <td>${typeof j.initiative === "number" ? j.initiative : "-"}</td>
-        <td><button class="icon-btn" title="Modifier" data-index="${index}">🪄</button></td>
-        
-      `;
-
-      tr.querySelector('[title="Modifier"]').addEventListener("click", () => {
-        joueurIndexAModifier = index;
-        editJoueurNomInput.value = j.pseudo;
-        editJoueurPVInput.value = j.pv || 0;
-        editJoueurInitInput.value = j.initiative || 0;
-        editJoueurModal.classList.remove("hidden");
-      });
-
-      tbodyJ.appendChild(tr); // ✅ manquait aussi
-    }); // 👈 C'EST ICI que tu avais oublié de FERMER la fonction forEach
-
-      
-    tableJoueurs.appendChild(tbodyJ);
-    listeJoueursDiv.appendChild(tableJoueurs);
+    afficherJoueurs(joueurs);
+    
   });
 };
 
@@ -214,4 +221,4 @@ setInterval(() => {
   if (!combatLance) {
     afficherListeTemporaire();
   }
-}, 3000); // 3000 ms = 3 secondes
+}, 5000); // 5000 ms = 3 secondes
