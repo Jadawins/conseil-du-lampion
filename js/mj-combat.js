@@ -258,12 +258,25 @@ lancerBtn.addEventListener("click", async () => {
     return b.initiative - a.initiative;
   });
 
+  // Stockage local
   localStorage.setItem(ordreKey, JSON.stringify(total));
   localStorage.setItem("indexTour-" + sessionId, "0");
+
+  // ✅ Ajout de l'envoi vers Azure
+  await fetch("https://lampion-api.azurewebsites.net/api/SetOrdre", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      sessionId,
+      ordreTour: total,
+      indexTour: 0
+    })
+  });
 
   // Redirection vers mj-bagarre
   window.location.href = `mj-bagarre.html?sessionId=${sessionId}`;
 });
+
 
 if (!combatLance) {
   afficherListeTemporaire();
