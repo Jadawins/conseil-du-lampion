@@ -179,6 +179,7 @@ function afficherListeTemporaire() {
     const tbodyJ = document.createElement("tbody");
 
     joueurs.forEach((j, index) => {
+      console.log("👤 Joueur analysé :", j);
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${j.pseudo}</td>
