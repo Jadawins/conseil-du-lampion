@@ -28,17 +28,19 @@ async function fetchOrdreCombat() {
     }
   }
 
-function afficherOrdreCombat() {
-  ordreUl.innerHTML = "";
-  ordreCombat.forEach((entite, index) => {
-    const li = document.createElement("li");
-    li.textContent = `${entite.pseudo || entite.nom} (${entite.initiative})`;
-    if (index === currentTurnIndex) {
-      li.classList.add("tour-actuel");
-    }
-    ordreUl.appendChild(li);
-  });
-}
+  function afficherOrdreCombat() {
+    const tbody = document.getElementById("liste-initiative");
+    tbody.innerHTML = "";
+    ordreCombat.forEach((entite, index) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
+        <td>${entite.initiative}</td>
+      `;
+      if (index === currentTurnIndex) tr.classList.add("highlight-row");
+      tbody.appendChild(tr);
+    });
+  }
 
 function afficherTourActuel() {
   const entite = ordreCombat[currentTurnIndex];

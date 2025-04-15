@@ -286,3 +286,42 @@ body[data-theme='light'] .table-monstres th {
   background-color: rgba(138, 43, 226, 0.2);
   border-left: 5px solid violet;
 }
+
+.table-ordre {
+  width: 100%;
+  max-width: 600px;
+  margin: 1rem auto;
+  border-collapse: collapse;
+  font-size: 1.1em;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table-ordre th,
+.table-ordre td {
+  padding: 0.8em 1em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-ordre th {
+  background-color: #3b0a52;
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.highlight-row {
+  background-color: #ffdd57;
+  font-weight: bold;
+  animation: pulseRow 1s infinite alternate;
+}
+
+@keyframes pulseRow {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.02);
+  }
+}
