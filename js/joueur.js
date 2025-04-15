@@ -11,33 +11,45 @@ window.addEventListener("DOMContentLoaded", async () => {
   const pseudo = localStorage.getItem("pseudo");
   const sessionId = localStorage.getItem("sessionId");
 
-  if (pseudo && sessionId) {
-    // On cache le formulaire et affiche le message d’attente
-    form.style.display = "none";
-    instruction.style.display = "none";
-    titre.innerHTML = `<img src="assets/img/d20.png" class="title-icon" alt="d20"> Bienvenue ${pseudo} <img src="assets/img/d20.png" class="title-icon" alt="d20">`;
+  // ✅ Si l'une des deux infos est manquante : on nettoie et on affiche le formulaire
+  if (!pseudo || !sessionId) {
+    localStorage.removeItem("pseudo");
+    localStorage.removeItem("sessionId");
+    form.style.display = "block";
+    instruction.style.display = "block";
+    messageAccueil.style.display = "none";
+    return;
+  }
 
-    // Récupérer le nom d’aventure depuis l’API
-    let nomAventure = "(Aventure mystère)";
-    try {
-      const sessionRes = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
-      if (sessionRes.ok) {
-        const data = await sessionRes.json();
-        nomAventure = data?.nomAventure || nomAventure;
-      }
-    } catch (e) {
-      console.error("Erreur récupération aventure après reload :", e);
+  // 👇 Ce bloc ne s’exécutera que si les deux infos sont bien présentes
+  form.style.display = "none";
+  instruction.style.display = "none";
+  titre.innerHTML = `<img src="assets/img/d20.png" class="title-icon" alt="d20"> Bienvenue ${pseudo} <img src="assets/img/d20.png" class="title-icon" alt="d20">`;
+
+  // Récupération de l'aventure...
+  let nomAventure = "(Aventure mystère)";
+  try {
+    const sessionRes = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+    if (sessionRes.ok) {
+      const data = await sessionRes.json();
+      nomAventure = data?.nomAventure || nomAventure;
     }
+  } catch (e) {
+    console.error("Erreur récupération aventure après reload :", e);
+  }
 
-    messageAccueil.innerHTML = `⏳ Merci d'avoir rejoint l'aventure "<strong>${nomAventure}</strong>". Veuillez patienter jusqu'à ce que le MJ démarre la session...`;
-    messageAccueil.style.display = "block";
+  messageAccueil.innerHTML = `⏳ Merci d'avoir rejoint l'aventure "<strong>${nomAventure}</strong>". Veuillez patienter jusqu'à ce que le MJ démarre la session...`;
+  messageAccueil.style.display = "block";
 
-    // ✅ Lancement unique
-    if (!intervalId) {
-      intervalId = setInterval(verifierDemarrageSession, 3000);
-    }
+  // 👉 Afficher le bouton "Changer de session"
+const boutonChangerSession = document.getElementById("changer-session");
+boutonChangerSession.style.display = "inline-block";
+
+  if (!intervalId) {
+    intervalId = setInterval(verifierDemarrageSession, 3000);
   }
 });
+
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -101,3 +113,9 @@ async function verifierDemarrageSession() {
     console.error("Erreur lors de la vérification du démarrage :", err);
   }
 }
+
+document.getElementById("changer-session").addEventListener("click", () => {
+  localStorage.removeItem("pseudo");
+  localStorage.removeItem("sessionId");
+  location.reload(); // 🔁 Recharge la page pour revenir au formulaire
+});
