@@ -98,16 +98,27 @@ editJoueurConfirm.addEventListener("click", async () => {
   if (!newNom || isNaN(newPV) || isNaN(newInit)) return;
 
   const data = await recupererSessionDepuisAPI(sessionId);
-  if (!data?.joueurs) return;
+  if (!data?.joueurs || !Array.isArray(data.joueurs)) return;
 
-  data.joueurs[joueurIndexAModifier].pseudo = newNom;
-  data.joueurs[joueurIndexAModifier].pv = newPV;
-  data.joueurs[joueurIndexAModifier].initiative = newInit;
+  // ✅ Sécurité : vérifier que l’index est bien dans la liste
+  if (joueurIndexAModifier < 0 || joueurIndexAModifier >= data.joueurs.length) return;
 
-  await fetch(`https://lampion-api.azurewebsites.net/api/UpdateSession`, {
+  // ✅ Mise à jour du joueur
+  data.joueurs[joueurIndexAModifier] = {
+    ...data.joueurs[joueurIndexAModifier],
+    pseudo: newNom,
+    pv: newPV,
+    initiative: newInit
+  };
+
+  // ✅ Envoi au backend
+  await fetch("https://lampion-api.azurewebsites.net/api/UpdateSession", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ sessionId: sessionId, joueurs: data.joueurs })
+    body: JSON.stringify({
+      sessionId,
+      joueurs: data.joueurs
+    })
   });
 
   editJoueurModal.classList.add("hidden");
