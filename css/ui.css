@@ -312,9 +312,9 @@ body[data-theme='light'] .table-monstres th {
 }
 
 .highlight-row {
-  background-color: #ffdd57;
+  background-color: rgba(134, 93, 255, 0.15); /* violet doux et transparent */
   font-weight: bold;
-  animation: pulseRow 1s infinite alternate;
+  border-left: 4px solid #865dff; /* petite bande violette à gauche */
 }
 
 @keyframes pulseRow {
