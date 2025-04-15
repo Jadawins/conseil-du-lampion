@@ -195,24 +195,14 @@ function afficherListeTemporaire() {
         editJoueurModal.classList.remove("hidden");
       });
 
-      tr.querySelector('[title="Réinitialiser"]').addEventListener("click", async () => {
-        j.pv = 0;
-        j.initiative = 0;
-        await fetch(`https://lampion-api.azurewebsites.net/api/UpdateSession`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sessionId: sessionId, joueurs: joueurs })
-        });
-        afficherListeTemporaire();
-      });
+      tbodyJ.appendChild(tr); // ✅ manquait aussi
+    }); // 👈 C'EST ICI que tu avais oublié de FERMER la fonction forEach
 
-      tbodyJ.appendChild(tr);
-    });
-
+      
     tableJoueurs.appendChild(tbodyJ);
     listeJoueursDiv.appendChild(tableJoueurs);
   });
-}
+};
 
 if (!combatLance) {
   afficherListeTemporaire();
