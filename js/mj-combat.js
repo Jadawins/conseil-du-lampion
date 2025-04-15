@@ -234,6 +234,17 @@ function afficherListeTemporaire() {
   });
 };
 
+resetBtn.addEventListener("click", () => {
+  if (confirm("❗ Réinitialiser uniquement les monstres ?")) {
+    monstres = [];
+    localStorage.removeItem(monstresKey);
+    ordreUl.innerHTML = "";
+    ordreTitre.style.display = "none";
+    combatLance = false;
+    afficherListeTemporaire(); // recharge l'affichage à jour sans toucher aux joueurs
+  }
+});
+
 if (!combatLance) {
   afficherListeTemporaire();
 }
