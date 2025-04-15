@@ -2,7 +2,31 @@ const urlParams = new URLSearchParams(window.location.search);
 const sessionId = urlParams.get('sessionId');
 const pseudo = localStorage.getItem("pseudo");
 
-document.getElementById('initiative-form').addEventListener('submit', async (e) => {
+const form = document.getElementById('initiative-form');
+const title = document.getElementById('initiative-title');
+const confirmation = document.getElementById('confirmation-message');
+
+window.addEventListener("DOMContentLoaded", async () => {
+  if (!sessionId || !pseudo) return;
+
+  try {
+    const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+    if (response.ok) {
+      const data = await response.json();
+      const joueur = data?.joueurs?.find(j => j.pseudo === pseudo);
+
+      if (joueur && typeof joueur.initiative === "number" && joueur.initiative > 0) {
+        form.style.display = "none";
+        title.style.display = "none";
+        confirmation.style.display = "block";
+      }
+    }
+  } catch (err) {
+    console.error("Erreur récupération initiative:", err);
+  }
+});
+
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const initiative = parseInt(document.getElementById('initiative-input').value);
@@ -17,9 +41,9 @@ document.getElementById('initiative-form').addEventListener('submit', async (e) 
       body: JSON.stringify({ sessionId, pseudo, initiative, pv })
     });
 
-    document.getElementById('initiative-form').style.display = 'none';
-    document.getElementById('initiative-title').style.display = 'none';
-    document.getElementById('confirmation-message').style.display = 'block';
+    form.style.display = 'none';
+    title.style.display = 'none';
+    confirmation.style.display = 'block';
   } catch (err) {
     alert("Erreur lors de l'enregistrement de l'initiative.");
   }
