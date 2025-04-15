@@ -209,3 +209,9 @@ function afficherListeTemporaire() {
 if (!combatLance) {
   afficherListeTemporaire();
 }
+
+setInterval(() => {
+  if (!combatLance) {
+    afficherListeTemporaire();
+  }
+}, 3000); // 3000 ms = 3 secondes
