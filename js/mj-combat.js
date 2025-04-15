@@ -245,6 +245,26 @@ resetBtn.addEventListener("click", () => {
   }
 });
 
+lancerBtn.addEventListener("click", async () => {
+  const data = await recupererSessionDepuisAPI(sessionId);
+  const joueurs = data?.joueurs || [];
+  const monstres = JSON.parse(localStorage.getItem(monstresKey)) || [];
+
+  // Fusion et tri
+  const total = [...monstres, ...joueurs].sort((a, b) => {
+    if (b.initiative === a.initiative) {
+      return a.pseudo?.localeCompare(b.pseudo) || a.nom?.localeCompare(b.nom) || 0;
+    }
+    return b.initiative - a.initiative;
+  });
+
+  localStorage.setItem(ordreKey, JSON.stringify(total));
+  localStorage.setItem("indexTour-" + sessionId, "0");
+
+  // Redirection vers mj-bagarre
+  window.location.href = `mj-bagarre.html?sessionId=${sessionId}`;
+});
+
 if (!combatLance) {
   afficherListeTemporaire();
 }

@@ -250,3 +250,18 @@ body[data-theme='light'] .table-monstres td {
 body[data-theme='light'] .table-monstres th {
   color: #4a148c;
 }
+
+.highlight-row {
+  background-color: #ffdd57;
+  font-weight: bold;
+  animation: pulseRow 1s infinite alternate;
+}
+
+@keyframes pulseRow {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.02);
+  }
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Combat Joueur – Le Conseil du Lampion</title>
+  <link rel="stylesheet" href="css/theme.css"/>
+  <link rel="stylesheet" href="css/ui.css"/>
+</head>
+<body data-theme="dark">
+    <!-- 🌗 Appliquer le thème dès le chargement -->
+    <script>
+        if (localStorage.getItem("theme") === "light") {
+          document.body.setAttribute("data-theme", "light");
+        } else {
+          document.body.setAttribute("data-theme", "dark");
+        }
+        </script>
+    
+        <!-- 🌙 Toggle thème clair/sombre -->
+        <div class="theme-toggle-container">
+        <span class="theme-icon sun">🌞</span>
+        <label class="switch">
+          <input type="checkbox" id="theme-toggle" />
+          <span class="slider"></span>
+        </label>
+        <span class="theme-icon moon">🌙</span>
+        </div>
+  <main>
+    <h1>🧝 Combat en cours</h1>
+
+    <!-- 🩸 Section PV joueur -->
+    <section id="pv-joueur">
+      <h2>❤️ Vos PV</h2>
+      <p id="pv-affichage">Chargement...</p>
+    </section>
+
+    <section id="tour-joueur">
+      <h2>⏳ Tour actuel</h2>
+      <p id="info-tour">Chargement...</p>
+    </section>
+
+    <section id="ordre-tour" class="table-section">
+        <h2>🧭 Ordre du Tour</h2>
+        <!-- Le tableau dynamique sera injecté ici -->
+      </section>
+      
+    <section id="actions-joueur" style="display: none;">
+      <h2>🎮 Vos actions</h2>
+      <button class="btn-style" id="btn-attaquer">⚔️ Attaquer</button>
+      <button class="btn-style" id="btn-soigner">❤️‍🩹 Soigner</button>
+      <button class="btn-style" id="btn-passer">➡️ Passer le tour</button>
+    </section>
+
+    <p id="feedback-message" class="message-flash"></p>
+  </main>
+
+  <script src="js/theme.js"></script>
+  <script src="js/joueur-bagarre.js"></script>
+</body>
+</html>
