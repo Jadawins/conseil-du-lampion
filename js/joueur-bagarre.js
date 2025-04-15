@@ -48,33 +48,26 @@ async function verifierTour() {
 }
 
 async function afficherOrdreDuTour() {
-  const data = await recupererSession();
-  const ordre = data?.ordreTour || [];
-  const indexTour = data?.indexTour ?? 0;
-
-  const conteneur = document.getElementById("ordre-tour");
-  if (!conteneur) return;
-  conteneur.innerHTML = "";
-
-  const table = document.createElement("table");
-  table.className = "table-monstres";
-
-  const thead = document.createElement("thead");
-  thead.innerHTML = `<tr><th>Nom</th><th>Initiative</th></tr>`;
-  table.appendChild(thead);
-
-  const tbody = document.createElement("tbody");
-
-  ordre.forEach((perso, index) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${perso.pseudo || perso.nom}</td><td>${perso.initiative}</td>`;
-    if (index === indexTour) tr.classList.add("highlight-row");
-    tbody.appendChild(tr);
-  });
-
-  table.appendChild(tbody);
-  conteneur.appendChild(table);
-}
+    const data = await recupererSession();
+    const ordreCombat = data?.ordreTour || [];
+    const currentTurnIndex = data?.indexTour || 0;
+  
+    const tbody = document.getElementById("liste-initiative");
+    if (!tbody) return;
+  
+    tbody.innerHTML = "";
+  
+    ordreCombat.forEach((entite, index) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
+        <td>${entite.initiative}</td>
+      `;
+      if (index === currentTurnIndex) tr.classList.add("highlight-row");
+      tbody.appendChild(tr);
+    });
+  }
+  
 
 // 🔁 Rafraîchissement toutes les 3 sec
 setInterval(verifierTour, 3000);
