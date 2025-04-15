@@ -41,28 +41,31 @@ const editConfirm = document.getElementById("edit-confirm");
 const editCancel = document.getElementById("edit-cancel");
 let monstreIndexAModifier = null;
 
+const editJoueurModal = document.getElementById("edit-joueur-modal");
+const editJoueurNomInput = document.getElementById("edit-joueur-nom");
+const editJoueurPVInput = document.getElementById("edit-joueur-pv");
+const editJoueurInitInput = document.getElementById("edit-joueur-init");
+const editJoueurConfirm = document.getElementById("edit-joueur-confirm");
+const editJoueurCancel = document.getElementById("edit-joueur-cancel");
+let joueurIndexAModifier = null;
+
 let monstres = JSON.parse(localStorage.getItem(monstresKey)) || [];
 let combatLance = false;
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-
   const nom = document.getElementById("nom-monstre").value.trim();
   const pv = parseInt(document.getElementById("pv-monstre").value);
   const initiative = parseInt(document.getElementById("initiative-monstre").value);
-
   if (!nom || isNaN(pv) || isNaN(initiative)) return;
-
   const existeDeja = monstres.some(monstre => monstre.nom.toLowerCase() === nom.toLowerCase());
   if (existeDeja) {
     alert("⚠️ Un monstre avec ce nom existe déjà !");
     return;
   }
-
   monstres.push({ nom, pv, initiative });
   localStorage.setItem(monstresKey, JSON.stringify(monstres));
   form.reset();
-
   if (!combatLance) afficherListeTemporaire();
 });
 
@@ -70,13 +73,8 @@ editConfirm.addEventListener("click", () => {
   const newName = editNomInput.value.trim();
   const newInit = parseInt(editInitInput.value);
   const newPV = parseInt(editPVInput.value);
-
   if (newName && !isNaN(newInit) && !isNaN(newPV) && monstreIndexAModifier !== null) {
-    monstres[monstreIndexAModifier] = {
-      nom: newName,
-      initiative: newInit,
-      pv: newPV
-    };
+    monstres[monstreIndexAModifier] = { nom: newName, initiative: newInit, pv: newPV };
     localStorage.setItem(monstresKey, JSON.stringify(monstres));
     afficherListeTemporaire();
     editModal.classList.add("hidden");
@@ -86,6 +84,34 @@ editConfirm.addEventListener("click", () => {
 
 editCancel.addEventListener("click", () => {
   editModal.classList.add("hidden");
+});
+
+editJoueurCancel.addEventListener("click", () => {
+  editJoueurModal.classList.add("hidden");
+  joueurIndexAModifier = null;
+});
+
+editJoueurConfirm.addEventListener("click", async () => {
+  const newNom = editJoueurNomInput.value.trim();
+  const newPV = parseInt(editJoueurPVInput.value);
+  const newInit = parseInt(editJoueurInitInput.value);
+  if (!newNom || isNaN(newPV) || isNaN(newInit)) return;
+
+  const data = await recupererSessionDepuisAPI(sessionId);
+  if (!data?.joueurs) return;
+
+  data.joueurs[joueurIndexAModifier].pseudo = newNom;
+  data.joueurs[joueurIndexAModifier].pv = newPV;
+  data.joueurs[joueurIndexAModifier].initiative = newInit;
+
+  await fetch(`https://lampion-api.azurewebsites.net/api/UpdateSession`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ sessionId: sessionId, joueurs: data.joueurs })
+  });
+
+  editJoueurModal.classList.add("hidden");
+  afficherListeTemporaire();
 });
 
 function afficherListeTemporaire() {
@@ -110,49 +136,25 @@ function afficherListeTemporaire() {
 
   monstres.forEach((m, index) => {
     const tr = document.createElement("tr");
-
-    const tdNom = document.createElement("td");
-    tdNom.textContent = m.nom;
-
-    const tdPV = document.createElement("td");
-    tdPV.textContent = m.pv;
-
-    const tdInit = document.createElement("td");
-    tdInit.textContent = m.initiative;
-
-    const tdEdit = document.createElement("td");
-    const editBtn = document.createElement("button");
-    editBtn.textContent = "🪄";
-    editBtn.className = "icon-btn";
-    editBtn.title = "Modifier ce monstre";
-    editBtn.dataset.index = index;
-    editBtn.addEventListener("click", (e) => {
-      const idx = e.currentTarget.dataset.index;
-      monstreIndexAModifier = idx;
-      editNomInput.value = monstres[idx].nom;
-      editInitInput.value = monstres[idx].initiative;
-      editPVInput.value = monstres[idx].pv;
+    tr.innerHTML = `
+      <td>${m.nom}</td>
+      <td>${m.pv}</td>
+      <td>${m.initiative}</td>
+      <td><button class="icon-btn" title="Modifier" data-index="${index}">🪄</button></td>
+      <td><button class="icon-btn" title="Supprimer">🔥</button></td>
+    `;
+    tr.querySelector('[title="Modifier"]').addEventListener("click", () => {
+      monstreIndexAModifier = index;
+      editNomInput.value = m.nom;
+      editInitInput.value = m.initiative;
+      editPVInput.value = m.pv;
       editModal.classList.remove("hidden");
     });
-    tdEdit.appendChild(editBtn);
-
-    const tdAction = document.createElement("td");
-    const deleteBtn = document.createElement("button");
-    deleteBtn.innerHTML = "🔥";
-    deleteBtn.className = "icon-btn";
-    deleteBtn.title = "Supprimer ce monstre";
-    deleteBtn.addEventListener("click", () => {
+    tr.querySelector('[title="Supprimer"]').addEventListener("click", () => {
       monstres.splice(index, 1);
       localStorage.setItem(monstresKey, JSON.stringify(monstres));
       afficherListeTemporaire();
     });
-    tdAction.appendChild(deleteBtn);
-
-    tr.appendChild(tdNom);
-    tr.appendChild(tdPV);
-    tr.appendChild(tdInit);
-    tr.appendChild(tdEdit);
-    tr.appendChild(tdAction);
     tbodyM.appendChild(tr);
   });
 
@@ -161,46 +163,57 @@ function afficherListeTemporaire() {
 
   recupererSessionDepuisAPI(sessionId).then(data => {
     const joueurs = data?.joueurs || [];
-    if (joueurs.length > 0) {
-      const tableJoueurs = document.createElement("table");
-      tableJoueurs.className = "table-monstres";
-      const theadJ = document.createElement("thead");
-      theadJ.innerHTML = `
-        <tr>
-          <th>🧝 Joueur</th>
-          <th>❤️ PV</th>
-          <th>⚔️ Initiative</th>
-        </tr>
+    const tableJoueurs = document.createElement("table");
+    tableJoueurs.className = "table-monstres";
+    const theadJ = document.createElement("thead");
+    theadJ.innerHTML = `
+      <tr>
+        <th>🧝 Joueur</th>
+        <th>❤️ PV</th>
+        <th>⚔️ Initiative</th>
+        <th>🪄 Modifier</th>
+      </tr>
+    `;
+    tableJoueurs.appendChild(theadJ);
+    const tbodyJ = document.createElement("tbody");
+
+    joueurs.forEach((j, index) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${j.pseudo}</td>
+        <td>${typeof j.pv === "number" ? j.pv : "-"}</td>
+        <td>${typeof j.initiative === "number" ? j.initiative : "-"}</td>
+        <td><button class="icon-btn" title="Modifier" data-index="${index}">🪄</button></td>
+        
       `;
-      tableJoueurs.appendChild(theadJ);
-  
-      const tbodyJ = document.createElement("tbody");
-      joueurs.forEach(j => {
-        const tr = document.createElement("tr");
-        const tdNom = document.createElement("td");
-        tdNom.textContent = j.pseudo;
-  
-        const tdInit = document.createElement("td");
-        tdInit.textContent = typeof j.initiative === "number" ? j.initiative : "-";
-  
-        const tdPV = document.createElement("td");
-        tdPV.textContent = typeof j.pv === "number" ? j.pv : "-";
-  
-        tr.appendChild(tdNom);
-        tr.appendChild(tdPV);
-        tr.appendChild(tdInit);
-        tbodyJ.appendChild(tr);
+
+      tr.querySelector('[title="Modifier"]').addEventListener("click", () => {
+        joueurIndexAModifier = index;
+        editJoueurNomInput.value = j.pseudo;
+        editJoueurPVInput.value = j.pv || 0;
+        editJoueurInitInput.value = j.initiative || 0;
+        editJoueurModal.classList.remove("hidden");
       });
-  
-      tableJoueurs.appendChild(tbodyJ);
-      listeJoueursDiv.appendChild(tableJoueurs);
-    }
+
+      tr.querySelector('[title="Réinitialiser"]').addEventListener("click", async () => {
+        j.pv = 0;
+        j.initiative = 0;
+        await fetch(`https://lampion-api.azurewebsites.net/api/UpdateSession`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId: sessionId, joueurs: joueurs })
+        });
+        afficherListeTemporaire();
+      });
+
+      tbodyJ.appendChild(tr);
+    });
+
+    tableJoueurs.appendChild(tbodyJ);
+    listeJoueursDiv.appendChild(tableJoueurs);
   });
 }
 
-  // ✅ À mettre à la toute fin du fichier :
 if (!combatLance) {
   afficherListeTemporaire();
 }
-
- 
