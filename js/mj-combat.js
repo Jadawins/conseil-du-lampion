@@ -112,14 +112,17 @@ editJoueurConfirm.addEventListener("click", async () => {
   };
 
   // ✅ Envoi au backend
-  await fetch("https://lampion-api.azurewebsites.net/api/UpdateSession", {
+  const response = await fetch("https://lampion-api.azurewebsites.net/api/UpdateSession", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       sessionId,
       joueurs: data.joueurs
     })
+    
   });
+  // ✅ Log de la réponse pour vérifier si tout s’est bien passé
+  console.log("📨 Réponse API update:", response.status, await response.text());
 
   editJoueurModal.classList.add("hidden");
   afficherListeTemporaire();
