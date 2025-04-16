@@ -257,11 +257,10 @@ lancerBtn.addEventListener("click", async () => {
     return b.initiative - a.initiative;
   });
 
-  // Stockage local
+  // Stockage local (optionnel)
   localStorage.setItem(ordreKey, JSON.stringify(total));
-  
 
-  // ✅ Ajout de l'envoi vers Azure
+  // Envoi vers Azure
   const response = await fetch("https://lampion-api.azurewebsites.net/api/SetOrdre", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -272,14 +271,21 @@ lancerBtn.addEventListener("click", async () => {
       combatEnCours: true
     })
   });
-  // 💬 Log de vérification
-const resText = await response.text();
-console.log("📨 Réponse SetOrdre :", response.status, resText);
 
-  // Redirection vers mj-bagarre
+  const resText = await response.text();
+  console.log("📨 Réponse SetOrdre :", response.status, resText);
+
+  // ⏳ Petite pause pour laisser Azure finir l’enregistrement
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  // 🧪 Vérification (optionnelle mais utile en debug)
+  const confirmation = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+  const finalData = await confirmation.json();
+  console.log("🎯 Données post-lancement :", finalData.indexTour); // Doit être 0
+
+  // Redirection
   window.location.href = `mj-bagarre.html?sessionId=${sessionId}`;
 });
-
 
 if (!combatLance) {
   afficherListeTemporaire();
