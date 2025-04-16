@@ -1,0 +1,14 @@
+.sprite-knight {
+  width: 120px;                     /* largeur d'une frame */
+  height: 50px;                    /* hauteur d'une frame */
+  background-image: url('../assets/img/chevalier-attaquev2.png');
+  background-repeat: no-repeat;
+  animation: attack-loop 1s steps(12) infinite;
+  margin: 1em auto;
+  background-position: 0 0;
+}
+
+@keyframes attack-loop {
+  from { background-position: 0 0; }
+  to { background-position: 0 -600px; } /* 12 frames × 50px de haut */
+}
