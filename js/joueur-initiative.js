@@ -49,7 +49,16 @@ form.addEventListener("submit", async (e) => {
   const pvMaxInput = document.getElementById("pv-max-input");
   const pvMax = pvMaxInput ? parseInt(pvMaxInput.value) : null;
 
-  if (isNaN(initiative) || isNaN(pv)) return;
+  if (isNaN(initiative) || isNaN(pv)) {
+    alert("Veuillez remplir correctement tous les champs obligatoires.");
+    return;
+  }
+
+  // ✅ Vérification : PV ne doit pas dépasser PV Max
+  if (!isNaN(pvMax) && pv > pvMax) {
+    alert(`Les points de vie ne peuvent pas dépasser les PV Max (${pvMax}).`);
+    return;
+  }
 
   const payload = {
     sessionId,
