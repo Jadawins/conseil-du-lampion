@@ -4,7 +4,7 @@ const sessionId = localStorage.getItem("sessionId");
 const pseudo = localStorage.getItem("pseudo");
 
 const messageTour = document.getElementById("message-tour");
-const actionSection = document.getElementById("action-section");
+const actionSection = document.getElementById("actions-joueur");
 const attenteSection = document.getElementById("attente-section");
 const pvAffichage = document.getElementById("pv-affichage");
 
