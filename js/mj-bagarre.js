@@ -28,20 +28,42 @@ async function fetchOrdreCombat() {
     }
   }
 
-  function afficherOrdreCombat() {
-    const tbody = document.getElementById("liste-initiative");
-    tbody.innerHTML = ""; // Nettoie les lignes précédentes
+  function formatPV(entite) {
+    const pv = entite?.pv ?? "?";
+    const pvMax = entite?.pvMax ?? entite?.pv ?? "?"; // Si pvMax absent, on suppose égal à pv
+    return `${pv} / ${pvMax}`;
+  }
   
+  function afficherOrdreCombat() {
+    ordreUl.innerHTML = "";
+  
+    const table = document.createElement("table");
+    table.className = "table-ordre";
+  
+    const thead = document.createElement("thead");
+    thead.innerHTML = `<tr><th>Nom</th><th>Initiative</th><th>PV</th></tr>`;
+    table.appendChild(thead);
+  
+    const tbody = document.createElement("tbody");
     ordreCombat.forEach((entite, index) => {
       const tr = document.createElement("tr");
+  
       tr.innerHTML = `
         <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
         <td>${entite.initiative}</td>
-        <td>${typeof entite.pv === "number" ? `${entite.pv} / ${entite.pvMax || "?"}` : "-"}</td>
+        <td>${formatPV(entite)}</td>
       `;
+
+      if (entite.pv && entite.pvMax && entite.pv / entite.pvMax < 0.3) {
+        tr.classList.add("low-hp");
+      }
+  
       if (index === currentTurnIndex) tr.classList.add("highlight-row");
       tbody.appendChild(tr);
     });
+  
+    table.appendChild(tbody);
+    ordreUl.appendChild(table);
   }
   
 

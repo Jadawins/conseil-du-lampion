@@ -8,6 +8,12 @@ const actionSection = document.getElementById("action-section");
 const attenteSection = document.getElementById("attente-section");
 const pvAffichage = document.getElementById("pv-affichage");
 
+function formatPV(joueur) {
+  const pv = joueur?.pv ?? "?";
+  const pvMax = joueur?.pvMax ?? "?";
+  return `${pv} / ${pvMax}`;
+}
+
 async function recupererSession() {
   try {
     const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
@@ -21,9 +27,9 @@ async function recupererSession() {
 }
 
 function afficherEtat(pv, pvMax, joueurActif) {
-    pvAffichage.textContent = `❤️ ${pv} / ${pvMax} PV`;
+  pvAffichage.textContent = `❤️ ${formatPV({ pv, pvMax })} PV`;
   
-    const estMonTour = (joueurActif?.pseudo || joueurActif?.nom) === pseudo;
+    const estMonTour = joueurActif?.pseudo === pseudo;
   
     if (estMonTour) {
       messageTour.textContent = "🗡️ C’est votre tour !";
@@ -71,13 +77,17 @@ async function afficherOrdreDuTour() {
 
     if (estJoueur) {
       const joueur = tousLesJoueurs.find(j => j.pseudo === entite.pseudo);
-      pvText = joueur ? `${joueur.pv ?? "?"} / ${joueur.pvMax ?? "?"}` : "-";
+      pvText = joueur ? formatPV(joueur) : "-";
     }
 
     tr.innerHTML = `
       <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
       <td>${pvText}</td>
     `;
+
+    if (typeof entite.pv === "number" && typeof entite.pvMax === "number" && entite.pvMax > 0 && entite.pv / entite.pvMax < 0.3) {
+      tr.classList.add("low-hp");
+    }
 
     if (index === currentTurnIndex) tr.classList.add("highlight-row");
     tbody.appendChild(tr);
