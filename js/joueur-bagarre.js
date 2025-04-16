@@ -94,9 +94,31 @@ async function afficherOrdreDuTour() {
   });
 }
 
-  
 
 // 🔁 Rafraîchissement toutes les 3 sec
 setInterval(verifierTour, 3000);
 setInterval(afficherOrdreDuTour, 3000);
 window.addEventListener("DOMContentLoaded", afficherOrdreDuTour);
+document.getElementById("btn-passer").addEventListener("click", async () => {
+  try {
+    const response = await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId })
+    });
+
+    const data = await response.json();
+    console.log("✔️ Tour passé :", data);
+
+    // ✅ Affichage du feedback uniquement après clic
+    const feedback = document.getElementById("feedback-message");
+    if (feedback) {
+      feedback.textContent = "⏭️ Tour passé !";
+      clearTimeout(feedback._timeout);
+      feedback._timeout = setTimeout(() => (feedback.textContent = ""), 3000);
+    }
+  } catch (err) {
+    console.error("❌ Erreur lors du passage du tour :", err);
+  }
+});
+

@@ -333,3 +333,11 @@ body[data-theme='light'] .table-monstres th {
   color: #ff6666;
   font-weight: bold;
 }
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
