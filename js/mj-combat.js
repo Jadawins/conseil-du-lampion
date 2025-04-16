@@ -23,7 +23,6 @@ async function recupererSessionDepuisAPI(sessionId) {
 
 const joueursKey = `joueursLampion-${sessionId}`;
 const monstresKey = `monstresLampion-${sessionId}`;
-const ordreKey = `ordreFinal-${sessionId}`;
 
 const form = document.getElementById("form-combat");
 const listeMonstresDiv = document.getElementById("liste-monstres");
@@ -260,7 +259,7 @@ lancerBtn.addEventListener("click", async () => {
 
   // Stockage local
   localStorage.setItem(ordreKey, JSON.stringify(total));
-  localStorage.setItem("indexTour-" + sessionId, "0");
+  
 
   // ✅ Ajout de l'envoi vers Azure
   const response = await fetch("https://lampion-api.azurewebsites.net/api/SetOrdre", {
@@ -270,9 +269,8 @@ lancerBtn.addEventListener("click", async () => {
       sessionId,
       ordreTour: total,
       indexTour: 0,
-      combatEnCours: true // ✅ cette ligne est bien, il faut juste ajouter une virgule avant
+      combatEnCours: true
     })
-    
   });
   // 💬 Log de vérification
 const resText = await response.text();
