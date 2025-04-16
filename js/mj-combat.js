@@ -23,6 +23,7 @@ async function recupererSessionDepuisAPI(sessionId) {
 
 const joueursKey = `joueursLampion-${sessionId}`;
 const monstresKey = `monstresLampion-${sessionId}`;
+const ordreKey = `ordreFinal-${sessionId}`;
 
 const form = document.getElementById("form-combat");
 const listeMonstresDiv = document.getElementById("liste-monstres");
