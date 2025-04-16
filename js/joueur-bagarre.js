@@ -52,25 +52,37 @@ async function verifierTour() {
 }
 
 async function afficherOrdreDuTour() {
-    const data = await recupererSession();
-    const ordreCombat = data?.ordreTour || [];
-    const currentTurnIndex = data?.indexTour || 0;
-  
-    const tbody = document.getElementById("liste-initiative");
-    if (!tbody) return;
-  
-    tbody.innerHTML = "";
-  
-    ordreCombat.forEach((entite, index) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
-        <td>${entite.initiative}</td>
-      `;
-      if (index === currentTurnIndex) tr.classList.add("highlight-row");
-      tbody.appendChild(tr);
-    });
-  }
+  const data = await recupererSession();
+  const ordreCombat = data?.ordreTour || [];
+  const currentTurnIndex = data?.indexTour || 0;
+  const tousLesJoueurs = data?.joueurs || [];
+
+  const tbody = document.getElementById("liste-initiative");
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+
+  ordreCombat.forEach((entite, index) => {
+    const tr = document.createElement("tr");
+    const estJoueur = !!entite.pseudo;
+
+    // Si c’est un joueur, on cherche ses PV
+    let pvText = "";
+    if (estJoueur) {
+      const joueur = tousLesJoueurs.find(j => j.pseudo === entite.pseudo);
+      pvText = joueur ? `${joueur.pv ?? "-"} PV` : "-";
+    }
+
+    tr.innerHTML = `
+      <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
+      <td>${estJoueur ? pvText : ""}</td>
+    `;
+
+    if (index === currentTurnIndex) tr.classList.add("highlight-row");
+    tbody.appendChild(tr);
+  });
+}
+
   
 
 // 🔁 Rafraîchissement toutes les 3 sec
