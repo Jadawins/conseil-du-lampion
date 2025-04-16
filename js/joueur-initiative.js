@@ -76,3 +76,16 @@ form.addEventListener("submit", async (e) => {
     alert("Erreur lors de l'enregistrement de l'initiative.");
   }
 });
+
+// ✅ Vérifie si le combat a démarré toutes les 3 secondes
+async function verifierDebutCombat() {
+  const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+  if (response.ok) {
+    const data = await response.json();
+    if (data.combatEnCours) {
+      window.location.href = `joueur-bagarre.html?sessionId=${sessionId}`;
+    }
+  }
+}
+
+setInterval(verifierDebutCombat, 3000);
