@@ -66,16 +66,17 @@ async function afficherOrdreDuTour() {
     const tr = document.createElement("tr");
     const estJoueur = !!entite.pseudo;
 
-    // Si c’est un joueur, on cherche ses PV
-    let pvText = "";
+    // 👇 Déclaration ici pour qu'elle soit visible dans le scope
+    let pvText = "-";
+
     if (estJoueur) {
       const joueur = tousLesJoueurs.find(j => j.pseudo === entite.pseudo);
-      pvText = joueur ? `${joueur.pv ?? "-"} PV` : "-";
+      pvText = joueur ? `${joueur.pv ?? "?"} / ${joueur.pvMax ?? "?"}` : "-";
     }
 
     tr.innerHTML = `
       <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
-      <td>${estJoueur ? pvText : ""}</td>
+      <td>${pvText}</td>
     `;
 
     if (index === currentTurnIndex) tr.classList.add("highlight-row");

@@ -37,7 +37,7 @@ async function fetchOrdreCombat() {
       tr.innerHTML = `
         <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
         <td>${entite.initiative}</td>
-        <td>${typeof entite.pv === "number" ? entite.pv : "-"}</td>
+        <td>${typeof entite.pv === "number" ? `${entite.pv} / ${entite.pvMax || "?"}` : "-"}</td>
       `;
       if (index === currentTurnIndex) tr.classList.add("highlight-row");
       tbody.appendChild(tr);
