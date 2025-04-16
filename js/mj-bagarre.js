@@ -78,11 +78,21 @@ function afficherTourActuel() {
   }
 }
 
-// 🎯 Passer le tour ➜ avance dans la liste
-boutonPasser.addEventListener("click", () => {
-  currentTurnIndex = (currentTurnIndex + 1) % ordreCombat.length;
-  afficherOrdreCombat();
-  afficherTourActuel();
+// 🎯 Passer le tour (MAJ dans Azure)
+boutonPasser.addEventListener("click", async () => {
+  try {
+    const response = await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId })
+    });
+
+    const data = await response.json();
+    console.log("✔️ Tour passé :", data);
+    await fetchOrdreCombat(); // recharge la session depuis Azure pour mettre à jour l’interface
+  } catch (err) {
+    console.error("❌ Erreur lors du passage du tour :", err);
+  }
 });
 
 fetchOrdreCombat();
