@@ -29,16 +29,9 @@ async function fetchOrdreCombat() {
   }
 
   function afficherOrdreCombat() {
-    ordreUl.innerHTML = "";
+    const tbody = document.getElementById("liste-initiative");
+    tbody.innerHTML = ""; // Nettoie les lignes précédentes
   
-    const table = document.createElement("table");
-    table.className = "table-ordre";
-  
-    const thead = document.createElement("thead");
-    thead.innerHTML = `<tr><th>Nom</th><th>Initiative</th><th>PV</th></tr>`;
-    table.appendChild(thead);
-  
-    const tbody = document.createElement("tbody");
     ordreCombat.forEach((entite, index) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -49,10 +42,8 @@ async function fetchOrdreCombat() {
       if (index === currentTurnIndex) tr.classList.add("highlight-row");
       tbody.appendChild(tr);
     });
-  
-    table.appendChild(tbody);
-    ordreUl.appendChild(table);
   }
+  
 
 function afficherTourActuel() {
   const entite = ordreCombat[currentTurnIndex];
