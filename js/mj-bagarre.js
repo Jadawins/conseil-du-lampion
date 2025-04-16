@@ -29,17 +29,29 @@ async function fetchOrdreCombat() {
   }
 
   function afficherOrdreCombat() {
-    const tbody = document.getElementById("liste-initiative");
-    tbody.innerHTML = "";
+    ordreUl.innerHTML = "";
+  
+    const table = document.createElement("table");
+    table.className = "table-ordre";
+  
+    const thead = document.createElement("thead");
+    thead.innerHTML = `<tr><th>Nom</th><th>Initiative</th><th>PV</th></tr>`;
+    table.appendChild(thead);
+  
+    const tbody = document.createElement("tbody");
     ordreCombat.forEach((entite, index) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
         <td>${entite.initiative}</td>
+        <td>${typeof entite.pv === "number" ? entite.pv : "-"}</td>
       `;
       if (index === currentTurnIndex) tr.classList.add("highlight-row");
       tbody.appendChild(tr);
     });
+  
+    table.appendChild(tbody);
+    ordreUl.appendChild(table);
   }
 
 function afficherTourActuel() {
