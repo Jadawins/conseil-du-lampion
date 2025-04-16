@@ -38,7 +38,7 @@ form.addEventListener('submit', async (e) => {
     await fetch(`https://lampion-api.azurewebsites.net/api/SetInitiative`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sessionId, pseudo, initiative, pv })
+      body: JSON.stringify({ sessionId, pseudo, initiative, pv, pvMax: pv })
     });
 
     form.style.display = 'none';
