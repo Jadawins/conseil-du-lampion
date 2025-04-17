@@ -153,30 +153,26 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
     return;
   }
 
+  const soignant = ordreCombat[currentTurnIndex]?.pseudo || ordreCombat[currentTurnIndex]?.nom || "inconnu";
+
   try {
     const response = await fetch("https://lampion-api.azurewebsites.net/api/SoinJoueur", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         sessionId,
-        auteur: "MJ",
+        auteur: soignant,
         cible,
         soin: valeur
       })
     });
-    console.log("📤 Données envoyées :", {
-      sessionId,
-      auteur: "MJ",
-      cible,
-      soin: valeur
-    });
 
     if (!response.ok) {
       const erreurTexte = await response.text();
-      console.error("🛑 Erreur API (brute) :", erreurTexte);
+      console.error("🛑 Erreur API :", erreurTexte);
       throw new Error("Erreur API");
     }
-    
+
     document.getElementById("formulaire-soin").classList.add("hidden");
     document.getElementById("ordre-combat").style.display = "block";
     document.getElementById("tour-actuel").style.display = "block";
@@ -184,11 +180,13 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
 
     await fetchOrdreCombat();
     await afficherJournalCombat();
+
   } catch (err) {
     console.error("❌ Erreur lors de l'envoi du soin :", err);
     alert("Erreur lors de l’envoi du soin. Veuillez réessayer.");
   }
 });
+
 
 document.getElementById("annuler-soin").addEventListener("click", () => {
   document.getElementById("formulaire-soin").classList.add("hidden");

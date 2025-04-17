@@ -170,6 +170,14 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
   boutonValider.disabled = true;
 
   try {
+    // ✅ AJOUTE ICI :
+  console.log("📤 Envoi du soin :", {
+    sessionId,
+    auteur: pseudo,
+    cible,
+    soin: valeur
+  });
+  
     const response = await fetch("https://lampion-api.azurewebsites.net/api/SoinJoueur", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
