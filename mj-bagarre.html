@@ -8,38 +8,41 @@
   <link rel="stylesheet" href="css/ui.css"/>
 </head>
 <body data-theme="dark">
-    <!-- 🌗 Appliquer le thème dès le chargement -->
-    <script>
+  <!-- 🌗 Appliquer le thème dès le chargement -->
+  <script>
     if (localStorage.getItem("theme") === "light") {
       document.body.setAttribute("data-theme", "light");
     } else {
       document.body.setAttribute("data-theme", "dark");
     }
-    </script>
+  </script>
 
-    <!-- 🌙 Toggle thème clair/sombre -->
-    <div class="theme-toggle-container">
+  <!-- 🌙 Toggle thème clair/sombre -->
+  <div class="theme-toggle-container">
     <span class="theme-icon sun">🌞</span>
     <label class="switch">
       <input type="checkbox" id="theme-toggle" />
       <span class="slider"></span>
     </label>
     <span class="theme-icon moon">🌙</span>
-    </div>
+  </div>
 
-<main>
+  <main>
     <h1>⚔️ Gestion du combat MJ</h1>
 
     <section id="tour-actuel">
-        <section id="tour-actuel">
-            <h2><span class="emoji">⏳</span> <span class="section-title">Tour actuel</span></h2>
-            <p id="info-tour" class="tour-message">Chargement...</p>
-          </section>
+      <h2><span class="emoji">⏳</span> <span class="section-title">Tour actuel</span></h2>
+      <p id="info-tour" class="tour-message">Chargement...</p>
     </section>
 
     <section id="ordre-combat">
       <h2>📜 Ordre d'initiative</h2>
-      <div id="liste-initiative"></div>
+      <table class="table-ordre">
+        <thead>
+          <tr><th>Nom</th><th>Initiative</th><th>PV</th></tr>
+        </thead>
+        <tbody id="liste-initiative"></tbody>
+      </table>
     </section>
 
     <section id="actions-mj" style="display: none;">
@@ -48,32 +51,30 @@
       <button class="btn-style" id="btn-soigner">❤️‍🩹 Soigner</button>
       <button class="btn-style" id="btn-passer">➡️ Passer le tour</button>
     </section>
+
+    <section id="journal-combat" class="card-section">
+      <h2>📜 Journal du combat</h2>
+      <ul id="log-combat"></ul>
+    </section>
+
+    <section id="formulaire-soin" class="card-section hidden">
+      <h2>🩹 Appliquer un soin</h2>
+      <label for="cible-soin">Cible :</label>
+      <select id="cible-soin"></select>
+
+      <label for="valeur-soin">Valeur du soin :</label>
+      <input type="number" id="valeur-soin" min="1" />
+
+      <button class="btn-style" id="valider-soin">✅ Valider</button>
+      <button class="btn-style" id="annuler-soin">❌ Annuler</button>
+    </section>
   </main>
 
   <script src="js/theme.js"></script>
   <script src="js/mj-bagarre.js"></script>
 
   <div class="bottom-nav">
-    <a href="index.html" class=".btn-accueil-bottom">🏠 Accueil</a>
+    <a href="index.html" class="btn-accueil-bottom">🏠 Accueil</a>
   </div>
-
-  <section id="journal-combat" class="card-section">
-    <h2>📜 Journal du combat</h2>
-    <ul id="log-combat"></ul>
-  </section>
-
-  <section id="formulaire-soin" class="card-section hidden">
-    <h2>🩹 Appliquer un soin</h2>
-    <label for="cible-soin">Cible :</label>
-    <select id="cible-soin"></select>
-  
-    <label for="valeur-soin">Valeur du soin :</label>
-    <input type="number" id="valeur-soin" min="1" />
-  
-    <button class="btn-style" id="valider-soin">✅ Valider</button>
-    <button class="btn-style" id="annuler-soin">❌ Annuler</button>
-  </section>
-  
-
 </body>
 </html>
