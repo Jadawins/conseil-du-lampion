@@ -269,7 +269,8 @@ lancerBtn.addEventListener("click", async () => {
       sessionId,
       ordreTour: total,
       indexTour: 0,
-      combatEnCours: true
+      combatEnCours: true,
+      monstres
     })
   });
 
