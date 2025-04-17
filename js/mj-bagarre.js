@@ -159,12 +159,7 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
     const response = await fetch("https://lampion-api.azurewebsites.net/api/SoinJoueur", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sessionId,
-        auteur: soignant,
-        cible,
-        soin: valeur
-      })
+      body: JSON.stringify({ sessionId, auteur: soignant, cible, soin: valeur })
     });
 
     if (!response.ok) {
@@ -173,6 +168,26 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
       throw new Error("Erreur API");
     }
 
+    const passerResponse = await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId })
+    });
+
+    if (!passerResponse.ok) {
+      const erreurTexte = await passerResponse.text();
+      console.error("⚠️ Passage du tour a échoué :", erreurTexte);
+    }
+
+    // ✅ Feedback visuel
+    const feedback = document.getElementById("feedback-message");
+    if (feedback) {
+      feedback.textContent = `✅ ${soignant} a soigné ${cible} de ${valeur} PV et a terminé son tour.`;
+      clearTimeout(feedback._timeout);
+      feedback._timeout = setTimeout(() => (feedback.textContent = ""), 4000);
+    }
+
+    // Réinitialisation affichage
     document.getElementById("formulaire-soin").classList.add("hidden");
     document.getElementById("ordre-combat").style.display = "block";
     document.getElementById("tour-actuel").style.display = "block";
@@ -187,7 +202,6 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
   }
 });
 
-
 document.getElementById("annuler-soin").addEventListener("click", () => {
   document.getElementById("formulaire-soin").classList.add("hidden");
   document.getElementById("ordre-combat").style.display = "block";
@@ -195,7 +209,8 @@ document.getElementById("annuler-soin").addEventListener("click", () => {
   document.getElementById("valeur-soin").value = "";
 });
 
-fetchOrdreCombat();
-setInterval(fetchOrdreCombat, 3000);
-window.addEventListener("DOMContentLoaded", afficherJournalCombat);
-setInterval(afficherJournalCombat, 3000);
+function refreshCombat() {
+  fetchOrdreCombat();
+  afficherJournalCombat();
+}
+setInterval(refreshCombat, 3000);
