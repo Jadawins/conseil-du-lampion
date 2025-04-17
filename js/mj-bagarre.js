@@ -35,47 +35,27 @@ async function fetchOrdreCombat() {
   }
   
   function afficherOrdreCombat() {
-    ordreUl.innerHTML = "";
-  
-    const table = document.createElement("table");
-    table.className = "table-ordre";
-  
-    const thead = document.createElement("thead");
-    thead.innerHTML = `<tr><th>Nom</th><th>Initiative</th><th>PV</th></tr>`;
-    table.appendChild(thead);
-  
-    const tbody = document.createElement("tbody");
-    ordreCombat.forEach((entite, index) => {
-      const tr = document.createElement("tr");
-  
-      tr.innerHTML = `
-        <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
-        <td>${entite.initiative}</td>
-        <td>${formatPV(entite)}</td>
-      `;
+  const tbody = document.getElementById("liste-initiative");
+  if (!tbody) return;
 
-      if (entite.pv && entite.pvMax && entite.pv / entite.pvMax < 0.3) {
-        tr.classList.add("low-hp");
-      }
-  
-      if (index === currentTurnIndex) tr.classList.add("highlight-row");
-      tbody.appendChild(tr);
-    });
-  
-    table.appendChild(tbody);
-    ordreUl.appendChild(table);
-  }
-  
+  tbody.innerHTML = "";
 
-function afficherTourActuel() {
-  const entite = ordreCombat[currentTurnIndex];
-  if (entite) {
-    messageTour.textContent = `🎯 C'est au tour de ${entite.pseudo || entite.nom} de jouer.`;
+  ordreCombat.forEach((entite, index) => {
+    const tr = document.createElement("tr");
 
-    // Si c'est un monstre → MJ peut agir
-    const estMonstre = !entite.id; // Si pas d'ID, c'est un monstre
-    zoneActions.style.display = estMonstre ? "block" : "none";
-  }
+    tr.innerHTML = `
+      <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
+      <td>${entite.initiative}</td>
+      <td>${formatPV(entite)}</td>
+    `;
+
+    if (entite.pv && entite.pvMax && entite.pv / entite.pvMax < 0.3) {
+      tr.classList.add("low-hp");
+    }
+
+    if (index === currentTurnIndex) tr.classList.add("highlight-row");
+    tbody.appendChild(tr);
+  });
 }
 
 // 🎯 Passer le tour (MAJ dans Azure)
