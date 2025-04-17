@@ -164,9 +164,19 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
         soin: valeur
       })
     });
+    console.log("📤 Données envoyées :", {
+      sessionId,
+      auteur: "MJ",
+      cible,
+      soin: valeur
+    });
 
-    if (!response.ok) throw new Error("Erreur API");
-
+    if (!response.ok) {
+      const erreurTexte = await response.text();
+      console.error("🛑 Erreur API (brute) :", erreurTexte);
+      throw new Error("Erreur API");
+    }
+    
     document.getElementById("formulaire-soin").classList.add("hidden");
     document.getElementById("ordre-combat").style.display = "block";
     document.getElementById("tour-actuel").style.display = "block";
