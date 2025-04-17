@@ -64,6 +64,25 @@
         </div>
         <p id="feedback-message" class="message-flash"></p>
       </section>
+
+      <div id="formulaire-soin" class="hidden">
+        <h3>🩹 Action de soin</h3>
+        
+        <label for="cible-soin">Choisir une cible :</label>
+        <select id="cible-soin">
+          <!-- Options ajoutées dynamiquement en JS -->
+        </select>
+      
+        <label for="valeur-soin">Nombre de PV à rendre :</label>
+        <input type="number" id="valeur-soin" min="1" required />
+      
+        <button id="valider-soin" class="btn-style violet">Valider</button>
+        <div class="form-buttons">
+          <button class="btn-style" id="valider-soin">✅ Valider</button>
+          <button class="btn-style btn-rouge" id="annuler-soin">❌ Annuler</button>
+        </div>
+      </div>
+
   </main>
 
   <script src="js/theme.js"></script>

@@ -57,5 +57,23 @@
     <a href="index.html" class=".btn-accueil-bottom">🏠 Accueil</a>
   </div>
 
+  <section id="journal-combat" class="card-section">
+    <h2>📜 Journal du combat</h2>
+    <ul id="log-combat"></ul>
+  </section>
+
+  <section id="formulaire-soin" class="card-section hidden">
+    <h2>🩹 Appliquer un soin</h2>
+    <label for="cible-soin">Cible :</label>
+    <select id="cible-soin"></select>
+  
+    <label for="valeur-soin">Valeur du soin :</label>
+    <input type="number" id="valeur-soin" min="1" />
+  
+    <button class="btn-style" id="valider-soin">✅ Valider</button>
+    <button class="btn-style" id="annuler-soin">❌ Annuler</button>
+  </section>
+  
+
 </body>
 </html>

@@ -122,3 +122,95 @@ document.getElementById("btn-passer").addEventListener("click", async () => {
   }
 });
 
+document.getElementById("btn-soigner").addEventListener("click", async () => {
+  // Masquer les éléments non nécessaires pendant l'action
+  document.getElementById("message-tour").style.display = "none";
+  document.getElementById("ordre-combat").style.display = "none";
+
+  // Afficher le formulaire de soin
+  document.getElementById("formulaire-soin").classList.remove("hidden");
+
+  // Récupérer les données centralisées de la session
+  const data = await recupererSession();
+  if (!data) return;
+
+  const joueurs = data.joueurs || [];
+  const monstres = data.monstres || [];
+
+  const select = document.getElementById("cible-soin");
+  select.innerHTML = ""; // Nettoyer la liste
+
+  // Ajouter les joueurs
+  joueurs.forEach(joueur => {
+    const option = document.createElement("option");
+    option.value = joueur.pseudo;
+    option.textContent = `🧝 ${joueur.pseudo}`;
+    select.appendChild(option);
+  });
+
+  // Ajouter les monstres
+  monstres.forEach(monstre => {
+    const option = document.createElement("option");
+    option.value = monstre.nom;
+    option.textContent = `👹 ${monstre.nom}`;
+    select.appendChild(option);
+  });
+});
+
+document.getElementById("valider-soin").addEventListener("click", async () => {
+  const cible = document.getElementById("cible-soin").value;
+  const valeur = parseInt(document.getElementById("valeur-soin").value);
+  const boutonValider = document.getElementById("valider-soin");
+
+  if (!cible || isNaN(valeur) || valeur <= 0) {
+    alert("Veuillez sélectionner une cible et entrer une valeur de soin valide.");
+    return;
+  }
+
+  boutonValider.disabled = true;
+
+  try {
+    const response = await fetch("https://lampion-api.azurewebsites.net/api/SoinJoueur", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sessionId,
+        auteur: pseudo,
+        cible,
+        soin: valeur
+      })
+    });
+
+    if (!response.ok) throw new Error("Erreur API");
+
+    // Réinitialiser l'UI
+    document.getElementById("formulaire-soin").classList.add("hidden");
+    document.getElementById("message-tour").style.display = "block";
+    document.getElementById("ordre-combat").style.display = "block";
+    document.getElementById("valeur-soin").value = "";
+
+    // Feedback utilisateur
+    const feedback = document.getElementById("feedback-message");
+    if (feedback) {
+      feedback.textContent = `🩹 Soin de ${valeur} PV appliqué à ${cible}`;
+      clearTimeout(feedback._timeout);
+      feedback._timeout = setTimeout(() => (feedback.textContent = ""), 4000);
+    }
+
+  } catch (err) {
+    console.error("❌ Erreur lors de l'envoi du soin :", err);
+    alert("Erreur lors de l’envoi du soin. Veuillez réessayer.");
+  } finally {
+    boutonValider.disabled = false;
+  }
+});
+
+
+document.getElementById("annuler-soin").addEventListener("click", () => {
+document.getElementById("formulaire-soin").classList.add("hidden");
+document.getElementById("message-tour").style.display = "block";
+document.getElementById("ordre-combat").style.display = "block";
+document.getElementById("valeur-soin").value = "";
+
+});
+

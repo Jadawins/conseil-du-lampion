@@ -95,6 +95,115 @@ boutonPasser.addEventListener("click", async () => {
   }
 });
 
-fetchOrdreCombat();
+async function afficherJournalCombat() {
+  const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+  if (!response.ok) return;
 
+  const data = await response.json();
+  const log = data.logCombat || [];
+  const ul = document.getElementById("log-combat");
+
+  ul.innerHTML = ""; // Nettoyer
+
+  log.slice(-10).reverse().forEach(entry => {
+    const li = document.createElement("li");
+    let texte = "";
+
+    const time = new Date(entry.timestamp).toLocaleTimeString("fr-FR", {
+      hour: "2-digit", minute: "2-digit"
+    });
+
+    if (entry.type === "soin") {
+      texte = `🩹 [${time}] ${entry.auteur} soigne ${entry.cible} de ${entry.valeur} PV`;
+    } else if (entry.type === "attaque") {
+      texte = `⚔️ [${time}] ${entry.auteur} attaque ${entry.cible} pour ${entry.valeur} dégâts`;
+    } else {
+      texte = `📌 [${time}] ${entry.auteur} fait une action inconnue.`;
+    }
+
+    li.textContent = texte;
+    ul.appendChild(li);
+  });
+}
+
+boutonSoigner.addEventListener("click", async () => {
+  // Masquer les éléments non nécessaires pendant l'action
+  document.getElementById("ordre-combat").style.display = "none";
+  document.getElementById("tour-actuel").style.display = "none";
+
+  // Afficher le formulaire de soin
+  document.getElementById("formulaire-soin").classList.remove("hidden");
+
+  // Récupérer les données de la session
+  const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+  if (!response.ok) return;
+  const data = await response.json();
+
+  const joueurs = data.joueurs || [];
+  const monstres = data.monstres || [];
+
+  const select = document.getElementById("cible-soin");
+  select.innerHTML = ""; // Nettoyer la liste
+
+  // Ajouter les joueurs
+  joueurs.forEach(joueur => {
+    const option = document.createElement("option");
+    option.value = joueur.pseudo;
+    option.textContent = `🧝 ${joueur.pseudo}`;
+    select.appendChild(option);
+  });
+
+  // Ajouter les monstres
+  monstres.forEach(monstre => {
+    const option = document.createElement("option");
+    option.value = monstre.nom;
+    option.textContent = `👹 ${monstre.nom}`;
+    select.appendChild(option);
+  });
+});
+
+document.getElementById("valider-soin").addEventListener("click", async () => {
+  const cible = document.getElementById("cible-soin").value;
+  const valeur = parseInt(document.getElementById("valeur-soin").value);
+
+  if (!cible || isNaN(valeur) || valeur <= 0) {
+    alert("Veuillez sélectionner une cible et entrer une valeur de soin valide.");
+    return;
+  }
+
+  try {
+    const response = await fetch("https://lampion-api.azurewebsites.net/api/SoinJoueur", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sessionId,
+        auteur: "MJ",
+        cible,
+        soin: valeur
+      })
+    });
+
+    if (!response.ok) throw new Error("Erreur API");
+
+    // Réinitialiser l'UI
+    document.getElementById("formulaire-soin").classList.add("hidden");
+    document.getElementById("ordre-combat").style.display = "block";
+    document.getElementById("tour-actuel").style.display = "block";
+    document.getElementById("valeur-soin").value = "";
+
+    // Mettre à jour l'affichage
+    await fetchOrdreCombat();
+    await afficherJournalCombat();
+  } catch (err) {
+    console.error("❌ Erreur lors de l'envoi du soin :", err);
+    alert("Erreur lors de l’envoi du soin. Veuillez réessayer.");
+  }
+});
+
+
+fetchOrdreCombat();
+// 🔁 Rafraîchissement du journal toutes les 3 sec
 setInterval(fetchOrdreCombat, 3000);
+window.addEventListener("DOMContentLoaded", afficherJournalCombat);
+
+setInterval(afficherJournalCombat, 3000);
