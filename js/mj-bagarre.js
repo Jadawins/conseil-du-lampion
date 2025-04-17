@@ -12,29 +12,29 @@ let currentTurnIndex = 0;
 let ordreCombat = [];
 
 async function fetchOrdreCombat() {
-    try {
-      const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
-      if (response.ok) {
-        const data = await response.json();
-        ordreCombat = data?.ordreTour || [];
-        currentTurnIndex = data?.indexTour || 0;
-        afficherOrdreCombat();
-        afficherTourActuel();
-      } else {
-        console.error("Erreur récupération session combat");
-      }
-    } catch (err) {
-      console.error("Erreur réseau:", err);
+  try {
+    const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+    if (response.ok) {
+      const data = await response.json();
+      ordreCombat = data?.ordreTour || [];
+      currentTurnIndex = data?.indexTour || 0;
+      afficherOrdreCombat();
+      afficherTourActuel();
+    } else {
+      console.error("Erreur récupération session combat");
     }
+  } catch (err) {
+    console.error("Erreur réseau:", err);
   }
+}
 
-  function formatPV(entite) {
-    const pv = entite?.pv ?? "?";
-    const pvMax = entite?.pvMax ?? entite?.pv ?? "?"; // Si pvMax absent, on suppose égal à pv
-    return `${pv} / ${pvMax}`;
-  }
-  
-  function afficherOrdreCombat() {
+function formatPV(entite) {
+  const pv = entite?.pv ?? "?";
+  const pvMax = entite?.pvMax ?? entite?.pv ?? "?";
+  return `${pv} / ${pvMax}`;
+}
+
+function afficherOrdreCombat() {
   const tbody = document.getElementById("liste-initiative");
   if (!tbody) return;
 
@@ -58,7 +58,17 @@ async function fetchOrdreCombat() {
   });
 }
 
-// 🎯 Passer le tour (MAJ dans Azure)
+function afficherTourActuel() {
+  const entite = ordreCombat[currentTurnIndex];
+  if (!entite) return;
+
+  messageTour.textContent = `🎯 C'est au tour de ${entite.pseudo || entite.nom} de jouer.`;
+
+  const estMonstre = !entite.id;
+  zoneActions.style.display = estMonstre ? "block" : "none";
+}
+
+// 🎯 Passer le tour
 boutonPasser.addEventListener("click", async () => {
   try {
     const response = await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
@@ -69,7 +79,7 @@ boutonPasser.addEventListener("click", async () => {
 
     const data = await response.json();
     console.log("✔️ Tour passé :", data);
-    await fetchOrdreCombat(); // recharge la session depuis Azure pour mettre à jour l’interface
+    await fetchOrdreCombat();
   } catch (err) {
     console.error("❌ Erreur lors du passage du tour :", err);
   }
@@ -83,12 +93,11 @@ async function afficherJournalCombat() {
   const log = data.logCombat || [];
   const ul = document.getElementById("log-combat");
 
-  ul.innerHTML = ""; // Nettoyer
+  ul.innerHTML = "";
 
   log.slice(-10).reverse().forEach(entry => {
     const li = document.createElement("li");
     let texte = "";
-
     const time = new Date(entry.timestamp).toLocaleTimeString("fr-FR", {
       hour: "2-digit", minute: "2-digit"
     });
@@ -107,25 +116,19 @@ async function afficherJournalCombat() {
 }
 
 boutonSoigner.addEventListener("click", async () => {
-  // Masquer les éléments non nécessaires pendant l'action
   document.getElementById("ordre-combat").style.display = "none";
   document.getElementById("tour-actuel").style.display = "none";
-
-  // Afficher le formulaire de soin
   document.getElementById("formulaire-soin").classList.remove("hidden");
 
-  // Récupérer les données de la session
   const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
   if (!response.ok) return;
   const data = await response.json();
 
   const joueurs = data.joueurs || [];
   const monstres = data.monstres || [];
-
   const select = document.getElementById("cible-soin");
-  select.innerHTML = ""; // Nettoyer la liste
+  select.innerHTML = "";
 
-  // Ajouter les joueurs
   joueurs.forEach(joueur => {
     const option = document.createElement("option");
     option.value = joueur.pseudo;
@@ -133,7 +136,6 @@ boutonSoigner.addEventListener("click", async () => {
     select.appendChild(option);
   });
 
-  // Ajouter les monstres
   monstres.forEach(monstre => {
     const option = document.createElement("option");
     option.value = monstre.nom;
@@ -165,13 +167,11 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
 
     if (!response.ok) throw new Error("Erreur API");
 
-    // Réinitialiser l'UI
     document.getElementById("formulaire-soin").classList.add("hidden");
     document.getElementById("ordre-combat").style.display = "block";
     document.getElementById("tour-actuel").style.display = "block";
     document.getElementById("valeur-soin").value = "";
 
-    // Mettre à jour l'affichage
     await fetchOrdreCombat();
     await afficherJournalCombat();
   } catch (err) {
@@ -180,10 +180,14 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
   }
 });
 
+document.getElementById("annuler-soin").addEventListener("click", () => {
+  document.getElementById("formulaire-soin").classList.add("hidden");
+  document.getElementById("ordre-combat").style.display = "block";
+  document.getElementById("tour-actuel").style.display = "block";
+  document.getElementById("valeur-soin").value = "";
+});
 
 fetchOrdreCombat();
-// 🔁 Rafraîchissement du journal toutes les 3 sec
 setInterval(fetchOrdreCombat, 3000);
 window.addEventListener("DOMContentLoaded", afficherJournalCombat);
-
 setInterval(afficherJournalCombat, 3000);
