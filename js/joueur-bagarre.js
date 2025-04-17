@@ -170,39 +170,31 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
   boutonValider.disabled = true;
 
   try {
-    // ✅ AJOUTE ICI :
-  console.log("📤 Envoi du soin :", {
-    sessionId,
-    auteur: pseudo,
-    cible,
-    soin: valeur
-  });
+    console.log("📤 Envoi du soin :", { sessionId, auteur: pseudo, cible, soin: valeur });
 
     const response = await fetch("https://lampion-api.azurewebsites.net/api/SoinJoueur", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sessionId,
-        auteur: pseudo,
-        cible,
-        soin: valeur
-      })
+      body: JSON.stringify({ sessionId, auteur: pseudo, cible, soin: valeur })
     });
 
-    // Passer automatiquement au tour suivant après le soin
-    await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
+    if (!response.ok) throw new Error("Erreur API lors du soin");
+
+    // ⚠️ Bien attendre le passage de tour
+    const passerResponse = await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sessionId })
     });
-    
-    // Réinitialiser l'UI
+
+    if (!passerResponse.ok) throw new Error("Erreur API lors du passage du tour");
+
+    // Réinitialisation interface
     document.getElementById("formulaire-soin").classList.add("hidden");
     document.getElementById("message-tour").style.display = "block";
     document.getElementById("ordre-combat").style.display = "block";
     document.getElementById("valeur-soin").value = "";
-    
-    // ✅ Feedback utilisateur
+
     const feedback = document.getElementById("feedback-message");
     if (feedback) {
       feedback.textContent = `✅ ${pseudo} a soigné ${cible} de ${valeur} PV et a terminé son tour.`;
@@ -211,13 +203,18 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
     }
 
   } catch (err) {
-    console.error("❌ Erreur lors de l'envoi du soin :", err);
-    alert("Erreur lors de l’envoi du soin. Veuillez réessayer.");
+    console.error("❌ Erreur lors du soin ou du passage de tour :", err);
+    alert("Une erreur est survenue. Réessayez.");
   } finally {
     boutonValider.disabled = false;
   }
 });
 
+function refreshCombat() {
+  verifierTour();
+  afficherOrdreDuTour();
+}
+setInterval(refreshCombat, 3000);
 
 document.getElementById("annuler-soin").addEventListener("click", () => {
 document.getElementById("formulaire-soin").classList.add("hidden");
