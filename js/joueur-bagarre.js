@@ -177,7 +177,7 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
     cible,
     soin: valeur
   });
-  
+
     const response = await fetch("https://lampion-api.azurewebsites.net/api/SoinJoueur", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -189,18 +189,23 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
       })
     });
 
-    if (!response.ok) throw new Error("Erreur API");
-
+    // Passer automatiquement au tour suivant après le soin
+    await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId })
+    });
+    
     // Réinitialiser l'UI
     document.getElementById("formulaire-soin").classList.add("hidden");
     document.getElementById("message-tour").style.display = "block";
     document.getElementById("ordre-combat").style.display = "block";
     document.getElementById("valeur-soin").value = "";
-
-    // Feedback utilisateur
+    
+    // ✅ Feedback utilisateur
     const feedback = document.getElementById("feedback-message");
     if (feedback) {
-      feedback.textContent = `🩹 Soin de ${valeur} PV appliqué à ${cible}`;
+      feedback.textContent = `✅ ${pseudo} a soigné ${cible} de ${valeur} PV et a terminé son tour.`;
       clearTimeout(feedback._timeout);
       feedback._timeout = setTimeout(() => (feedback.textContent = ""), 4000);
     }
