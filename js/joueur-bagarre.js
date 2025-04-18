@@ -122,6 +122,7 @@ window.addEventListener("DOMContentLoaded", () => {
 // ✅ Ces deux lignes doivent être ici AVANT le return
 verifierFinCombat(data);
 
+afficherOrdreCombat(data, ordre, indexTour);
 
 if (joueur.pv === 0) return;
 
