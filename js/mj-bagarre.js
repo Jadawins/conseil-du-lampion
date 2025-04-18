@@ -194,6 +194,100 @@ document.getElementById("annuler-soin").addEventListener("click", () => {
   document.getElementById("valeur-soin").value = "";
 });
 
+
+// 🎯 Gestion ATTAQUE MJ
+
+boutonAttaquer.addEventListener("click", async () => {
+  document.getElementById("ordre-combat").style.display = "none";
+  document.getElementById("tour-actuel").style.display = "none";
+  document.getElementById("formulaire-attaque").classList.remove("hidden");
+
+  try {
+    const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+    if (!response.ok) return;
+    const data = await response.json();
+
+    const joueurs = data.joueurs || [];
+    const monstres = data.monstres || [];
+    const select = document.getElementById("cible-attaque");
+    select.innerHTML = "";
+
+    joueurs.forEach(joueur => {
+      const option = document.createElement("option");
+      option.value = joueur.pseudo;
+      option.textContent = `🧝 ${joueur.pseudo}`;
+      select.appendChild(option);
+    });
+
+    monstres.forEach(monstre => {
+      const option = document.createElement("option");
+      option.value = monstre.nom;
+      option.textContent = `👹 ${monstre.nom}`;
+      select.appendChild(option);
+    });
+  } catch (err) {
+    console.error("❌ Erreur chargement cibles attaque :", err);
+  }
+});
+
+document.getElementById("valider-attaque").addEventListener("click", async () => {
+  const cible = document.getElementById("cible-attaque").value;
+  const valeur = parseInt(document.getElementById("valeur-attaque").value);
+  if (!cible || isNaN(valeur) || valeur <= 0) {
+    alert("Veuillez sélectionner une cible et entrer une valeur de dégâts valide.");
+    return;
+  }
+
+  const attaquant = ordreCombat[currentTurnIndex]?.pseudo || ordreCombat[currentTurnIndex]?.nom || "inconnu";
+
+  try {
+    const response = await fetch("https://lampion-api.azurewebsites.net/api/AttaqueJoueur", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId, auteur: attaquant, cible, degats: valeur })
+    });
+
+    if (!response.ok) {
+      const texte = await response.text();
+      console.error("🛑 Erreur API Attaque :", texte);
+      throw new Error("Erreur API Attaque");
+    }
+
+    await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId })
+    });
+
+    const feedback = document.getElementById("feedback-message");
+    if (feedback) {
+      feedback.textContent = `⚔️ ${attaquant} a infligé ${valeur} dégâts à ${cible}`;
+      clearTimeout(feedback._timeout);
+      feedback._timeout = setTimeout(() => (feedback.textContent = ""), 4000);
+    }
+
+    document.getElementById("formulaire-attaque").classList.add("hidden");
+    document.getElementById("ordre-combat").style.display = "block";
+    document.getElementById("tour-actuel").style.display = "block";
+    document.getElementById("valeur-attaque").value = "";
+
+    await fetchOrdreCombat();
+    await afficherJournalCombat();
+
+  } catch (err) {
+    console.error("❌ Erreur lors de l'attaque :", err);
+    alert("Erreur lors de l’envoi de l’attaque. Veuillez réessayer.");
+  }
+});
+
+document.getElementById("annuler-attaque").addEventListener("click", () => {
+  document.getElementById("formulaire-attaque").classList.add("hidden");
+  document.getElementById("ordre-combat").style.display = "block";
+  document.getElementById("tour-actuel").style.display = "block";
+  document.getElementById("valeur-attaque").value = "";
+});
+
+
 function refreshCombat() {
   fetchOrdreCombat();
   afficherJournalCombat();

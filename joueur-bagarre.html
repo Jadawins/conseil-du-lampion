@@ -93,6 +93,20 @@
         </div>
       </div>
 
+      <div id="formulaire-attaque" class="hidden">
+        <h3>⚔️ Action d'attaque</h3>
+      
+        <label for="cible-attaque">Choisir une cible :</label>
+        <select id="cible-attaque"></select>
+      
+        <label for="valeur-attaque">Nombre de dégâts à infliger :</label>
+        <input type="number" id="valeur-attaque" min="1" required />
+      
+        <div class="form-buttons">
+          <button class="btn-style" id="valider-attaque">✅ Valider</button>
+          <button class="btn-style btn-rouge" id="annuler-attaque">❌ Annuler</button>
+        </div>
+      </div>
   </main>
 
   <div class="bottom-nav">

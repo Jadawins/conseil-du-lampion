@@ -168,4 +168,75 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("ordre-combat").style.display = "block";
     document.getElementById("valeur-soin").value = "";
   });
+
+  document.getElementById("btn-attaquer").addEventListener("click", async () => {
+    document.getElementById("formulaire-attaque").classList.remove("hidden");
+    document.getElementById("message-tour").style.display = "none";
+    document.getElementById("ordre-combat").style.display = "none";
+  
+    const data = await recupererSession();
+    if (!data) return;
+  
+    const select = document.getElementById("cible-attaque");
+    select.innerHTML = "";
+  
+    [...data.joueurs, ...data.monstres].forEach(entite => {
+      const nom = entite.pseudo || entite.nom;
+      if (nom === pseudo) return; // le joueur ne peut pas se cibler lui-même
+      const option = document.createElement("option");
+      option.value = nom;
+      option.textContent = `${entite.pseudo ? "🧝" : "👹"} ${nom}`;
+      select.appendChild(option);
+    });
+  });
+  
+  document.getElementById("valider-attaque").addEventListener("click", async () => {
+    const cible = document.getElementById("cible-attaque").value;
+    const valeur = parseInt(document.getElementById("valeur-attaque").value);
+  
+    if (!cible || isNaN(valeur) || valeur <= 0) {
+      alert("Veuillez entrer une valeur de dégâts valide.");
+      return;
+    }
+  
+    try {
+      const res = await fetch("https://lampion-api.azurewebsites.net/api/AttaqueJoueur", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, auteur: pseudo, cible, degats: valeur })
+      });
+  
+      if (!res.ok) throw new Error("Erreur API attaque");
+  
+      await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId })
+      });
+  
+      document.getElementById("formulaire-attaque").classList.add("hidden");
+      document.getElementById("valeur-attaque").value = "";
+      document.getElementById("message-tour").style.display = "block";
+      document.getElementById("ordre-combat").style.display = "block";
+  
+      if (feedback) {
+        feedback.textContent = `⚔️ ${pseudo} a attaqué ${cible} pour ${valeur} PV.`;
+        clearTimeout(feedback._timeout);
+        feedback._timeout = setTimeout(() => (feedback.textContent = ""), 4000);
+      }
+  
+      await refreshCombat();
+  
+    } catch (err) {
+      console.error("❌ Erreur lors de l'attaque :", err);
+      alert("Erreur lors de l’envoi de l’attaque. Veuillez réessayer.");
+    }
+  });
+  
+  document.getElementById("annuler-attaque").addEventListener("click", () => {
+    document.getElementById("formulaire-attaque").classList.add("hidden");
+    document.getElementById("message-tour").style.display = "block";
+    document.getElementById("ordre-combat").style.display = "block";
+    document.getElementById("valeur-attaque").value = "";
+  });  
 });

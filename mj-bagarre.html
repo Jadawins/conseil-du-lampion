@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="css/ui.css"/>
 </head>
 <body data-theme="dark">
-  <!-- 🌗 Appliquer le thème dès le chargement -->
   <script>
     if (localStorage.getItem("theme") === "light") {
       document.body.setAttribute("data-theme", "light");
@@ -17,7 +16,6 @@
     }
   </script>
 
-  <!-- 🌙 Toggle thème clair/sombre -->
   <div class="theme-toggle-container">
     <span class="theme-icon sun">🌞</span>
     <label class="switch">
@@ -44,7 +42,6 @@
         <tbody id="liste-initiative"></tbody>
       </table>
     </section>
- 
 
     <section id="actions-mj" style="display: none;">
       <h2>🎮 Vos actions</h2>
@@ -60,20 +57,40 @@
 
     <section id="formulaire-soin" class="card-section hidden">
       <h2>🩹 Appliquer un soin</h2>
-    
+
       <div class="form-group">
         <label for="cible-soin">Cible :</label>
         <select id="cible-soin"></select>
       </div>
-    
+
       <div class="form-group">
         <label for="valeur-soin">Valeur du soin :</label>
         <input type="number" id="valeur-soin" min="1" />
       </div>
-    
+
       <div class="form-buttons">
         <button class="btn-style" id="valider-soin">✅ Valider</button>
         <button class="btn-style btn-rouge" id="annuler-soin">❌ Annuler</button>
+      </div>
+    </section>
+
+    <!-- 🎯 FORMULAIRE ATTAQUE -->
+    <section id="formulaire-attaque" class="card-section hidden">
+      <h2>⚔️ Appliquer une attaque</h2>
+
+      <div class="form-group">
+        <label for="cible-attaque">Cible :</label>
+        <select id="cible-attaque"></select>
+      </div>
+
+      <div class="form-group">
+        <label for="valeur-attaque">Valeur des dégâts :</label>
+        <input type="number" id="valeur-attaque" min="1" />
+      </div>
+
+      <div class="form-buttons">
+        <button class="btn-style" id="valider-attaque">✅ Valider</button>
+        <button class="btn-style btn-rouge" id="annuler-attaque">❌ Annuler</button>
       </div>
     </section>
   </main>
@@ -86,4 +103,3 @@
   </div>
 </body>
 </html>
- 
