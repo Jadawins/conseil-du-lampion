@@ -20,7 +20,7 @@ async function fetchOrdreCombat() {
       const data = await response.json();
       ordreCombat = data?.ordreTour || [];
       currentTurnIndex = data?.indexTour || 0;
-      afficherOrdreCombat(data);
+      afficherOrdreCombat();
       afficherTourActuel();
     } else {
       console.error("Erreur récupération session combat");
@@ -30,27 +30,23 @@ async function fetchOrdreCombat() {
   }
 }
 
-function formatPV(entite, data) {
-  const nom = entite.pseudo || entite.nom;
-  const isJoueur = !!entite.pseudo;
-  const source = isJoueur ? data.joueurs : data.monstres;
-  const reference = source?.find(e => (e.pseudo || e.nom) === nom);
-
-  const pv = reference?.pv ?? "?";
-  const pvMax = reference?.pvMax ?? pv ?? "?";
+function formatPV(entite) {
+  const pv = entite?.pv ?? "?";
+  const pvMax = entite?.pvMax ?? entite?.pv ?? "?";
   return `${pv} / ${pvMax}`;
 }
 
-function afficherOrdreCombat(data) {
+function afficherOrdreCombat() {
   const tbody = document.getElementById("liste-initiative");
   if (!tbody) return;
   tbody.innerHTML = "";
+
   ordreCombat.forEach((entite, index) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
       <td>${entite.initiative}</td>
-      <td>${formatPV(entite, data)}</td>
+      <td>${formatPV(entite)}</td>
     `;
     if (entite.pv && entite.pvMax && entite.pv / entite.pvMax < 0.3) tr.classList.add("low-hp");
     if (index === currentTurnIndex) tr.classList.add("highlight-row");
@@ -102,7 +98,7 @@ async function afficherJournalCombat() {
         texte += ` dont ${entry.overheal} en trop`;
       }
     } else if (entry.type === "attaque") {
-      texte = `⚔️ [${time}] ${entry.auteur} attaque ${entry.cible} pour ${entry.degats} dégâts`;
+      texte = `⚔️ [${time}] ${entry.auteur} attaque ${entry.cible} pour ${entry.valeur} dégâts`;
     } else {
       texte = `📌 [${time}] ${entry.auteur} fait une action inconnue.`;
     }
