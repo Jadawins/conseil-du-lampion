@@ -26,6 +26,7 @@ async function fetchOrdreCombat() {
       currentTurnIndex = data?.indexTour || 0;
       afficherOrdreCombat(data);
       afficherTourActuel();
+      afficherJournalCombat();
       verifierFinCombat(data); // ✅ Déplace ici
     } else {
       console.error("Erreur récupération session combat");
