@@ -89,6 +89,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // ✅ Affiche "☠️ Gandalf est à terre !" une seule fois
 const log = document.getElementById("log-combat");
+if (!log) return;
 (data.joueurs || []).forEach(joueur => {
   if (joueur.pv === 0 && !joueursAnnoncesKO.includes(joueur.pseudo)) {
     const li = document.createElement("li");
