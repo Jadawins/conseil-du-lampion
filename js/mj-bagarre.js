@@ -9,6 +9,10 @@ const zoneActions = document.getElementById("actions-mj");
 const boutonAttaquer = document.getElementById("btn-attaquer");
 const boutonSoigner = document.getElementById("btn-soigner");
 const boutonPasser = document.getElementById("btn-passer");
+const sectionFinCombat = document.getElementById("fin-combat");
+const messageFinCombat = document.getElementById("message-fin-combat");
+const boutonFinManuelle = document.getElementById("btn-fin-combat");
+let joueursAnnoncesKO = [];
 
 let currentTurnIndex = 0;
 let ordreCombat = [];
@@ -22,6 +26,7 @@ async function fetchOrdreCombat() {
       currentTurnIndex = data?.indexTour || 0;
       afficherOrdreCombat(data);
       afficherTourActuel();
+      verifierFinCombat(data); // ✅ Déplace ici
     } else {
       console.error("Erreur récupération session combat");
     }
@@ -292,9 +297,54 @@ document.getElementById("annuler-attaque").addEventListener("click", () => {
   document.getElementById("valeur-attaque").value = "";
 });
 
+function verifierFinCombat(data) {
+  const joueurs = data.joueurs || [];
+  const monstres = data.monstres || [];
+
+  // Message quand un joueur tombe à 0 PV
+  joueurs.forEach(j => {
+    if (j.pv === 0 && !joueursAnnoncesKO.includes(j.pseudo)) {
+      const ul = document.getElementById("log-combat");
+      const li = document.createElement("li");
+      li.textContent = `☠️ ${j.pseudo} est à terre !`;
+      ul.appendChild(li);
+      joueursAnnoncesKO.push(j.pseudo);
+    }
+  });
+
+  const tousJoueursMorts = joueurs.length > 0 && joueurs.every(j => j.pv === 0);
+  const tousMonstresMorts = monstres.length === 0;
+
+  if (tousJoueursMorts) {
+    messageFinCombat.textContent = "☠️ Défaite... Tous les joueurs sont à terre.";
+    sectionFinCombat.classList.remove("hidden");
+    zoneActions.style.display = "none";
+  } else if (tousMonstresMorts) {
+    messageFinCombat.textContent = "🎉 Victoire ! Tous les monstres ont été vaincus.";
+    sectionFinCombat.classList.remove("hidden");
+    zoneActions.style.display = "none";
+  }
+  clearInterval(intervalRefresh);
+}
+
+boutonFinManuelle?.addEventListener("click", async () => {
+  try {
+    const response = await fetch("https://lampion-api.azurewebsites.net/api/FinCombat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId })
+    });
+    const result = await response.text();
+    console.log("🔚 Fin de combat déclenchée manuellement:", result);
+    sectionFinCombat.classList.add("hidden");
+  } catch (err) {
+    console.error("❌ Erreur FinCombat:", err);
+  }
+});
+
 
 function refreshCombat() {
   fetchOrdreCombat();
   afficherJournalCombat();
 }
-setInterval(refreshCombat, 3000);
+const intervalRefresh = setInterval(refreshCombat, 3000);

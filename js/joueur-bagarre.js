@@ -11,6 +11,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const feedback = document.getElementById("feedback-message");
 
   let soinEnCours = null;
+  let joueursAnnoncesKO = [];
 
   function formatPV(joueur) {
     const pv = joueur?.pv ?? "?";
@@ -31,13 +32,46 @@ window.addEventListener("DOMContentLoaded", () => {
   function afficherEtat(pv, pvMax, joueurActif) {
     pvAffichage.textContent = `❤️ ${formatPV({ pv, pvMax })} PV`;
     const estMonTour = joueurActif?.pseudo === pseudo;
+    const estKO = pv === 0;
+  
+    if (estKO) {
+      messageTour.textContent = "☠️ Vous êtes à terre...";
+      actionSection.style.display = "none";
+      attenteSection.style.display = "none";
+    } else {
+      if (estMonTour) {
+        messageTour.textContent = "🗡️ C’est votre tour !";
+        actionSection.style.display = "block";
+        attenteSection.style.display = "none";
+      } else {
+        messageTour.textContent = `🌟 C'est au tour de ${joueurActif?.pseudo || joueurActif?.nom || "..."} de jouer.`;
+        actionSection.style.display = "none";
+        attenteSection.style.display = "block";
+      }
+    }
+  }
+  
 
-    messageTour.textContent = estMonTour
-      ? "🗡️ C’est votre tour !"
-      : `🌟 C'est au tour de ${joueurActif?.pseudo || joueurActif?.nom || "..." } de jouer.`;
-
-    actionSection.style.display = estMonTour ? "block" : "none";
-    attenteSection.style.display = estMonTour ? "none" : "block";
+  function verifierFinCombat(data) {
+    const joueurs = data.joueurs || [];
+    const monstres = data.monstres || [];
+  
+    const moi = joueurs.find(j => j.pseudo === pseudo);
+    if (!moi) return;
+  
+    const sectionFin = document.getElementById("fin-combat-joueur");
+    const messageFin = document.getElementById("message-fin-combat-joueur");
+  
+    const tousJoueursMorts = joueurs.every(j => j.pv === 0);
+    const tousMonstresMorts = monstres.length === 0;
+  
+    if (tousJoueursMorts) {
+      messageFin.textContent = "☠️ Défaite... Tous les joueurs sont à terre.";
+      sectionFin.classList.remove("hidden");
+    } else if (tousMonstresMorts && moi.pv > 0) {
+      messageFin.textContent = "🎉 Victoire ! Tous les monstres ont été vaincus.";
+      sectionFin.classList.remove("hidden");
+    }
   }
 
   async function refreshCombat() {
@@ -50,6 +84,18 @@ window.addEventListener("DOMContentLoaded", () => {
     const joueurActif = ordre[indexTour];
 
     if (joueur) afficherEtat(joueur.pv, joueur.pvMax || joueur.pv, joueurActif);
+    verifierFinCombat(data);
+
+    // ✅ Affiche "☠️ Gandalf est à terre !" une seule fois
+const log = document.getElementById("log-combat");
+(data.joueurs || []).forEach(joueur => {
+  if (joueur.pv === 0 && !joueursAnnoncesKO.includes(joueur.pseudo)) {
+    const li = document.createElement("li");
+    li.textContent = `☠️ ${joueur.pseudo} est à terre !`;
+    log.appendChild(li);
+    joueursAnnoncesKO.push(joueur.pseudo);
+  }
+});
 
     const tbody = document.getElementById("liste-initiative");
     tbody.innerHTML = "";
