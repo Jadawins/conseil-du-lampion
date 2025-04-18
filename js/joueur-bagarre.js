@@ -99,27 +99,35 @@ if (!log) return;
   }
 });
 
-    const tbody = document.getElementById("liste-initiative");
-    tbody.innerHTML = "";
-    ordre.forEach((entite, index) => {
-      const tr = document.createElement("tr");
-      const nom = entite.pseudo || entite.nom;
-    
-      let pvText = "-";
-      if (entite.pseudo) {
-        const joueurData = data.joueurs?.find(j => j.pseudo === entite.pseudo);
-        pvText = joueurData ? formatPV(joueurData) : "?";
-      }
-    
-      tr.innerHTML = `
-        <td>${index === indexTour ? "🌟 " : ""}${nom}</td>
-        <td>${pvText}</td>
-      `;
-    
-      if (entite.pv && entite.pvMax && entite.pv / entite.pvMax < 0.3) tr.classList.add("low-hp");
-      if (index === indexTour) tr.classList.add("highlight-row");
-      tbody.appendChild(tr);
-    });
+const tbody = document.getElementById("liste-initiative");
+tbody.innerHTML = "";
+
+ordre.forEach((entite, index) => {
+  const nom = entite.pseudo || entite.nom;
+  const estJoueur = !!entite.pseudo;
+  const joueurData = data.joueurs?.find(j => j.pseudo === entite.pseudo);
+
+  const tr = document.createElement("tr");
+
+  const pvText = estJoueur && joueurData ? formatPV(joueurData) : "-";
+  const pv = joueurData?.pv;
+  const pvMax = joueurData?.pvMax;
+
+  tr.innerHTML = `
+    <td>${index === indexTour ? "🌟 " : ""}${nom}</td>
+    <td>${pvText}</td>
+  `;
+
+  if (estJoueur && pv !== undefined && pvMax !== undefined && pv / pvMax < 0.3) {
+    tr.classList.add("low-hp");
+  }
+
+  if (index === indexTour) {
+    tr.classList.add("highlight-row");
+  }
+
+  tbody.appendChild(tr);
+});
   }
 
   refreshCombat();
