@@ -103,13 +103,19 @@ if (!log) return;
     tbody.innerHTML = "";
     ordre.forEach((entite, index) => {
       const tr = document.createElement("tr");
-      const estJoueur = !!entite.pseudo;
-      const joueurData = data.joueurs?.find(j => j.pseudo === entite.pseudo);
-      const pvText = estJoueur && joueurData ? formatPV(joueurData) : "-";
+      const nom = entite.pseudo || entite.nom;
+    
+      let pvText = "-";
+      if (entite.pseudo) {
+        const joueurData = data.joueurs?.find(j => j.pseudo === entite.pseudo);
+        pvText = joueurData ? formatPV(joueurData) : "?";
+      }
+    
       tr.innerHTML = `
-        <td>${index === indexTour ? "🌟 " : ""}${entite.pseudo || entite.nom}</td>
+        <td>${index === indexTour ? "🌟 " : ""}${nom}</td>
         <td>${pvText}</td>
       `;
+    
       if (entite.pv && entite.pvMax && entite.pv / entite.pvMax < 0.3) tr.classList.add("low-hp");
       if (index === indexTour) tr.classList.add("highlight-row");
       tbody.appendChild(tr);
