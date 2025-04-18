@@ -63,7 +63,7 @@ form.addEventListener("submit", (e) => {
     alert("⚠️ Un monstre avec ce nom existe déjà !");
     return;
   }
-  monstres.push({ nom, pv, initiative });
+  monstres.push({ nom, pv, pvMax: pv, initiative });
   localStorage.setItem(monstresKey, JSON.stringify(monstres));
   form.reset();
   if (!combatLance) afficherListeTemporaire();
@@ -74,7 +74,7 @@ editConfirm.addEventListener("click", () => {
   const newInit = parseInt(editInitInput.value);
   const newPV = parseInt(editPVInput.value);
   if (newName && !isNaN(newInit) && !isNaN(newPV) && monstreIndexAModifier !== null) {
-    monstres[monstreIndexAModifier] = { nom: newName, initiative: newInit, pv: newPV };
+    monstres[monstreIndexAModifier] = { nom: newName, initiative: newInit, pv: newPV, pvMax: newPV };
     localStorage.setItem(monstresKey, JSON.stringify(monstres));
     afficherListeTemporaire();
     editModal.classList.add("hidden");
