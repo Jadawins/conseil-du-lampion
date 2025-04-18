@@ -117,6 +117,17 @@ window.addEventListener("DOMContentLoaded", () => {
     const indexTour = data.indexTour ?? 0;
     const joueurActif = ordre[indexTour];
 
+    // 🔁 Si c’est le tour du joueur ET qu’il est à terre, passer automatiquement
+if (joueurActif?.pseudo === pseudo && joueur?.pv === 0) {
+  console.log(`⏭️ ${pseudo} est à terre. Passage automatique du tour.`);
+  await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ sessionId })
+  });
+  return;
+}
+
     if (joueur) afficherEtat(joueur.pv, joueur.pvMax || joueur.pv, joueurActif);
 
 // ✅ Ces deux lignes doivent être ici AVANT le return

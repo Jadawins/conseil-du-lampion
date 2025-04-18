@@ -72,10 +72,21 @@ function afficherOrdreCombat(data, ordre, indexTour) {
 
 
 function afficherTourActuel(data, ordre, indexTour) {
-  const entite = ordre[indexTour];
+  let entite = ordre[indexTour];
+
+  // 🔁 Si entité est morte, on passe automatiquement au tour suivant
+  if (entite && entite.pv === 0) {
+    console.log(`⏭️ ${entite.pseudo || entite.nom} est mort, on passe son tour.`);
+    fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId })
+    }).then(() => fetchOrdreCombat());
+    return;
+  }
   if (!entite) return;
   messageTour.textContent = `🎯 C'est au tour de ${entite.pseudo || entite.nom} de jouer.`;
-  const estMonstre = !entite.id;
+  const estMonstre = !entite.id && entite.pv > 0;
   zoneActions.style.display = estMonstre ? "block" : "none";
 }
 
