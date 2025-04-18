@@ -370,8 +370,17 @@ boutonFinManuelle?.addEventListener("click", async () => {
 });
 
 
-function refreshCombat() {
-  fetchOrdreCombat();
+async function refreshCombat() {
+  const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+  if (!response.ok) return;
+  const data = await response.json();
+
+  const ordre = data?.ordreTour || [];
+  const indexTour = data?.indexTour ?? 0;
+
+  afficherOrdreCombat(data, ordre, indexTour);
+  afficherTourActuel(data, ordre, indexTour);
+  verifierFinCombat(data);
   afficherJournalCombat();
 }
 const intervalRefresh = setInterval(refreshCombat, 3000);
