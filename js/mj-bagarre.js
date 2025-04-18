@@ -1,3 +1,5 @@
+// ✅ mj-bagarre.js – journal amélioré avec affichage overheal
+
 const urlParams = new URLSearchParams(window.location.search);
 const sessionId = urlParams.get("sessionId") || localStorage.getItem("sessionId");
 
@@ -37,22 +39,16 @@ function formatPV(entite) {
 function afficherOrdreCombat() {
   const tbody = document.getElementById("liste-initiative");
   if (!tbody) return;
-
   tbody.innerHTML = "";
 
   ordreCombat.forEach((entite, index) => {
     const tr = document.createElement("tr");
-
     tr.innerHTML = `
       <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
       <td>${entite.initiative}</td>
       <td>${formatPV(entite)}</td>
     `;
-
-    if (entite.pv && entite.pvMax && entite.pv / entite.pvMax < 0.3) {
-      tr.classList.add("low-hp");
-    }
-
+    if (entite.pv && entite.pvMax && entite.pv / entite.pvMax < 0.3) tr.classList.add("low-hp");
     if (index === currentTurnIndex) tr.classList.add("highlight-row");
     tbody.appendChild(tr);
   });
@@ -61,14 +57,11 @@ function afficherOrdreCombat() {
 function afficherTourActuel() {
   const entite = ordreCombat[currentTurnIndex];
   if (!entite) return;
-
   messageTour.textContent = `🎯 C'est au tour de ${entite.pseudo || entite.nom} de jouer.`;
-
   const estMonstre = !entite.id;
   zoneActions.style.display = estMonstre ? "block" : "none";
 }
 
-// 🎯 Passer le tour
 boutonPasser.addEventListener("click", async () => {
   try {
     const response = await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
@@ -76,7 +69,6 @@ boutonPasser.addEventListener("click", async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sessionId })
     });
-
     const data = await response.json();
     console.log("✔️ Tour passé :", data);
     await fetchOrdreCombat();
@@ -88,22 +80,23 @@ boutonPasser.addEventListener("click", async () => {
 async function afficherJournalCombat() {
   const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
   if (!response.ok) return;
-
   const data = await response.json();
   const log = data.logCombat || [];
   const ul = document.getElementById("log-combat");
-
   ul.innerHTML = "";
 
   log.slice(-10).reverse().forEach(entry => {
     const li = document.createElement("li");
-    let texte = "";
     const time = new Date(entry.timestamp).toLocaleTimeString("fr-FR", {
       hour: "2-digit", minute: "2-digit"
     });
+    let texte = "";
 
     if (entry.type === "soin") {
       texte = `🩹 [${time}] ${entry.auteur} soigne ${entry.cible} de ${entry.valeur} PV`;
+      if (entry.overheal && entry.overheal > 0) {
+        texte += ` dont ${entry.overheal} en trop`;
+      }
     } else if (entry.type === "attaque") {
       texte = `⚔️ [${time}] ${entry.auteur} attaque ${entry.cible} pour ${entry.valeur} dégâts`;
     } else {
@@ -147,7 +140,6 @@ boutonSoigner.addEventListener("click", async () => {
 document.getElementById("valider-soin").addEventListener("click", async () => {
   const cible = document.getElementById("cible-soin").value;
   const valeur = parseInt(document.getElementById("valeur-soin").value);
-
   if (!cible || isNaN(valeur) || valeur <= 0) {
     alert("Veuillez sélectionner une cible et entrer une valeur de soin valide.");
     return;
@@ -168,26 +160,19 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
       throw new Error("Erreur API");
     }
 
-    const passerResponse = await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
+    await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sessionId })
     });
 
-    if (!passerResponse.ok) {
-      const erreurTexte = await passerResponse.text();
-      console.error("⚠️ Passage du tour a échoué :", erreurTexte);
-    }
-
-    // ✅ Feedback visuel
     const feedback = document.getElementById("feedback-message");
     if (feedback) {
-      feedback.textContent = `✅ ${soignant} a soigné ${cible} de ${valeur} PV et a terminé son tour.`;
+      feedback.textContent = `✅ ${soignant} a soigné ${cible} de ${valeur} PV.`;
       clearTimeout(feedback._timeout);
       feedback._timeout = setTimeout(() => (feedback.textContent = ""), 4000);
     }
 
-    // Réinitialisation affichage
     document.getElementById("formulaire-soin").classList.add("hidden");
     document.getElementById("ordre-combat").style.display = "block";
     document.getElementById("tour-actuel").style.display = "block";
