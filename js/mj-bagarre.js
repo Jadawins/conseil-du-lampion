@@ -98,7 +98,7 @@ async function afficherJournalCombat() {
         texte += ` dont ${entry.overheal} en trop`;
       }
     } else if (entry.type === "attaque") {
-      texte = `⚔️ [${time}] ${entry.auteur} attaque ${entry.cible} pour ${entry.valeur} dégâts`;
+      texte = `⚔️ [${time}] ${entry.auteur} attaque ${entry.cible} pour ${entry.degats} dégâts`;
     } else {
       texte = `📌 [${time}] ${entry.auteur} fait une action inconnue.`;
     }
