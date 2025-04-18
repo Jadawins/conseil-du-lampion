@@ -26,8 +26,8 @@ async function fetchOrdreCombat() {
       currentTurnIndex = data?.indexTour || 0;
       afficherOrdreCombat(data);
       afficherTourActuel();
-      afficherJournalCombat();
-      verifierFinCombat(data); // ✅ Déplace ici
+      verifierFinCombat(data);
+      afficherJournalCombat(); // ✅ <<< AJOUTER ICI
     } else {
       console.error("Erreur récupération session combat");
     }
@@ -35,6 +35,7 @@ async function fetchOrdreCombat() {
     console.error("Erreur réseau:", err);
   }
 }
+
 
 function formatPV(entite, data) {
   const nom = entite.pseudo || entite.nom;
