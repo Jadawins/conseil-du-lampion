@@ -130,12 +130,17 @@ async function afficherJournalCombat() {
       texte = `⚔️ [${time}] ${entry.auteur} attaque ${entry.cible} pour ${entry.degats} dégâts`;
     } else if (entry.type === "mort") {
       texte = `☠️ [${time}] ${entry.cible} est mort.`;
-    } else {
+    } else if (entry.type === "sortie_combat") {
+      texte = `📤 [${time}] ${entry.cible} a quitté le combat (${entry.raison})`;
+    } else if (entry.type === "fin_combat") {
+      const couleur = entry.resultat === "victoire" ? "#4caf50" : "#f44336";
+      texte = `🏁 [${time}] <span style="color: ${couleur}; font-weight: bold;">${entry.resultat.toUpperCase()} !</span>`;
+    }else {
       const auteur = entry.auteur ?? entry.cible ?? "Quelqu’un";
       texte = `📌 [${time}] ${auteur} fait une action inconnue.`;
     }
 
-    li.textContent = texte;
+    li.innerHTML = texte;
     ul.appendChild(li);
   });
 }
