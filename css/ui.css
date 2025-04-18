@@ -341,3 +341,12 @@ body[data-theme='light'] .table-monstres th {
   justify-content: center;
   margin-bottom: 1rem;
 }
+
+.card-confirm {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 2px solid var(--color-accent);
+  border-radius: 10px;
+  background-color: var(--bg-secondary);
+  text-align: center;
+}
