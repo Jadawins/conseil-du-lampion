@@ -114,9 +114,10 @@ ordre.forEach((entite, index) => {
   const pvMax = joueurData?.pvMax;
 
   tr.innerHTML = `
-    <td>${index === indexTour ? "🌟 " : ""}${nom}</td>
-    <td>${pvText}</td>
-  `;
+  <td>${index === indexTour ? "🌟 " : ""}${nom}</td>
+  <td>${entite.initiative ?? "-"}</td>
+  <td>${pvText}</td>
+`;
 
   if (estJoueur && pv !== undefined && pvMax !== undefined && pv / pvMax < 0.3) {
     tr.classList.add("low-hp");
