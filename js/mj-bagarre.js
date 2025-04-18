@@ -378,9 +378,12 @@ async function refreshCombat() {
   const ordre = data?.ordreTour || [];
   const indexTour = data?.indexTour ?? 0;
 
+  console.log("🔄 Mise à jour via refreshCombat", { ordre, indexTour }); // 👀
+
   afficherOrdreCombat(data, ordre, indexTour);
   afficherTourActuel(data, ordre, indexTour);
   verifierFinCombat(data);
   afficherJournalCombat();
 }
 const intervalRefresh = setInterval(refreshCombat, 3000);
+refreshCombat()
