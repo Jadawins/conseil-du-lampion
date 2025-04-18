@@ -30,13 +30,18 @@ async function fetchOrdreCombat() {
   }
 }
 
-function formatPV(entite) {
-  const pv = entite.pv ?? "?";
-  const pvMax = entite.pvMax ?? pv ?? "?";
+function formatPV(entite, data) {
+  const nom = entite.pseudo || entite.nom;
+  const isJoueur = !!entite.pseudo;
+  const source = isJoueur ? data.joueurs : data.monstres;
+  const reference = source?.find(e => (e.pseudo || e.nom) === nom);
+
+  const pv = reference?.pv ?? "?";
+  const pvMax = reference?.pvMax ?? pv ?? "?";
   return `${pv} / ${pvMax}`;
 }
 
-function afficherOrdreCombat() {
+function afficherOrdreCombat(data) {
   const tbody = document.getElementById("liste-initiative");
   if (!tbody) return;
   tbody.innerHTML = "";
@@ -45,14 +50,10 @@ function afficherOrdreCombat() {
     tr.innerHTML = `
       <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
       <td>${entite.initiative}</td>
-      <td>${formatPV(entite)}</td>
+      <td>${formatPV(entite, data)}</td>
     `;
-    if (entite.pv && entite.pvMax && entite.pv / entite.pvMax < 0.3) {
-      tr.classList.add("low-hp");
-    }
-    if (index === currentTurnIndex) {
-      tr.classList.add("highlight-row");
-    }
+    if (entite.pv && entite.pvMax && entite.pv / entite.pvMax < 0.3) tr.classList.add("low-hp");
+    if (index === currentTurnIndex) tr.classList.add("highlight-row");
     tbody.appendChild(tr);
   });
 }
