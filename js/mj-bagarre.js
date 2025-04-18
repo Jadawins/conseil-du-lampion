@@ -128,8 +128,11 @@ async function afficherJournalCombat() {
       }
     } else if (entry.type === "attaque") {
       texte = `⚔️ [${time}] ${entry.auteur} attaque ${entry.cible} pour ${entry.degats} dégâts`;
+    } else if (entry.type === "mort") {
+      texte = `☠️ [${time}] ${entry.cible} est mort.`;
     } else {
-      texte = `📌 [${time}] ${entry.auteur} fait une action inconnue.`;
+      const auteur = entry.auteur ?? entry.cible ?? "Quelqu’un";
+      texte = `📌 [${time}] ${auteur} fait une action inconnue.`;
     }
 
     li.textContent = texte;
