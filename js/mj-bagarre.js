@@ -20,7 +20,7 @@ async function fetchOrdreCombat() {
       const data = await response.json();
       ordreCombat = data?.ordreTour || [];
       currentTurnIndex = data?.indexTour || 0;
-      afficherOrdreCombat();
+      afficherOrdreCombat(data);
       afficherTourActuel();
     } else {
       console.error("Erreur récupération session combat");
@@ -30,13 +30,18 @@ async function fetchOrdreCombat() {
   }
 }
 
-function formatPV(entite) {
-  const pv = entite?.pv ?? "?";
-  const pvMax = entite?.pvMax ?? entite?.pv ?? "?";
+function formatPV(entite, data) {
+  const nom = entite.pseudo || entite.nom;
+  const ref = [...(data.joueurs || []), ...(data.monstres || [])]
+    .find(e => (e.pseudo || e.nom) === nom);
+
+  const pv = ref?.pv ?? entite.pv ?? "?";
+  const pvMax = ref?.pvMax ?? entite.pvMax ?? pv ?? "?";
+
   return `${pv} / ${pvMax}`;
 }
 
-function afficherOrdreCombat() {
+function afficherOrdreCombat(data) {
   const tbody = document.getElementById("liste-initiative");
   if (!tbody) return;
   tbody.innerHTML = "";
@@ -46,7 +51,7 @@ function afficherOrdreCombat() {
     tr.innerHTML = `
       <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
       <td>${entite.initiative}</td>
-      <td>${formatPV(entite)}</td>
+      <td>${formatPV(entite, data)}</td>
     `;
     if (entite.pv && entite.pvMax && entite.pv / entite.pvMax < 0.3) tr.classList.add("low-hp");
     if (index === currentTurnIndex) tr.classList.add("highlight-row");
