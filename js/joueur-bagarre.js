@@ -84,8 +84,12 @@ window.addEventListener("DOMContentLoaded", () => {
     const joueurActif = ordre[indexTour];
 
     if (joueur) afficherEtat(joueur.pv, joueur.pvMax || joueur.pv, joueurActif);
-    if (joueur.pv === 0) return;
-    verifierFinCombat(data);
+
+// ✅ Ces deux lignes doivent être ici AVANT le return
+verifierFinCombat(data);
+
+
+if (joueur.pv === 0) return;
 
     // ✅ Affiche "☠️ Gandalf est à terre !" une seule fois
 const log = document.getElementById("log-combat");
