@@ -74,6 +74,40 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function afficherOrdreCombat(data, ordre, indexTour) {
+    const tbody = document.getElementById("liste-initiative");
+    if (!tbody) return;
+    tbody.innerHTML = "";
+  
+    ordre.forEach((entite, index) => {
+      const nom = entite.pseudo || entite.nom;
+      const estJoueur = !!entite.pseudo;
+      const joueurData = data.joueurs?.find(j => j.pseudo === entite.pseudo);
+  
+      const tr = document.createElement("tr");
+  
+      const pvText = estJoueur && joueurData ? formatPV(joueurData) : "-";
+      const pv = joueurData?.pv;
+      const pvMax = joueurData?.pvMax;
+  
+      tr.innerHTML = `
+        <td>${index === indexTour ? "🌟 " : ""}${nom}</td>
+        <td>${entite.initiative ?? "-"}</td>
+        <td>${pvText}</td>
+      `;
+  
+      if (estJoueur && pv !== undefined && pvMax !== undefined && pv / pvMax < 0.3) {
+        tr.classList.add("low-hp");
+      }
+  
+      if (index === indexTour) {
+        tr.classList.add("highlight-row");
+      }
+  
+      tbody.appendChild(tr);
+    });
+  }
+
   async function refreshCombat() {
     const data = await recupererSession();
     if (!data) return;
