@@ -72,6 +72,7 @@ boutonPasser.addEventListener("click", async () => {
 async function afficherJournalCombat() {
   const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
   if (!response.ok) return;
+
   const data = await response.json();
   const log = data.logCombat || [];
   const ul = document.getElementById("log-combat");
@@ -82,6 +83,7 @@ async function afficherJournalCombat() {
     const time = new Date(entry.timestamp).toLocaleTimeString("fr-FR", {
       hour: "2-digit", minute: "2-digit"
     });
+
     let texte = "";
 
     if (entry.type === "soin") {
@@ -91,8 +93,14 @@ async function afficherJournalCombat() {
       }
     } else if (entry.type === "attaque") {
       texte = `⚔️ [${time}] ${entry.auteur} attaque ${entry.cible} pour ${entry.degats} dégâts`;
+    } else if (entry.type === "mort") {
+      texte = `☠️ [${time}] ${entry.cible} est mort (par ${entry.auteur})`;
+    } else if (entry.type === "sortie_combat") {
+      texte = `🚪 [${time}] ${entry.cible} quitte le combat (${entry.raison})`;
+    } else if (entry.type === "fin_combat") {
+      texte = `🏁 [${time}] Fin du combat – ${entry.resultat === "victoire" ? "Victoire !" : "Défaite..."}`;
     } else {
-      texte = `📌 [${time}] ${entry.auteur} fait une action inconnue.`;
+      texte = `📌 [${time}] ${entry.auteur || "?"} fait une action inconnue.`;
     }
 
     li.textContent = texte;
