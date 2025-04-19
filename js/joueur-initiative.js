@@ -17,32 +17,55 @@ window.addEventListener("DOMContentLoaded", async () => {
       const joueur = data?.joueurs?.find(j => j.pseudo === pseudo);
 
       if (joueur) {
+        // 🧠 Ajouter un message si ce n'est pas le premier combat
+        if ((data.combats?.length || 0) > 0 && typeof joueur.pv === "number") {
+          const message = document.createElement("p");
+          message.textContent = `💬 Il vous reste ${joueur.pv} PV après le dernier combat.`;
+          message.style.marginTop = "1rem";
+          message.style.fontStyle = "italic";
+          message.style.color = "var(--text-faded)";
+          form.prepend(message);
+        }
+
+        // ✅ Préremplir les champs s'ils existent
+        if (typeof joueur.pv === "number") {
+          document.getElementById("pv-input").value = joueur.pv;
+        }
+
+        const pvMaxInput = document.getElementById("pv-max-input");
+        if (typeof joueur.pvMax === "number") {
+          if (pvMaxInput) {
+            pvMaxInput.value = joueur.pvMax;
+            console.log(`🧠 PV Max prérempli : ${joueur.pvMax}`);
+          }
+          pvMaxGroup.style.display = "none";
+        } else {
+          pvMaxGroup.style.display = "block";
+        }
+
+        if (typeof joueur.initiative === "number") {
+          document.getElementById("initiative-input").value = joueur.initiative;
+        }
+
+        // ✅ Ajouter bouton "Valider les infos précédentes"
+        if (typeof joueur.pv === "number" && typeof joueur.initiative === "number") {
+          const btnAuto = document.createElement("button");
+          btnAuto.textContent = "✅ Reprendre les mêmes valeurs";
+          btnAuto.type = "button";
+          btnAuto.className = "btn-style";
+          btnAuto.style.marginTop = "1rem";
+          btnAuto.addEventListener("click", () => form.requestSubmit());
+          form.appendChild(btnAuto);
+        }
+
+        // Cacher le formulaire si déjà envoyé
         if (typeof joueur.initiative === "number" && joueur.initiative > 0) {
           form.style.display = "none";
           title.style.display = "none";
           confirmation.style.display = "block";
         }
-
-        // 🎯 Afficher PV Max seulement si non défini
-        if (typeof joueur.pvMax === "number") {
-          pvMaxGroup.style.display = "none"; // Cacher champ PV Max
-        } else {
-          pvMaxGroup.style.display = "block";
-        }
-
-        // Pré-remplir champ PV si déjà existant
-        if (typeof joueur.pv === "number") {
-          document.getElementById("pv-input").value = joueur.pv;
-        }
-        if (typeof joueur.pvMax === "number") {
-          const pvMaxInput = document.getElementById("pv-max-input");
-          if (pvMaxInput) {
-            pvMaxInput.value = joueur.pvMax;
-            console.log(`🧠 PV Max prérempli : ${joueur.pvMax}`);
-          }
-        }
       }
-      
+
     }
   } catch (err) {
     console.error("Erreur récupération initiative:", err);
@@ -62,7 +85,6 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  // ✅ Vérification : PV ne doit pas dépasser PV Max
   if (!isNaN(pvMax) && pv > pvMax) {
     alert(`Les points de vie ne peuvent pas dépasser les PV Max (${pvMax}).`);
     return;
@@ -94,7 +116,6 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-// ✅ Vérifie si le combat a démarré toutes les 3 secondes
 async function verifierDebutCombat() {
   const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
   if (response.ok) {
