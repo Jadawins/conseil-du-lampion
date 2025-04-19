@@ -27,6 +27,20 @@ window.addEventListener("DOMContentLoaded", async () => {
           form.prepend(message);
         }
 
+        // 💬 Afficher le message \"il vous restait X PV sur Y\"
+          const dernierPV = localStorage.getItem("dernierPV");
+          const pvMax = localStorage.getItem("pvMax");
+
+          if (dernierPV && pvMax) {
+        const message = document.createElement("p");
+        message.textContent = `💬 À la fin du dernier combat, il vous restait ${dernierPV} PV sur ${pvMax}.`;
+        message.style.marginTop = "1rem";
+        message.style.fontStyle = "italic";
+        message.style.color = "var(--text-faded)";
+        form.prepend(message);
+          }
+
+
         // ✅ Préremplir les champs s'ils existent
         if (typeof joueur.pv === "number") {
           document.getElementById("pv-input").value = joueur.pv;
