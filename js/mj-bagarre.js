@@ -332,7 +332,9 @@ boutonFinManuelle?.addEventListener("click", async () => {
     });
     const result = await response.text();
     console.log("🔚 Fin de combat déclenchée manuellement:", result);
-    sectionFinCombat.classList.add("hidden");
+
+    // Redirection avec sessionId
+    window.location.href = `mj-combat.html?sessionId=${sessionId}`;
   } catch (err) {
     console.error("❌ Erreur FinCombat:", err);
   }
@@ -352,7 +354,7 @@ async function refreshCombat() {
 
     if (!data.combatEnCours) {
       clearInterval(intervalRefresh);
-      window.location.href = "mj-combat.html";
+      window.location.href = `mj-combat.html?sessionId=${sessionId}`;
       return;
     }
 
