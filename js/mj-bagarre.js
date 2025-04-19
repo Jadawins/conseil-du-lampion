@@ -316,13 +316,11 @@ function verifierFinCombat(data) {
     messageFinCombat.textContent = "☠️ Défaite... Tous les joueurs sont à terre.";
     sectionFinCombat.classList.remove("hidden");
     zoneActions.style.display = "none";
-    clearInterval(intervalRefresh);
-  } else if (tousMonstresMorts) {
+      } else if (tousMonstresMorts) {
     messageFinCombat.textContent = "🎉 Victoire ! Tous les monstres ont été vaincus.";
     sectionFinCombat.classList.remove("hidden");
     zoneActions.style.display = "none";
-    clearInterval(intervalRefresh);
-  }
+      }
 }
 
 boutonFinManuelle?.addEventListener("click", async () => {
@@ -353,6 +351,7 @@ async function refreshCombat() {
     const data = await response.json();
 
     if (!data.combatEnCours) {
+      clearInterval(intervalRefresh);
       window.location.href = "mj-combat.html";
       return;
     }
