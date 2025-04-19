@@ -17,22 +17,28 @@ let joueursAnnoncesKO = [];
 let currentTurnIndex = 0;
 let ordreCombat = [];
 
-async function fetchOrdreCombat() {
+async function refreshCombat() {
   try {
+    console.log("🔁 MJ - refreshCombat appelé");
+
     const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
-    if (response.ok) {
-      const data = await response.json();
-      ordreCombat = data?.ordreTour || [];
-      currentTurnIndex = data?.indexTour || 0;
-      afficherOrdreCombat(data);
-      afficherTourActuel();
-      afficherJournalCombat();
-      verifierFinCombat(data); // ✅ Déplace ici
-    } else {
-      console.error("Erreur récupération session combat");
-    }
-  } catch (err) {
-    console.error("Erreur réseau:", err);
+    console.log("📡 MJ - fetch exécuté");
+
+    if (!response.ok) throw new Error("Erreur réseau");
+
+    const data = await response.json();
+    const ordre = data?.ordreTour || [];
+    const indexTour = data?.indexTour ?? 0;
+
+    ordreCombat = ordre;
+    currentTurnIndex = indexTour;
+
+    afficherOrdreCombat(data);
+    afficherTourActuel();
+    verifierFinCombat(data);
+    afficherJournalCombat();
+  } catch (error) {
+    console.error("❌ MJ - Erreur dans refreshCombat:", error);
   }
 }
 
@@ -82,7 +88,7 @@ boutonPasser.addEventListener("click", async () => {
     });
     const data = await response.json();
     console.log("✔️ Tour passé :", data);
-    await fetchOrdreCombat();
+    await refreshCombat();
   } catch (err) {
     console.error("❌ Erreur lors du passage du tour :", err);
   }
@@ -189,7 +195,7 @@ document.getElementById("valider-soin").addEventListener("click", async () => {
     document.getElementById("tour-actuel").style.display = "block";
     document.getElementById("valeur-soin").value = "";
 
-    await fetchOrdreCombat();
+    await refreshCombat();
     await afficherJournalCombat();
 
   } catch (err) {
@@ -282,7 +288,7 @@ document.getElementById("valider-attaque").addEventListener("click", async () =>
     document.getElementById("tour-actuel").style.display = "block";
     document.getElementById("valeur-attaque").value = "";
 
-    await fetchOrdreCombat();
+    await refreshCombat();
     await afficherJournalCombat();
 
   } catch (err) {
