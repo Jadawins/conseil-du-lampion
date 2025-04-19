@@ -178,7 +178,9 @@ function afficherListeTemporaire() {
     const tbody = listeJoueursDiv.querySelector("table tbody");
     tbody.innerHTML = ""; // <--- uniquement le contenu, pas tout le tableau
   
-    joueurs.forEach((j, index) => {
+    joueurs
+    .filter(j => typeof j.initiative === "number" && typeof j.pv === "number")
+    .forEach((j, index) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${j.pseudo}</td>
