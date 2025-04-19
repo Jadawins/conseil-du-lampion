@@ -115,7 +115,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const joueur = data.joueurs?.find(j => j.pseudo === pseudo);
 
     if (!data.combatEnCours) {
-      window.location.href = "joueur-initiative.html";
+      window.location.href = `joueur-initiative.html?sessionId=${sessionId}`;
       return;
     }
     
