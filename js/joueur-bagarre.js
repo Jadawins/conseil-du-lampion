@@ -113,6 +113,13 @@ window.addEventListener("DOMContentLoaded", () => {
     if (!data) return;
 
     const joueur = data.joueurs?.find(j => j.pseudo === pseudo);
+
+    if (!data.combatEnCours) {
+      window.location.href = "joueur-initiative.html";
+      return;
+    }
+    
+
     const ordre = data.ordreTour || [];
     const indexTour = data.indexTour ?? 0;
     const joueurActif = ordre[indexTour];

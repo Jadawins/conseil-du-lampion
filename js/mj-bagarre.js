@@ -351,6 +351,12 @@ async function refreshCombat() {
     if (!response.ok) throw new Error("Erreur réseau");
 
     const data = await response.json();
+
+    if (!data.combatEnCours) {
+      window.location.href = "mj-combat.html";
+      return;
+    }
+
     const ordre = data?.ordreTour || [];
     const indexTour = data?.indexTour ?? 0;
 
@@ -365,6 +371,7 @@ async function refreshCombat() {
     console.error("❌ MJ - Erreur dans refreshCombat:", error);
   }
 }
+
 
 const intervalRefresh = setInterval(refreshCombat, 3000);
 refreshCombat();
