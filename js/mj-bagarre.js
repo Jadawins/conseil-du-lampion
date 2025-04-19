@@ -17,31 +17,6 @@ let joueursAnnoncesKO = [];
 let currentTurnIndex = 0;
 let ordreCombat = [];
 
-async function refreshCombat() {
-  try {
-    console.log("🔁 MJ - refreshCombat appelé");
-
-    const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
-    console.log("📡 MJ - fetch exécuté");
-
-    if (!response.ok) throw new Error("Erreur réseau");
-
-    const data = await response.json();
-    const ordre = data?.ordreTour || [];
-    const indexTour = data?.indexTour ?? 0;
-
-    ordreCombat = ordre;
-    currentTurnIndex = indexTour;
-
-    afficherOrdreCombat(data);
-    afficherTourActuel();
-    verifierFinCombat(data);
-    afficherJournalCombat();
-  } catch (error) {
-    console.error("❌ MJ - Erreur dans refreshCombat:", error);
-  }
-}
-
 function formatPV(entite, data) {
   const nom = entite.pseudo || entite.nom;
   const ref = [...(data.joueurs || []), ...(data.monstres || [])]
@@ -375,5 +350,5 @@ async function refreshCombat() {
   }
 }
 
-setInterval(refreshCombat, 3000);
+const intervalRefresh = setInterval(refreshCombat, 3000);
 refreshCombat();
