@@ -375,5 +375,5 @@ async function refreshCombat() {
   }
 }
 
-const intervalRefresh = setInterval(refreshCombat, 3000);
+setInterval(refreshCombat, 3000);
 refreshCombat();
