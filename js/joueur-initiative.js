@@ -17,17 +17,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       const joueur = data?.joueurs?.find(j => j.pseudo === pseudo);
 
       if (joueur) {
-        // 🧠 Ajouter un message si ce n'est pas le premier combat
-        if ((data.combats?.length || 0) > 0 && typeof joueur.pv === "number") {
-          const message = document.createElement("p");
-          message.textContent = `💬 Il vous reste ${joueur.pv} PV après le dernier combat.`;
-          message.style.marginTop = "1rem";
-          message.style.fontStyle = "italic";
-          message.style.color = "var(--text-faded)";
-          form.prepend(message);
-        }
-
-        // 💬 Afficher le message \"il vous restait X PV sur Y\"
+         // 💬 Afficher le message \"il vous restait X PV sur Y\"
           const dernierPV = localStorage.getItem("dernierPV");
           const pvMax = localStorage.getItem("pvMax");
 
@@ -42,20 +32,19 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 
         // ✅ Préremplir les champs s'ils existent
-        if (typeof joueur.pv === "number") {
-          document.getElementById("pv-input").value = joueur.pv;
-        }
-
-        const pvMaxInput = document.getElementById("pv-max-input");
         if (typeof joueur.pvMax === "number") {
           if (pvMaxInput) {
             pvMaxInput.value = joueur.pvMax;
             console.log(`🧠 PV Max prérempli : ${joueur.pvMax}`);
           }
           pvMaxGroup.style.display = "none";
+        } else if (localStorage.getItem("pvMax")) {
+          pvMaxInput.value = localStorage.getItem("pvMax");
+          console.log(`🧠 PV Max récupéré via localStorage : ${pvMaxInput.value}`);
+          pvMaxGroup.style.display = "block";
         } else {
           pvMaxGroup.style.display = "block";
-        }
+        }   
 
         if (typeof joueur.initiative === "number") {
           document.getElementById("initiative-input").value = joueur.initiative;
