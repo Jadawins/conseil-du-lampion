@@ -1,4 +1,4 @@
-// ✅ mj-bagarre.js – journal amélioré avec affichage overheal et correctif tableau initiative
+// ✅ mj-bagarre.js – journal amélioré avec affichage overheal
 
 const urlParams = new URLSearchParams(window.location.search);
 const sessionId = urlParams.get("sessionId") || localStorage.getItem("sessionId");
@@ -14,28 +14,20 @@ const messageFinCombat = document.getElementById("message-fin-combat");
 const boutonFinManuelle = document.getElementById("btn-fin-combat");
 let joueursAnnoncesKO = [];
 
-let ordreCombat = [];
 let currentTurnIndex = 0;
+let ordreCombat = [];
 
 async function fetchOrdreCombat() {
   try {
     const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
     if (response.ok) {
       const data = await response.json();
-      const ordre = data?.ordreTour || [];
-      const indexTour = data?.indexTour ?? 0;
-      ordreCombat = ordre;
-      currentTurnIndex = indexTour;
-
-      if (!ordre.length) {
-        console.warn("⚠️ ordreTour vide ou manquant:", data);
-        return;
-      }
-
-      afficherOrdreCombat(data, ordre, indexTour);
-      afficherTourActuel(data, ordre, indexTour);
-      verifierFinCombat(data);
+      ordreCombat = data?.ordreTour || [];
+      currentTurnIndex = data?.indexTour || 0;
+      afficherOrdreCombat(data);
+      afficherTourActuel();
       afficherJournalCombat();
+      verifierFinCombat(data); // ✅ Déplace ici
     } else {
       console.error("Erreur récupération session combat");
     }
@@ -46,50 +38,40 @@ async function fetchOrdreCombat() {
 
 function formatPV(entite, data) {
   const nom = entite.pseudo || entite.nom;
-  const ref = [...(data.joueurs || []), ...(data.monstres || [])].find(e => (e.pseudo || e.nom) === nom);
+  const ref = [...(data.joueurs || []), ...(data.monstres || [])]
+    .find(e => (e.pseudo || e.nom) === nom);
+
   const pv = ref?.pv ?? entite.pv ?? "?";
   const pvMax = ref?.pvMax ?? entite.pvMax ?? pv ?? "?";
+
   return `${pv} / ${pvMax}`;
 }
 
-function afficherOrdreCombat(data, ordre, indexTour) {
+function afficherOrdreCombat(data) {
   const tbody = document.getElementById("liste-initiative");
   if (!tbody) return;
   tbody.innerHTML = "";
 
-  ordre.forEach((entite, index) => {
+  ordreCombat.forEach((entite, index) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${index === indexTour ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
+      <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
       <td>${entite.initiative}</td>
       <td>${formatPV(entite, data)}</td>
     `;
     if (entite.pv && entite.pvMax && entite.pv / entite.pvMax < 0.3) tr.classList.add("low-hp");
-    if (index === indexTour) tr.classList.add("highlight-row");
+    if (index === currentTurnIndex) tr.classList.add("highlight-row");
     tbody.appendChild(tr);
   });
 }
 
-
-function afficherTourActuel(data, ordre, indexTour) {
-  let entite = ordre[indexTour];
-
-  // 🔁 Si entité est morte, on passe automatiquement au tour suivant
-  if (entite && entite.pv === 0) {
-    console.log(`⏭️ ${entite.pseudo || entite.nom} est mort, on passe son tour.`);
-    fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sessionId })
-    }).then(() => fetchOrdreCombat());
-    return;
-  }
+function afficherTourActuel() {
+  const entite = ordreCombat[currentTurnIndex];
   if (!entite) return;
   messageTour.textContent = `🎯 C'est au tour de ${entite.pseudo || entite.nom} de jouer.`;
-  const estMonstre = !entite.id && entite.pv > 0;
+  const estMonstre = !entite.id;
   zoneActions.style.display = estMonstre ? "block" : "none";
 }
-
 
 boutonPasser.addEventListener("click", async () => {
   try {
@@ -128,19 +110,11 @@ async function afficherJournalCombat() {
       }
     } else if (entry.type === "attaque") {
       texte = `⚔️ [${time}] ${entry.auteur} attaque ${entry.cible} pour ${entry.degats} dégâts`;
-    } else if (entry.type === "mort") {
-      texte = `☠️ [${time}] ${entry.cible} est mort.`;
-    } else if (entry.type === "sortie_combat") {
-      texte = `📤 [${time}] ${entry.cible} a quitté le combat (${entry.raison})`;
-    } else if (entry.type === "fin_combat") {
-      const couleur = entry.resultat === "victoire" ? "#4caf50" : "#f44336";
-      texte = `🏁 [${time}] <span style="color: ${couleur}; font-weight: bold;">${entry.resultat.toUpperCase()} !</span>`;
-    }else {
-      const auteur = entry.auteur ?? entry.cible ?? "Quelqu’un";
-      texte = `📌 [${time}] ${auteur} fait une action inconnue.`;
+    } else {
+      texte = `📌 [${time}] ${entry.auteur} fait une action inconnue.`;
     }
 
-    li.innerHTML = texte;
+    li.textContent = texte;
     ul.appendChild(li);
   });
 }
@@ -370,23 +344,8 @@ boutonFinManuelle?.addEventListener("click", async () => {
 });
 
 
-async function refreshCombat() {
-  const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
-  if (!response.ok) return;
-  const data = await response.json();
-
-  const ordre = data?.ordreTour || [];
-  const indexTour = data?.indexTour ?? 0;
-
-  console.log("🔄 Mise à jour via refreshCombat", { ordre, indexTour }); // 👀
-
-  ordreCombat = ordre;               
-  currentTurnIndex = indexTour;     
-
-  afficherOrdreCombat(data, ordre, indexTour);
-  afficherTourActuel(data, ordre, indexTour);
-  verifierFinCombat(data);
+function refreshCombat() {
+  fetchOrdreCombat();
   afficherJournalCombat();
 }
 const intervalRefresh = setInterval(refreshCombat, 3000);
-refreshCombat()
