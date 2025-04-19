@@ -16,6 +16,20 @@ async function recupererSessionDepuisAPI(sessionId) {
 
 (async () => {
   const data = await recupererSessionDepuisAPI(sessionId);
+  if (data && data.combatEnCours === false) {
+    // 🔁 Combat terminé : nettoyage du localStorage et du DOM
+    localStorage.removeItem(monstresKey);
+    localStorage.removeItem(ordreKey);
+    monstres = [];
+    console.log("🧹 Données locales vidées suite à fin de combat.");
+
+    // Vider les éléments visibles
+    listeMonstresDiv.innerHTML = "";
+    listeJoueursDiv.innerHTML = "";
+    ordreUl.innerHTML = "";
+    ordreTitre.style.display = "none";
+  }
+
   const nomAventure = data?.nomAventure || "(Aventure mystère)";
   document.getElementById("titre-aventure").textContent = `${nomAventure}`;
   document.getElementById("session-id-display").textContent = `🆔 Session ID : ${sessionId}`;

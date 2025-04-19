@@ -34,7 +34,15 @@ window.addEventListener("DOMContentLoaded", async () => {
         if (typeof joueur.pv === "number") {
           document.getElementById("pv-input").value = joueur.pv;
         }
+        if (typeof joueur.pvMax === "number") {
+          const pvMaxInput = document.getElementById("pv-max-input");
+          if (pvMaxInput) {
+            pvMaxInput.value = joueur.pvMax;
+            console.log(`🧠 PV Max prérempli : ${joueur.pvMax}`);
+          }
+        }
       }
+      
     }
   } catch (err) {
     console.error("Erreur récupération initiative:", err);
