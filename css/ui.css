@@ -350,3 +350,31 @@ body[data-theme='light'] .table-monstres th {
   background-color: var(--bg-secondary);
   text-align: center;
 }
+
+.log-soin {
+  color: #aaffaa;
+}
+
+.log-attaque {
+  color: #ffaaaa;
+}
+
+.log-mort {
+  color: #ff4444;
+  font-weight: bold;
+}
+
+.log-sortie {
+  font-style: italic;
+  color: #ffa500;
+}
+
+.log-victoire {
+  color: gold;
+  font-weight: bold;
+}
+
+.log-inconnu {
+  color: #cccccc;
+  font-style: italic;
+}
