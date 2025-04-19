@@ -344,8 +344,29 @@ boutonFinManuelle?.addEventListener("click", async () => {
 });
 
 
-function refreshCombat() {
-  fetchOrdreCombat();
-  afficherJournalCombat();
+async function refreshCombat() {
+  try {
+    console.log("🔁 MJ - refreshCombat appelé");
+
+    const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+    console.log("📡 MJ - fetch exécuté");
+
+    if (!response.ok) throw new Error("Erreur réseau");
+
+    const data = await response.json();
+    const ordre = data?.ordreTour || [];
+    const indexTour = data?.indexTour ?? 0;
+
+    ordreCombat = ordre;
+    currentTurnIndex = indexTour;
+
+    afficherOrdreCombat(data, ordre, indexTour);
+    afficherTourActuel(data, ordre, indexTour);
+    verifierFinCombat(data);
+    afficherJournalCombat();
+  } catch (error) {
+    console.error("❌ MJ - Erreur dans refreshCombat:", error);
+  }
 }
+
 const intervalRefresh = setInterval(refreshCombat, 3000);
