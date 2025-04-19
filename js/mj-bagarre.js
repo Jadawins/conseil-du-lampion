@@ -301,12 +301,13 @@ function verifierFinCombat(data) {
     messageFinCombat.textContent = "☠️ Défaite... Tous les joueurs sont à terre.";
     sectionFinCombat.classList.remove("hidden");
     zoneActions.style.display = "none";
+    clearInterval(intervalRefresh);
   } else if (tousMonstresMorts) {
     messageFinCombat.textContent = "🎉 Victoire ! Tous les monstres ont été vaincus.";
     sectionFinCombat.classList.remove("hidden");
     zoneActions.style.display = "none";
+    clearInterval(intervalRefresh);
   }
-  clearInterval(intervalRefresh);
 }
 
 boutonFinManuelle?.addEventListener("click", async () => {
