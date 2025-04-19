@@ -380,6 +380,9 @@ async function refreshCombat() {
 
   console.log("🔄 Mise à jour via refreshCombat", { ordre, indexTour }); // 👀
 
+  ordreCombat = ordre;               
+  currentTurnIndex = indexTour;     
+
   afficherOrdreCombat(data, ordre, indexTour);
   afficherTourActuel(data, ordre, indexTour);
   verifierFinCombat(data);
