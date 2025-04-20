@@ -46,18 +46,23 @@ function afficherOrdreCombat(data, ordre, indexTour) {
   });
 }
 
-function afficherTourActuel(ordre, indexTour) {
-  const entite = ordre[indexTour];
+function afficherTourActuel() {
+  const entite = ordreCombat[currentTurnIndex];
   if (!entite) return;
 
   const estMonstre = !entite.id;
 
+  const messageTour = document.getElementById("info-tour");
+  const zoneActions = document.getElementById("actions-mj");
+
   messageTour.textContent = `🎯 C'est au tour de ${entite.pseudo || entite.nom} de jouer.`;
 
-  zoneActions.style.display = estMonstre ? "block" : "none";
-  boutonAttaquer.style.display = estMonstre ? "inline-block" : "none";
-  boutonSoigner.style.display = estMonstre ? "inline-block" : "none";
-  boutonPasser.style.display = estMonstre ? "inline-block" : "none";
+  // ✅ Affiche les boutons si c'est un monstre, sinon les cache
+  if (estMonstre) {
+    zoneActions.style.display = "block";
+  } else {
+    zoneActions.style.display = "none";
+  }
 }
 
 boutonPasser.addEventListener("click", async () => {
