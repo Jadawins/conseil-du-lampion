@@ -167,7 +167,7 @@ function afficherListeTemporaire() {
     if (!tableExistante) {
       // Créer la table au premier affichage
       const table = document.createElement("table");
-      table.className = "table-monstres";
+      table.className = "combat-table journal-combat";
   
       const thead = document.createElement("thead");
       thead.innerHTML = `
@@ -212,7 +212,7 @@ function afficherListeTemporaire() {
   }
 
   const tableMonstres = document.createElement("table");
-  tableMonstres.className = "table-monstres";
+  tableMonstres.className = "combat-table journal-combat";
   const theadM = document.createElement("thead");
   theadM.innerHTML = `
     <tr>

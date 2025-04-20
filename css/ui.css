@@ -229,3 +229,32 @@ select.input-style:focus {
   transform: scale(1.2);
   filter: drop-shadow(0 0 10px rgba(255, 255, 200, 0.8));
 }
+.combat-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 1rem;
+  font-family: 'Cinzel', serif;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
+}
+
+.combat-table th,
+.combat-table td {
+  padding: 0.6rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.combat-table thead {
+  background-color: rgba(255, 215, 0, 0.15);
+  color: #ffe66d;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.combat-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
