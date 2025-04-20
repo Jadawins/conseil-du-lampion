@@ -378,7 +378,7 @@ async function refreshCombat() {
     currentTurnIndex = indexTour;
 
     afficherOrdreCombat(data);
-    afficherTourActuel();
+    afficherTourActuel(data);
     verifierFinCombat(data);
     afficherJournalCombat();
   } catch (error) {
