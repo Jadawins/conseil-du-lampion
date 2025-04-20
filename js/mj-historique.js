@@ -3,16 +3,48 @@
 const sessionId = localStorage.getItem("sessionId");
 const url = `https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`;
 
+async function chargerDernieresSessions() {
+  const select = document.getElementById("session-select");
+  try {
+    const response = await fetch("https://lampion-api.azurewebsites.net/api/GetLastSessions");
+    if (!response.ok) throw new Error("Erreur API");
+
+    const sessions = await response.json();
+    sessions.forEach(s => {
+      const option = document.createElement("option");
+      option.value = s.sessionId;
+      option.textContent = `${s.nomAventure} (${new Date(s.timestampFin).toLocaleString("fr-FR")})`;
+      select.appendChild(option);
+    });
+  } catch (err) {
+    console.error("Erreur chargement sessions :", err);
+  }
+}
+
 window.addEventListener("DOMContentLoaded", async () => {
+  await chargerDernieresSessions();
+
+  document.getElementById("session-select").addEventListener("change", (e) => {
+    const selectedId = e.target.value;
+    if (selectedId) {
+      chargerHistoriquePourSession(selectedId);
+    }
+  });
+
+  chargerHistoriquePourSession(sessionId);
+});
+
+async function chargerHistoriquePourSession(sessionId) {
+  const url = `https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`;
+  const table = document.getElementById("combat-historique-body");
+  table.innerHTML = "";
+
   try {
     const response = await fetch(url);
-    if (!response.ok) throw new Error("Erreur de récupération de session");
+    if (!response.ok) throw new Error("Erreur récupération session");
 
     const data = await response.json();
     const combats = data.combats || [];
-
-    const table = document.getElementById("combat-historique-body");
-    if (!table) return;
 
     if (combats.length === 0) {
       const tr = document.createElement("tr");
@@ -28,15 +60,15 @@ window.addEventListener("DOMContentLoaded", async () => {
       let joueursMorts = 0;
 
       if (Array.isArray(combat.joueurs)) {
-      combat.joueurs.forEach(j => {
-      if (typeof j.pv === "number") {
-      if (j.pv > 0) joueursVivants++;
-      else joueursMorts++;
+        combat.joueurs.forEach(j => {
+          if (typeof j.pv === "number") {
+            if (j.pv > 0) joueursVivants++;
+            else joueursMorts++;
+          }
+        });
       }
-      });
-}
-      const nbMonstres = combat.monstres?.length || 0;
 
+      const nbMonstres = combat.monstres?.length || 0;
       const resultat =
         combat.resultat === "victoire"
           ? "🎉 Victoire"
@@ -52,18 +84,48 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       tr.innerHTML = `
         <td>${combat.id || `Combat ${index + 1}`}</td>
-        <td>${joueursVivants} 🧝 / ${joueursMorts} 💀 / ${nbMonstres} 👹</td>
-        <td>${resultat}</td>
         <td>${horodatage}</td>
+        <td>${resultat}</td>
+        <td>${joueursVivants} 🧝 / ${joueursMorts} 💀 / ${nbMonstres} 👹</td>
       `;
 
+      const logRow = document.createElement("tr");
+      logRow.classList.add("log-row");
+      logRow.style.display = "none";
+
+      const logCell = document.createElement("td");
+      logCell.colSpan = 4;
+      logCell.innerHTML = genererJournalCombat(combat.logCombat);
+      logRow.appendChild(logCell);
+
+      tr.addEventListener("click", () => {
+        const isVisible = logRow.style.display === "table-row";
+        logRow.style.display = isVisible ? "none" : "table-row";
+        logCell.style.display = isVisible ? "none" : "table-cell";
+      });
+
       table.appendChild(tr);
+      table.appendChild(logRow);
     });
   } catch (err) {
-    console.error("Erreur chargement historique:", err);
-    const table = document.getElementById("table-combats");
+    console.error("❌ Erreur GetSession:", err);
     const tr = document.createElement("tr");
     tr.innerHTML = `<td colspan="4">Erreur de chargement des données</td>`;
     table.appendChild(tr);
   }
-});
+}
+
+function genererJournalCombat(log) {
+  if (!Array.isArray(log) || log.length === 0) return `<em>Journal vide</em>`;
+  return `
+    <div class="journal-combat">
+      <ul>
+        ${log.map(e => `
+          <li>
+            ${e.timestamp ? `<strong>[${new Date(e.timestamp).toLocaleTimeString("fr-FR")}]</strong>` : ""}
+            ${e.auteur || "?"} ${e.action || ""}
+          </li>`).join("")}
+      </ul>
+    </div>
+  `;
+}
