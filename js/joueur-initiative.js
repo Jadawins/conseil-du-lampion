@@ -16,6 +16,17 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (response.ok) {
       const data = await response.json();
       const joueur = data?.joueurs?.find(j => j.pseudo === pseudo);
+      // 💬 Récupération des PV restants depuis l'historique des combats
+      const dernierCombat = data?.combats?.[data.combats.length - 1];
+      const ancienJoueur = dernierCombat?.joueurs?.find(j => j.pseudo === pseudo);
+      if (ancienJoueur && typeof ancienJoueur.pv === "number" && typeof ancienJoueur.pvMax === "number") {
+      const message = document.createElement("p");
+      message.textContent = `💬 À la fin du dernier combat, il vous restait ${ancienJoueur.pv} PV sur ${ancienJoueur.pvMax}.`;
+      message.style.marginTop = "1rem";
+      message.style.fontStyle = "italic";
+      message.style.color = "var(--text-faded)";
+      form.prepend(message);
+  }
 
       if (joueur) {
          // 💬 Afficher le message \"il vous restait X PV sur Y\"
