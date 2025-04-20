@@ -118,19 +118,14 @@ window.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("dernierPV", joueur.pv);
       localStorage.setItem("pvMax", joueur.pvMax);
       console.log(`💾 Stockage PV avant redirection : ${joueur.pv} / ${joueur.pvMax}`);
-    }
-
-    if (!data.combatEnCours) {
-      if (joueur && typeof joueur.pv === "number" && typeof joueur.pvMax === "number") {
-        console.log("💾 Enregistrement dans le localStorage :", joueur.pv, joueur.pvMax);
-        localStorage.setItem("dernierPV", joueur.pv);
-        localStorage.setItem("pvMax", joueur.pvMax);
-        console.log(`💾 Stockage local PV : ${joueur.pv} / ${joueur.pvMax}`);
-      }
+      // ⏳ Laisse 50ms avant redirection
+      setTimeout(() => {
       window.location.href = `joueur-initiative.html?sessionId=${sessionId}`;
+      }, 50);
       return;
     }
-    
+
+      
 
     const ordre = data.ordreTour || [];
     const indexTour = data.indexTour ?? 0;
