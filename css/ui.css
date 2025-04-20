@@ -478,3 +478,30 @@ select.input-style:focus {
   outline: none;
   box-shadow: 0 0 5px var(--primary-color);
 }
+
+.log-list {
+  list-style: none;
+  padding-left: 1rem;
+}
+
+.log-entry {
+  margin-bottom: 4px;
+  color: #ffecb3;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.log-time {
+  color: #facc15;
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+.log-auteur {
+  color: #60a5fa;
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+.log-action {
+  color: #ffffff;
+}

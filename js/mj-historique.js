@@ -129,15 +129,19 @@ async function chargerHistoriquePourSession(sessionId) {
 
 function genererJournalCombat(log) {
   if (!Array.isArray(log) || log.length === 0) return `<em>Journal vide</em>`;
+
   return `
     <div class="journal-combat">
-      <ul>
+      <ul class="log-list">
         ${log.map(e => `
-          <li>
-            ${e.timestamp ? `<strong>[${new Date(e.timestamp).toLocaleTimeString("fr-FR")}]</strong>` : ""}
-            ${e.auteur || "?"} ${e.action || ""}
-          </li>`).join("")}
+          <li class="log-entry">
+            <span class="log-time">${e.timestamp ? `[${new Date(e.timestamp).toLocaleTimeString("fr-FR")}]` : "[?]"}</span>
+            <span class="log-auteur">${e.auteur || "?"}</span>
+            <span class="log-action">${e.action || "<em>Action inconnue</em>"}</span>
+          </li>
+        `).join("")}
       </ul>
     </div>
   `;
 }
+
