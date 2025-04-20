@@ -377,11 +377,9 @@ afficherTourActuel(ordre, indexTour);
   } catch (error) {
     console.error("❌ MJ - Erreur dans refreshCombat:", error);
   }
-  if (data.ordreTour && typeof data.indexTour === "number") {
-    afficherTourActuel(data.ordreTour, data.indexTour);
   }
-}
 
 
 const intervalRefresh = setInterval(refreshCombat, 3000);
 refreshCombat();
+S
