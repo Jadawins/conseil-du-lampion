@@ -173,3 +173,52 @@ async function afficherJournalCombat() {
   });
 }
 
+function genererJournalCombat(log) {
+  if (!Array.isArray(log) || log.length === 0) return `<em>Journal vide</em>`;
+
+  return `
+    <div class="journal-combat">
+      <ul>
+        ${log.map(entry => {
+          const time = new Date(entry.timestamp).toLocaleTimeString("fr-FR", {
+            hour: "2-digit", minute: "2-digit"
+          });
+
+          let texte = "";
+          let classe = "";
+
+          switch (entry.type) {
+            case "attaque":
+              texte = `⚔️ [${time}] ${entry.auteur} attaque ${entry.cible} pour ${entry.degats} dégâts`;
+              classe = "log-attaque";
+              break;
+            case "soin":
+              texte = `🩹 [${time}] ${entry.auteur} soigne ${entry.cible} de ${entry.valeur} PV`;
+              if (entry.overheal && entry.overheal > 0) {
+                texte += ` dont ${entry.overheal} en trop`;
+              }
+              classe = "log-soin";
+              break;
+            case "mort":
+              texte = `☠️ [${time}] ${entry.cible} est mort (par ${entry.auteur})`;
+              classe = "log-mort";
+              break;
+            case "sortie_combat":
+              texte = `🚪 [${time}] ${entry.cible} quitte le combat (PV à 0)`;
+              classe = "log-sortie";
+              break;
+            case "fin_combat":
+              texte = `🏁 [${time}] Fin du combat – ${entry.resultat === "victoire" ? "Victoire !" : "Défaite..."}`;
+              classe = "log-victoire";
+              break;
+            default:
+              texte = `📌 [${time}] ${entry.auteur || "?"} fait une action inconnue.`;
+              classe = "log-inconnu";
+          }
+
+          return `<li class="${classe}">${texte}</li>`;
+        }).join("")}
+      </ul>
+    </div>
+  `;
+}
