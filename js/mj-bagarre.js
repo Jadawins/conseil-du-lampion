@@ -49,9 +49,22 @@ function afficherOrdreCombat(data) {
 function afficherTourActuel() {
   const entite = ordreCombat[currentTurnIndex];
   if (!entite) return;
-  messageTour.textContent = `🎯 C'est au tour de ${entite.pseudo || entite.nom} de jouer.`;
+
   const estMonstre = !entite.id;
+
+  messageTour.textContent = `🎯 C'est au tour de ${entite.pseudo || entite.nom} de jouer.`;
+
+  // 🔄 Mise à jour claire de l'affichage des boutons
   zoneActions.style.display = estMonstre ? "block" : "none";
+  if (!estMonstre) {
+    boutonAttaquer.style.display = "none";
+    boutonSoigner.style.display = "none";
+    boutonPasser.style.display = "none";
+  } else {
+    boutonAttaquer.style.display = "inline-block";
+    boutonSoigner.style.display = "inline-block";
+    boutonPasser.style.display = "inline-block";
+  }
 }
 
 boutonPasser.addEventListener("click", async () => {
