@@ -167,3 +167,33 @@ select.input-style:focus {
 .btn-icon:hover {
   transform: scale(1.2);
 }
+
+.hidden {
+  display: none !important;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1a1a2e;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+  z-index: 1000;
+  max-width: 90%;
+  color: white;
+}
+.modal .btn-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.btn-bottom-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}

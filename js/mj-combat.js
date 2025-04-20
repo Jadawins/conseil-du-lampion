@@ -83,6 +83,8 @@ form.addEventListener("submit", (e) => {
   monstres.push({ nom, pv, pvMax: pv, initiative });
   localStorage.setItem(monstresKey, JSON.stringify(monstres));
   form.reset();
+  editModal.classList.add("hidden");
+  editJoueurModal.classList.add("hidden");
   if (!combatLance) afficherListeTemporaire();
 });
 
@@ -194,7 +196,7 @@ function afficherListeTemporaire() {
         <td>${j.pseudo}</td>
         <td>${typeof j.pv === "number" ? j.pv : "-"}</td>
         <td>${typeof j.initiative === "number" ? j.initiative : "-"}</td>
-        <td><button class="icon-btn" title="Modifier" data-index="${index}">🪄</button></td>
+        <td><button class="btn-icon" title="Modifier" data-index="${index}">🪄</button></td>
       `;
   
       tr.querySelector('[title="Modifier"]').addEventListener("click", () => {
