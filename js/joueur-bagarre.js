@@ -370,4 +370,28 @@ ordre.forEach((entite, index) => {
     document.getElementById("ordre-combat").style.display = "block";
     document.getElementById("valeur-attaque").value = "";
   });  
+
+  document.getElementById("btn-passer-tour").addEventListener("click", async () => {
+    try {
+      const res = await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId })
+      });
+  
+      if (!res.ok) throw new Error("Erreur API PasserTour");
+  
+      if (feedback) {
+        feedback.textContent = `⏭️ ${pseudo} a passé son tour.`;
+        clearTimeout(feedback._timeout);
+        feedback._timeout = setTimeout(() => (feedback.textContent = ""), 4000);
+      }
+  
+      await refreshCombat();
+    } catch (err) {
+      console.error("❌ Erreur lors du passage de tour :", err);
+      alert("Erreur lors du passage de tour. Veuillez réessayer.");
+    }
+  });
+
 });
