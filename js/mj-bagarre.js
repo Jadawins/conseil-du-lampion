@@ -54,7 +54,6 @@ function afficherTourActuel(ordre, indexTour) {
 
   messageTour.textContent = `🎯 C'est au tour de ${entite.pseudo || entite.nom} de jouer.`;
 
-  // ✅ Mise à jour complète des boutons
   zoneActions.style.display = estMonstre ? "block" : "none";
   boutonAttaquer.style.display = estMonstre ? "inline-block" : "none";
   boutonSoigner.style.display = estMonstre ? "inline-block" : "none";
@@ -377,6 +376,9 @@ afficherTourActuel(ordre, indexTour);
     afficherJournalCombat();
   } catch (error) {
     console.error("❌ MJ - Erreur dans refreshCombat:", error);
+  }
+  if (data.ordreTour && typeof data.indexTour === "number") {
+    afficherTourActuel(data.ordreTour, data.indexTour);
   }
 }
 
