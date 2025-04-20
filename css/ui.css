@@ -217,3 +217,15 @@ select.input-style:focus {
   margin: 0 auto;
   text-align: center;
 }
+
+#lanterne-icon {
+  width: 48px;
+  height: 48px;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 150, 0.5));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+#lanterne-icon:hover {
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 200, 0.8));
+}

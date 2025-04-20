@@ -1,28 +1,22 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const themeToggle = document.getElementById("theme-toggle");
-  const moonIcon = document.querySelector(".icon-moon");
-  const sunIcon = document.querySelector(".icon-sun");
+  const lanterneBtn = document.getElementById("theme-toggle");
+  const lanterneIcon = document.getElementById("lanterne-icon");
 
   const savedTheme = localStorage.getItem("theme") || "dark";
   document.body.setAttribute("data-theme", savedTheme);
-
-  if (themeToggle) {
-    themeToggle.checked = savedTheme === "light";
-
-    if (moonIcon && sunIcon) {
-      moonIcon.style.opacity = savedTheme === "light" ? "0" : "1";
-      sunIcon.style.opacity = savedTheme === "light" ? "1" : "0";
-    }
-
-    themeToggle.addEventListener("change", () => {
-      const theme = themeToggle.checked ? "light" : "dark";
-      document.body.setAttribute("data-theme", theme);
-      localStorage.setItem("theme", theme);
-
-      if (moonIcon && sunIcon) {
-        moonIcon.style.opacity = theme === "light" ? "0" : "1";
-        sunIcon.style.opacity = theme === "light" ? "1" : "0";
-      }
-    });
+  if (lanterneIcon) {
+    lanterneIcon.src = savedTheme === "light"
+      ? "assets/img/sombre.png"
+      : "assets/img/lumiere.png";
   }
+
+  lanterneBtn.addEventListener("click", () => {
+    const currentTheme = document.body.getAttribute("data-theme");
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    document.body.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+    lanterneIcon.src = newTheme === "light"
+  ? "assets/img/sombre.png"
+  : "assets/img/lumiere.png";
+  });
 });

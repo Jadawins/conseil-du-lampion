@@ -172,4 +172,14 @@
   .switch input:checked + .slider::before {
     transform: translateX(24px);
   }
+  .lanterne-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.2rem;
+    transition: transform 0.2s ease;
+  }
   
+  .lanterne-btn img:hover {
+    transform: scale(1.1);
+  }
