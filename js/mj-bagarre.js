@@ -124,6 +124,7 @@ async function afficherJournalCombat() {
 }
 
 boutonSoigner.addEventListener("click", async () => {
+  masquerFormulairesMJ(); // ✅ cache l'autre formulaire
   document.getElementById("ordre-combat").style.display = "none";
   document.getElementById("tour-actuel").style.display = "none";
   document.getElementById("formulaire-soin").classList.remove("hidden");
@@ -213,10 +214,10 @@ document.getElementById("annuler-soin").addEventListener("click", () => {
 // 🎯 Gestion ATTAQUE MJ
 
 boutonAttaquer.addEventListener("click", async () => {
-  document.getElementById("ordre-combat").style.display = "none";
-  document.getElementById("tour-actuel").style.display = "none";
-  document.getElementById("formulaire-attaque").classList.remove("hidden");
-
+  masquerFormulairesMJ(); // ✅ on cache d'abord tout
+    document.getElementById("ordre-combat").style.display = "none";
+    document.getElementById("tour-actuel").style.display = "none";
+    document.getElementById("formulaire-attaque").classList.remove("hidden");
   try {
     const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
     if (!response.ok) return;
@@ -381,6 +382,11 @@ async function refreshCombat() {
   }
   }
 
+  function masquerFormulairesMJ() {
+    document.getElementById("form-attaque").style.display = "none";
+    document.getElementById("form-soin").style.display = "none";
+  }
 
-const intervalRefresh = setInterval(refreshCombat, 3000);
+
+  const intervalRefresh = setInterval(refreshCombat, 3000);
 refreshCombat();
