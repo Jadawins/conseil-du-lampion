@@ -24,7 +24,17 @@ window.addEventListener("DOMContentLoaded", async () => {
     combats.forEach((combat, index) => {
       const tr = document.createElement("tr");
 
-      const nbJoueurs = combat.joueurs?.length || 0;
+      let joueursVivants = 0;
+      let joueursMorts = 0;
+
+      if (Array.isArray(combat.joueurs)) {
+      combat.joueurs.forEach(j => {
+      if (typeof j.pv === "number") {
+      if (j.pv > 0) joueursVivants++;
+      else joueursMorts++;
+      }
+      });
+}
       const nbMonstres = combat.monstres?.length || 0;
 
       const resultat =
@@ -42,7 +52,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       tr.innerHTML = `
         <td>${combat.id || `Combat ${index + 1}`}</td>
-        <td>${nbJoueurs} 🧝 / ${nbMonstres} 👹</td>
+        <td>${joueursVivants} 🧝 / ${joueursMorts} 💀 / ${nbMonstres} 👹</td>
         <td>${resultat}</td>
         <td>${horodatage}</td>
       `;
