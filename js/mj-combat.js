@@ -24,7 +24,10 @@ async function recupererSessionDepuisAPI(sessionId) {
     console.log("🧹 Données locales vidées suite à fin de combat.");
 
     // Vider les éléments visibles
-    listeMonstresDiv.innerHTML = "";
+    // Supprime les anciennes tables pour éviter les doublons
+      while (listeMonstresDiv.firstChild) {
+      listeMonstresDiv.removeChild(listeMonstresDiv.firstChild);
+      }
     listeJoueursDiv.innerHTML = "";
     ordreUl.innerHTML = "";
     ordreTitre.style.display = "none";
@@ -150,6 +153,11 @@ console.log("📦 Données envoyées :", JSON.stringify({
   
 
 function afficherListeTemporaire() {
+  if (listeMonstresDiv) {
+    listeMonstresDiv.innerHTML = ""; // 🔁 Évite les doublons visuels
+  }
+  
+  const monstresJSON = localStorage.getItem(monstresKey); // ✅ Évite les doublons de formulaires
   monstres = JSON.parse(localStorage.getItem(monstresKey)) || [];
   listeMonstresDiv.innerHTML = "";
   function afficherJoueurs(joueurs) {
@@ -222,8 +230,8 @@ function afficherListeTemporaire() {
       <td>${m.nom}</td>
       <td>${m.pv}</td>
       <td>${m.initiative}</td>
-      <td><button class="icon-btn" title="Modifier" data-index="${index}">🪄</button></td>
-      <td><button class="icon-btn" title="Supprimer">🔥</button></td>
+      <td><button class="btn-icon" title="Modifier" data-index="${index}">🪄</button></td>
+      <td><button class="btn-icon" title="Supprimer">🔥</button></td>
     `;
     tr.querySelector('[title="Modifier"]').addEventListener("click", () => {
       monstreIndexAModifier = index;
@@ -310,7 +318,9 @@ if (!combatLance) {
 }
 
 setInterval(() => {
+  const combatLance = localStorage.getItem("combatLance") === "true";
   if (!combatLance) {
+    console.log("🔄 Refresh affichage monstres");
     afficherListeTemporaire();
   }
-}, 5000); // 5000 ms = 3 secondes
+}, 5000);

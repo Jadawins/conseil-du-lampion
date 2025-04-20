@@ -154,3 +154,16 @@ select.input-style:focus {
   outline: none;
   box-shadow: 0 0 5px var(--primary-color);
 }
+/* 🔧 Boutons icônes transparents (modifier / supprimer) */
+.btn-icon {
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  transition: transform 0.2s ease;
+}
+
+.btn-icon:hover {
+  transform: scale(1.2);
+}
