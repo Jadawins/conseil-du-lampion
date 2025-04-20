@@ -46,23 +46,20 @@ function afficherOrdreCombat(data, ordre, indexTour) {
   });
 }
 
-function afficherTourActuel() {
-  const entite = ordreCombat[currentTurnIndex];
+function afficherTourActuel(ordre, indexTour) {
+  const entite = ordre[indexTour];
   if (!entite) return;
 
   const estMonstre = !entite.id;
 
   const messageTour = document.getElementById("info-tour");
-  const zoneActions = document.getElementById("actions-mj");
-
+  
   messageTour.textContent = `🎯 C'est au tour de ${entite.pseudo || entite.nom} de jouer.`;
 
-  // ✅ Affiche les boutons si c'est un monstre, sinon les cache
-  if (estMonstre) {
-    zoneActions.style.display = "block";
-  } else {
-    zoneActions.style.display = "none";
-  }
+  console.log("🔍 MJ - estMonstre =", estMonstre); // DEBUG
+
+  // ✅ Affiche ou masque les boutons MJ
+  zoneActions.style.display = estMonstre ? "block" : "none";
 }
 
 boutonPasser.addEventListener("click", async () => {
@@ -376,9 +373,9 @@ async function refreshCombat() {
     currentTurnIndex = indexTour;
 
     afficherOrdreCombat(data, ordre, indexTour);
-afficherTourActuel(ordre, indexTour);
+    afficherTourActuel(data.ordreTour, data.indexTour);
     verifierFinCombat(data);
-    afficherJournalCombat();
+    afficherJournalCombat(data.logCombat || []);
   } catch (error) {
     console.error("❌ MJ - Erreur dans refreshCombat:", error);
   }
