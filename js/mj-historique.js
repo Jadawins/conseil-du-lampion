@@ -5,21 +5,33 @@ const url = `https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`;
 
 async function chargerDernieresSessions() {
   const select = document.getElementById("session-select");
+  select.innerHTML = `<option value="">-- Session actuelle --</option>`; // on vide
+
   try {
-    const response = await fetch("https://lampion-api.azurewebsites.net/api/GetLastSessions");
-    if (!response.ok) throw new Error("Erreur API");
+    const response = await fetch("https://lampion-api.azurewebsites.net/api/ListerSession");
+    if (!response.ok) throw new Error("Erreur API GetLastSessions");
 
     const sessions = await response.json();
+    if (!Array.isArray(sessions)) throw new Error("Réponse inattendue");
+
     sessions.forEach(s => {
       const option = document.createElement("option");
       option.value = s.sessionId;
       option.textContent = `${s.nomAventure} (${new Date(s.timestampFin).toLocaleString("fr-FR")})`;
       select.appendChild(option);
     });
+
+    // Si la session actuelle est connue, on la pré-sélectionne
+    const currentId = localStorage.getItem("sessionId");
+    if (currentId) {
+      select.value = currentId;
+    }
+
   } catch (err) {
-    console.error("Erreur chargement sessions :", err);
+    console.error("❌ Erreur chargement des dernières sessions :", err);
   }
 }
+
 
 window.addEventListener("DOMContentLoaded", async () => {
   await chargerDernieresSessions();
