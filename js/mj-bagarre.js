@@ -46,7 +46,7 @@ function afficherOrdreCombat(data) {
   });
 }
 
-function afficherTourActuel() {
+function afficherTourActuel(data) {
   const entite = ordreCombat[currentTurnIndex];
   if (!entite) return;
 
