@@ -465,3 +465,16 @@ body[data-theme='light'] .table-monstres th {
   transform: scale(1.1);
   cursor: pointer;
 }
+
+select.input-style {
+  background-color: #1a1a1a;
+  color: var(--text-color);
+  border: 1px solid var(--primary-color);
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+select.input-style:focus {
+  outline: none;
+  box-shadow: 0 0 5px var(--primary-color);
+}
