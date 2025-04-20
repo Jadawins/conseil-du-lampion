@@ -3,7 +3,6 @@
 /* ------------------------------------------------------------------- */
 /* 🎭 Boutons */
 
-/* 🔵 Boutons violets stylisés */
 .btn-style,
 .btn-accueil-bottom {
   background-color: #3b0a52;
@@ -29,24 +28,6 @@
   transform: scale(1.05);
 }
 
-/* Accueil texte sans fond mais bien visible */
-.bottom-nav a {
-  color: #ffcc00;
-  font-size: 1.2em;
-  font-weight: bold;
-  text-decoration: none;
-  font-family: 'Georgia', serif;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-}
-
-.bottom-nav a:hover {
-  text-decoration: underline;
-  color: #ffd700;
-}
-
-/* 🔴 Boutons rouges (ex: suppression) */
 .btn-danger {
   background-color: #c0392b;
   color: white;
@@ -63,14 +44,6 @@
 
 .btn-danger:hover {
   background-color: #e74c3c;
-}
-
-/* 🔷 Position bas de page */
-.bottom-nav {
-  display: flex;
-  justify-content: center;
-  margin-top: 3rem;
-  margin-bottom: 2rem;
 }
 
 /* ------------------------------------------------------------------- */
@@ -91,7 +64,6 @@ textarea {
   transition: box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
-/* ☀️ Thème clair pour les champs */
 body[data-theme='light'] input[type="text"],
 body[data-theme='light'] input[type="number"],
 body[data-theme='light'] textarea {
@@ -100,7 +72,6 @@ body[data-theme='light'] textarea {
   box-shadow: 0 0 5px rgba(100, 50, 150, 0.2);
 }
 
-/* Effet focus (les deux thèmes) */
 input[type="text"]:focus,
 input[type="number"]:focus,
 textarea:focus {
@@ -116,305 +87,8 @@ body[data-theme='light'] textarea:focus {
 }
 
 /* ------------------------------------------------------------------- */
-/* ✨ Icônes seules (sans fond bouton) */
-.icon-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.4em;
-  padding: 0.3em;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s ease;
-}
+/* ✨ Icônes, tables et autres éléments */
 
-.icon-btn:hover {
-  transform: scale(1.2);
-}
-
-/* ------------------------------------------------------------------- */
-/* 🪤 Fenêtre modale */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-/* 🪡 Contenu centré du modal */
-.modal-content {
-  background-color: var(--background-color);
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  width: 90%;
-  max-width: 500px;
-  animation: popup 0.2s ease-in-out;
-}
-
-@keyframes popup {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.hidden {
-  display: none !important;
-}
-
-.modal-buttons .btn-style,
-.modal-buttons .btn-danger {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  padding: 0.8rem 1.2rem;
-  border-radius: 1.2rem;
-  min-width: 140px;
-  height: 50px;
-  box-sizing: border-box;
-  gap: 0.5rem;
-}
-
-.modal-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-top: 1rem;
-}
-
-.modal-buttons .btn-style i,
-.modal-buttons .btn-danger i {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* 🧩 Groupe d’entrée avec icône */
-.input-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  margin-bottom: 1em;
-  font-size: 1.2em;
-  color: #f0e6d2;
-}
-
-/* 🎨 Sections de tableaux (monstres et joueurs) */
-.table-section {
-  margin-top: 3em;
-  text-align: center;
-}
-
-.table-section h2 {
-  color: #FFD700;
-  margin-bottom: 0.5em;
-  font-size: 1.6em;
-}
-
-/* 🧾 Harmonisation des tableaux joueurs/monstres */
-.table-monstres {
-  width: 100%;
-  max-width: 700px;
-  margin: 1em auto;
-  border-collapse: collapse;
-}
-
-.table-monstres th,
-.table-monstres td {
-  padding: 0.6em 1em;
-  font-size: 1.1em;
-  text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* 🌞 Amélioration visibilité en thème clair */
-body[data-theme='light'] .table-monstres th,
-body[data-theme='light'] .table-monstres td {
-  color: #2b1d38;
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-body[data-theme='light'] .table-monstres th {
-  color: #4a148c;
-}
-
-.highlight-row {
-  background-color: #ffdd57;
-  font-weight: bold;
-  animation: pulseRow 1s infinite alternate;
-}
-
-@keyframes pulseRow {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.02);
-  }
-}
-
-.ordre-container {
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 2px dashed var(--primary);
-  border-radius: 12px;
-  background-color: var(--background);
-}
-
-.ordre-item {
-  padding: 0.5rem;
-  margin: 0.3rem 0;
-  border-radius: 8px;
-  font-weight: bold;
-  transition: background 0.3s;
-}
-
-.ordre-item.actif {
-  background-color: rgba(138, 43, 226, 0.2);
-  border-left: 5px solid violet;
-}
-
-.table-ordre {
-  width: 100%;
-  max-width: 500px;
-  margin: 1em auto;
-  border-collapse: collapse;
-  border-radius: 12px;
-  overflow: hidden;
-  font-family: 'Georgia', serif;
-}
-
-.table-ordre th {
-  background-color: #2e004f;
-  color: #ffdd57;
-  font-size: 1.1em;
-  padding: 0.6em;
-}
-
-.table-ordre td {
-  background-color: rgba(255, 255, 255, 0.03);
-  color: white;
-  text-align: center;
-  padding: 0.5em;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.highlight-row {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffd700;
-  font-weight: bold;
-}
-
-
-@keyframes pulseRow {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.02);
-  }
-}
-
-.low-hp td {
-  background-color: rgba(255, 0, 0, 0.1);
-  color: #ff6666;
-  font-weight: bold;
-}
-
-.action-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.card-confirm {
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 2px solid var(--color-accent);
-  border-radius: 10px;
-  background-color: var(--bg-secondary);
-  text-align: center;
-}
-
-.log-soin {
-  color: #aaffaa;
-}
-
-.log-attaque {
-  color: #ffaaaa;
-}
-
-.log-mort {
-  color: #ff4444;
-  font-weight: bold;
-}
-
-.log-sortie {
-  font-style: italic;
-  color: #ffa500;
-}
-
-.log-victoire {
-  color: gold;
-  font-weight: bold;
-}
-
-.log-inconnu {
-  color: #cccccc;
-  font-style: italic;
-}
-
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-#combat-historique-container {
-  margin-top: 2rem;
-  overflow-x: auto;
-}
-
-.styled-table {
-  width: 100%;
-  margin: 0 auto;
-  border-collapse: collapse;
-}
-
-.styled-table th, .styled-table td {
-  padding: 0.75rem 1rem;
-  text-align: center;
-}
-
-.styled-table thead {
-  background-color: var(--table-head-bg, #222);
-  color: var(--text-color, #fff);
-}
-
-.styled-table tbody tr:nth-child(even) {
-  background-color: var(--table-row-alt-bg, #111);
-}
-
-.styled-table tbody tr:hover {
-  background-color: var(--table-row-hover-bg, #333);
-}
-/* Style de la ligne de journal */
 .log-row td {
   background-color: #1f1f1f;
   font-style: italic;
@@ -423,7 +97,6 @@ body[data-theme='light'] .table-monstres th {
   border-top: 1px solid #333;
 }
 
-/* Animation à l’apparition */
 .log-row[style*="display: table-row"] td {
   animation: fadeIn 0.3s ease-in;
 }
@@ -439,73 +112,6 @@ body[data-theme='light'] .table-monstres th {
   }
 }
 
-/* Liste du journal */
-.journal-combat ul {
-  padding-left: 1.5rem;
-  margin: 0;
-  list-style: disc;
-}
-
-.journal-combat li {
-  line-height: 1.6;
-  margin-bottom: 0.3rem;
-}
-
-/* Icône toggle + / - */
-.toggle-icon {
-  float: right;
-  font-weight: bold;
-  font-size: 1.2em;
-  color: #ccc;
-  transition: transform 0.3s;
-}
-
-.combat-row:hover .toggle-icon {
-  color: #fff;
-  transform: scale(1.1);
-  cursor: pointer;
-}
-
-select.input-style {
-  background-color: #1a1a1a;
-  color: var(--text-color);
-  border: 1px solid var(--primary-color);
-  padding: 0.4rem 0.8rem;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-}
-select.input-style:focus {
-  outline: none;
-  box-shadow: 0 0 5px var(--primary-color);
-}
-
-.log-list {
-  list-style: none;
-  padding-left: 1rem;
-}
-
-.log-entry {
-  margin-bottom: 4px;
-  color: #ffecb3;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-.log-time {
-  color: #facc15;
-  font-weight: bold;
-  margin-right: 6px;
-}
-
-.log-auteur {
-  color: #60a5fa;
-  font-weight: bold;
-  margin-right: 6px;
-}
-
-.log-action {
-  color: #ffffff;
-}
-
 .journal-combat {
   background-color: #1a1a1a;
   padding: 10px 20px;
@@ -513,20 +119,38 @@ select.input-style:focus {
   margin-top: 8px;
 }
 
-.log-liste {
+.journal-combat ul {
+  padding-left: 1.5rem;
+  margin: 0;
   list-style: none;
-  padding-left: 0;
 }
 
-.log-liste li {
-  margin: 6px 0;
+.journal-combat li {
+  line-height: 1.6;
+  margin-bottom: 0.3rem;
   font-style: italic;
-  color: #ffd700;
 }
 
-.log-soin { color: #6fe7c2; }
-.log-attaque { color: #ff8080; }
-.log-mort { color: #ff4d4d; }
-.log-sortie { color: #ffa64d; }
-.log-victoire { color: #d1b3ff; }
-.log-inconnu { color: #cccccc; }
+/* Couleurs par type d’action dans les journaux */
+.log-soin { color: #34d399; font-weight: bold; }
+.log-attaque { color: #60a5fa; font-weight: bold; }
+.log-mort { color: #f87171; font-weight: bold; }
+.log-sortie { color: #fbbf24; }
+.log-victoire { color: #e9d8a6; font-weight: bold; }
+.log-inconnu { color: #9ca3af; font-style: italic; }
+
+/* Liste déroulante sessions */
+select.input-style {
+  background-color: #1a1a1a;
+  color: var(--text-color);
+  border: 1px solid var(--primary-color);
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+}
+
+select.input-style:focus {
+  outline: none;
+  box-shadow: 0 0 5px var(--primary-color);
+}
