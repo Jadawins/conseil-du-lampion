@@ -116,6 +116,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (!data.combatEnCours) {
       if (joueur && typeof joueur.pv === "number" && typeof joueur.pvMax === "number") {
+        console.log("💾 Enregistrement dans le localStorage :", joueur.pv, joueur.pvMax);
         localStorage.setItem("dernierPV", joueur.pv);
         localStorage.setItem("pvMax", joueur.pvMax);
         console.log(`💾 Stockage local PV : ${joueur.pv} / ${joueur.pvMax}`);
