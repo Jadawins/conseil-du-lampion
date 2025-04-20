@@ -127,21 +127,49 @@ async function chargerHistoriquePourSession(sessionId) {
   }
 }
 
-function genererJournalCombat(log) {
-  if (!Array.isArray(log) || log.length === 0) return `<em>Journal vide</em>`;
+async function afficherJournalCombat() {
+  const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
+  if (!response.ok) return;
+  const data = await response.json();
+  const log = data.logCombat || [];
+  const ul = document.getElementById("log-combat");
+  ul.innerHTML = "";
 
-  return `
-    <div class="journal-combat">
-      <ul class="log-list">
-        ${log.map(e => `
-          <li class="log-entry">
-            <span class="log-time">${e.timestamp ? `[${new Date(e.timestamp).toLocaleTimeString("fr-FR")}]` : "[?]"}</span>
-            <span class="log-auteur">${e.auteur || "?"}</span>
-            <span class="log-action">${e.action || "<em>Action inconnue</em>"}</span>
-          </li>
-        `).join("")}
-      </ul>
-    </div>
-  `;
+  log.slice(-10).reverse().forEach(entry => {
+    const li = document.createElement("li");
+    const time = new Date(entry.timestamp).toLocaleTimeString("fr-FR", {
+      hour: "2-digit", minute: "2-digit"
+    });
+
+    let texte = "";
+    let classe = "";
+
+    if (entry.type === "soin") {
+      texte = `🩹 [${time}] ${entry.auteur} soigne ${entry.cible} de ${entry.valeur} PV`;
+      if (entry.overheal && entry.overheal > 0) {
+        texte += ` dont ${entry.overheal} en trop`;
+      }
+      classe = "log-soin";
+    } else if (entry.type === "attaque") {
+      texte = `⚔️ [${time}] ${entry.auteur} attaque ${entry.cible} pour ${entry.degats} dégâts`;
+      classe = "log-attaque";
+    } else if (entry.type === "mort") {
+      texte = `☠️ [${time}] ${entry.cible} est mort (par ${entry.auteur})`;
+      classe = "log-mort";
+    } else if (entry.type === "sortie_combat") {
+      texte = `🚪 [${time}] ${entry.cible} quitte le combat (PV à 0)`;
+      classe = "log-sortie";
+    } else if (entry.type === "fin_combat") {
+      texte = `🏁 [${time}] Fin du combat – ${entry.resultat === "victoire" ? "Victoire !" : "Défaite..."}`;
+      classe = "log-victoire";
+    } else {
+      texte = `📌 [${time}] ${entry.auteur || "?"} fait une action inconnue.`;
+      classe = "log-inconnu";
+    }
+
+    li.textContent = texte;
+    li.classList.add(classe);
+    ul.appendChild(li);
+  });
 }
 

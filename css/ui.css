@@ -505,3 +505,28 @@ select.input-style:focus {
 .log-action {
   color: #ffffff;
 }
+
+.journal-combat {
+  background-color: #1a1a1a;
+  padding: 10px 20px;
+  border-radius: 10px;
+  margin-top: 8px;
+}
+
+.log-liste {
+  list-style: none;
+  padding-left: 0;
+}
+
+.log-liste li {
+  margin: 6px 0;
+  font-style: italic;
+  color: #ffd700;
+}
+
+.log-soin { color: #6fe7c2; }
+.log-attaque { color: #ff8080; }
+.log-mort { color: #ff4d4d; }
+.log-sortie { color: #ffa64d; }
+.log-victoire { color: #d1b3ff; }
+.log-inconnu { color: #cccccc; }
