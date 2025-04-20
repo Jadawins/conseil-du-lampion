@@ -197,3 +197,23 @@ select.input-style:focus {
   gap: 1rem;
   margin-top: 2rem;
 }
+/* Centrer le conteneur principal */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Centrer la table de l’historique */
+#combat-historique-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Centrer la liste déroulante */
+.label-select, #session-select {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+}
