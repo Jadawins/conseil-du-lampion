@@ -114,13 +114,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const joueur = data.joueurs?.find(j => j.pseudo === pseudo);
 
-    if (!data.combatEnCours && joueur && typeof joueur.pv === "number" && typeof joueur.pvMax === "number") {
-      localStorage.setItem("dernierPV", joueur.pv);
-      localStorage.setItem("pvMax", joueur.pvMax);
-      console.log(`💾 Stockage PV avant redirection : ${joueur.pv} / ${joueur.pvMax}`);
-      // ⏳ Laisse 50ms avant redirection
+    if (!data.combatEnCours) {
+      if (joueur && typeof joueur.pv === "number" && typeof joueur.pvMax === "number") {
+        localStorage.setItem("dernierPV", joueur.pv);
+        localStorage.setItem("pvMax", joueur.pvMax);
+        console.log(`💾 Stockage PV avant redirection : ${joueur.pv} / ${joueur.pvMax}`);
+      } else {
+        console.warn("⚠️ Impossible de stocker PV : joueur ou valeurs manquantes");
+      }
+    
       setTimeout(() => {
-      window.location.href = `joueur-initiative.html?sessionId=${sessionId}`;
+        window.location.href = `joueur-initiative.html?sessionId=${sessionId}`;
       }, 50);
       return;
     }
