@@ -28,12 +28,12 @@ function formatPV(entite, data) {
   return `${pv} / ${pvMax}`;
 }
 
-function afficherOrdreCombat(data) {
+function afficherOrdreCombat(data, ordre, indexTour) {
   const tbody = document.getElementById("liste-initiative");
   if (!tbody) return;
   tbody.innerHTML = "";
 
-  ordreCombat.forEach((entite, index) => {
+  ordre.forEach((entite, index) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${index === currentTurnIndex ? "🎯 " : ""}${entite.pseudo || entite.nom}</td>
@@ -41,30 +41,23 @@ function afficherOrdreCombat(data) {
       <td>${formatPV(entite, data)}</td>
     `;
     if (entite.pv && entite.pvMax && entite.pv / entite.pvMax < 0.3) tr.classList.add("low-hp");
-    if (index === currentTurnIndex) tr.classList.add("highlight-row");
+    if (index === indexTour) tr.classList.add("highlight-row");
     tbody.appendChild(tr);
   });
 }
 
-function afficherTourActuel(data) {
-  const entite = ordreCombat[currentTurnIndex];
+function afficherTourActuel(ordre, indexTour) {
+  const entite = ordre[indexTour];
   if (!entite) return;
 
   const estMonstre = !entite.id;
 
   messageTour.textContent = `🎯 C'est au tour de ${entite.pseudo || entite.nom} de jouer.`;
 
-  // 🔄 Mise à jour claire de l'affichage des boutons
   zoneActions.style.display = estMonstre ? "block" : "none";
-  if (!estMonstre) {
-    boutonAttaquer.style.display = "none";
-    boutonSoigner.style.display = "none";
-    boutonPasser.style.display = "none";
-  } else {
-    boutonAttaquer.style.display = "inline-block";
-    boutonSoigner.style.display = "inline-block";
-    boutonPasser.style.display = "inline-block";
-  }
+  boutonAttaquer.style.display = estMonstre ? "inline-block" : "none";
+  boutonSoigner.style.display = estMonstre ? "inline-block" : "none";
+  boutonPasser.style.display = estMonstre ? "inline-block" : "none";
 }
 
 boutonPasser.addEventListener("click", async () => {
@@ -377,8 +370,8 @@ async function refreshCombat() {
     ordreCombat = ordre;
     currentTurnIndex = indexTour;
 
-    afficherOrdreCombat(data);
-    afficherTourActuel(data);
+    afficherOrdreCombat(data, ordre, indexTour);
+afficherTourActuel(ordre, indexTour);
     verifierFinCombat(data);
     afficherJournalCombat();
   } catch (error) {
