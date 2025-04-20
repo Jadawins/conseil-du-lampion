@@ -203,6 +203,7 @@ ordre.forEach((entite, index) => {
   setInterval(refreshCombat, 3000);
 
   document.getElementById("btn-soigner").addEventListener("click", async () => {
+    document.getElementById("formulaire-attaque").classList.add("hidden");
     document.getElementById("formulaire-soin").classList.remove("hidden");
     document.getElementById("message-tour").style.display = "none";
     document.getElementById("ordre-combat").style.display = "none";
@@ -301,6 +302,7 @@ ordre.forEach((entite, index) => {
   });
 
   document.getElementById("btn-attaquer").addEventListener("click", async () => {
+    document.getElementById("formulaire-soin").classList.add("hidden"); // 👈 cache soin
     document.getElementById("formulaire-attaque").classList.remove("hidden");
     document.getElementById("message-tour").style.display = "none";
     document.getElementById("ordre-combat").style.display = "none";
@@ -386,6 +388,12 @@ ordre.forEach((entite, index) => {
         clearTimeout(feedback._timeout);
         feedback._timeout = setTimeout(() => (feedback.textContent = ""), 4000);
       }
+      document.getElementById("formulaire-attaque").classList.add("hidden");
+      document.getElementById("formulaire-soin").classList.add("hidden");
+      document.getElementById("confirmation-soin").classList.add("hidden");
+
+      document.getElementById("message-tour").style.display = "block";
+      document.getElementById("ordre-combat").style.display = "block";
   
       await refreshCombat();
     } catch (err) {
