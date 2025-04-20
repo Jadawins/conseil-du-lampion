@@ -6,6 +6,7 @@ const form = document.getElementById("initiative-form");
 const title = document.getElementById("initiative-title");
 const confirmation = document.getElementById("confirmation-message");
 const pvMaxGroup = document.getElementById("pv-max-group"); // le conteneur du champ PV Max
+const pvMaxInput = document.getElementById("pv-max-input");
 
 window.addEventListener("DOMContentLoaded", async () => {
   if (!sessionId || !pseudo) return;
@@ -80,8 +81,7 @@ form.addEventListener("submit", async (e) => {
 
   const initiative = parseInt(document.getElementById("initiative-input").value);
   const pv = parseInt(document.getElementById("pv-input").value);
-  const pvMaxInput = document.getElementById("pv-max-input");
-  const pvMax = pvMaxInput ? parseInt(pvMaxInput.value) : null;
+    const pvMax = pvMaxInput ? parseInt(pvMaxInput.value) : null;
 
   if (isNaN(initiative) || isNaN(pv)) {
     alert("Veuillez remplir correctement tous les champs obligatoires.");
