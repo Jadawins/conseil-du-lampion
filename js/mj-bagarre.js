@@ -387,4 +387,3 @@ afficherTourActuel(ordre, indexTour);
 
 const intervalRefresh = setInterval(refreshCombat, 3000);
 refreshCombat();
-S
