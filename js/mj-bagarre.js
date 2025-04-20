@@ -383,10 +383,28 @@ async function refreshCombat() {
   }
 
   function masquerFormulairesMJ() {
-    document.getElementById("form-attaque").style.display = "none";
-    document.getElementById("form-soin").style.display = "none";
+    const formSoin = document.getElementById("formulaire-soin");
+    const formAttaque = document.getElementById("formulaire-attaque");
+  
+    if (formSoin) formSoin.classList.add("hidden");
+    if (formAttaque) formAttaque.classList.add("hidden");
   }
-
+  
+  document.getElementById("btn-attaquer").addEventListener("click", () => {
+    masquerFormulairesMJ();
+    const formulaire = document.getElementById("formulaire-attaque");
+    if (formulaire) formulaire.classList.remove("hidden");
+  });
+  
+  document.getElementById("btn-soigner").addEventListener("click", () => {
+    masquerFormulairesMJ();
+    const formulaire = document.getElementById("formulaire-soin");
+    if (formulaire) formulaire.classList.remove("hidden");
+  });
+  document.getElementById("ordre-combat").style.display = "block";
+  document.getElementById("tour-actuel").style.display = "block";
+  document.getElementById("annuler-attaque").addEventListener("click", masquerFormulairesMJ);
+  document.getElementById("annuler-soin").addEventListener("click", masquerFormulairesMJ);
 
   const intervalRefresh = setInterval(refreshCombat, 3000);
 refreshCombat();
