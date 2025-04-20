@@ -9,7 +9,7 @@ async function chargerDernieresSessions() {
 
   try {
     const response = await fetch("https://lampion-api.azurewebsites.net/api/ListerSession");
-    if (!response.ok) throw new Error("Erreur API GetLastSessions");
+    if (!response.ok) throw new Error("Erreur API ListerSession");
 
     const sessions = await response.json();
     if (!Array.isArray(sessions)) throw new Error("Réponse inattendue");
