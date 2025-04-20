@@ -115,6 +115,11 @@ window.addEventListener("DOMContentLoaded", () => {
     const joueur = data.joueurs?.find(j => j.pseudo === pseudo);
 
     if (!data.combatEnCours) {
+      if (joueur && typeof joueur.pv === "number" && typeof joueur.pvMax === "number") {
+        localStorage.setItem("dernierPV", joueur.pv);
+        localStorage.setItem("pvMax", joueur.pvMax);
+        console.log(`💾 Stockage local PV : ${joueur.pv} / ${joueur.pvMax}`);
+      }
       window.location.href = `joueur-initiative.html?sessionId=${sessionId}`;
       return;
     }
