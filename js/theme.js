@@ -4,19 +4,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const savedTheme = localStorage.getItem("theme") || "dark";
   document.body.setAttribute("data-theme", savedTheme);
-  if (lanterneIcon) {
-    lanterneIcon.src = savedTheme === "light"
-      ? "assets/img/sombre.png"
-      : "assets/img/lumiere.png";
-  }
+  updateLanterneIcon(savedTheme);
 
   lanterneBtn.addEventListener("click", () => {
     const currentTheme = document.body.getAttribute("data-theme");
     const newTheme = currentTheme === "dark" ? "light" : "dark";
     document.body.setAttribute("data-theme", newTheme);
     localStorage.setItem("theme", newTheme);
-    lanterneIcon.src = newTheme === "light"
-  ? "assets/img/sombre.png"
-  : "assets/img/lumiere.png";
+    updateLanterneIcon(newTheme);
   });
+
+  function updateLanterneIcon(theme) {
+    if (!lanterneIcon) return;
+    lanterneIcon.src =
+      theme === "light"
+        ? "assets/img/lumiere.png"
+        : "assets/img/sombre.png";
+  }
 });
