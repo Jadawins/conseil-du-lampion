@@ -147,3 +147,18 @@ function genererJournalCombat(log) {
     </div>
   `;
 }
+const trDetails = document.createElement("tr");
+trDetails.className = "accordeon-content"; // classe pour l'animation
+trDetails.id = `details-${index}`;
+trDetails.classList.remove("open"); // caché par défaut
+
+const td = document.createElement("td");
+td.colSpan = 5;
+td.innerHTML = genererJournalCombat(combat.logCombat);
+trDetails.appendChild(td);
+tbody.appendChild(trDetails);
+
+// bouton ou ligne cliquable pour afficher/masquer
+ligne.addEventListener("click", () => {
+  trDetails.classList.toggle("open");
+});
