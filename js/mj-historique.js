@@ -105,7 +105,7 @@ async function chargerHistoriquePourSession(sessionId) {
         <span class="combat-resultat">${resultat}</span>
         <span class="combat-stats">${joueursVivants} 🧝 / ${joueursMorts} 💀 / ${nbMonstres} 👹</span>
       `;
-      table.appendChild(ligne);
+      table.appendChild(tr);
       const logRow = document.createElement("tr");
       logRow.classList.add("log-row");
       logRow.style.display = "none";
