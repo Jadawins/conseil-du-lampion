@@ -275,3 +275,48 @@ section.journal-combat {
 .journal-combat-list .log-victoire { color: #e9d8a6 !important; font-weight: bold; }
 .journal-combat-list .log-inconnu  { color: #9ca3af !important; font-style: italic; }
 .journal-combat-list .log-pass     { color: #cbd5e1 !important; font-style: italic; }
+
+.combat-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  gap: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.combat-entry:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.combat-entry span {
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.combat-id {
+  font-weight: bold;
+  flex: 0 0 100px;
+}
+
+.combat-resultat {
+  font-weight: bold;
+  color: #facc15; /* doré */
+}
+
+.combat-date {
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+.combat-stats {
+  font-style: italic;
+  color: #ccc;
+}
