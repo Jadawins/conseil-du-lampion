@@ -124,6 +124,9 @@ async function afficherJournalCombat() {
     } else if (entry.type === "fin_combat") {
       texte = `🏁 [${time}] Fin du combat – ${entry.resultat === "victoire" ? "Victoire !" : "Défaite..."}`;
       classe = "log-victoire";
+    } else if (entry.type === "passer_tour") {
+      texte = `⏭️ [${time}] ${entry.auteur} passe son tour.`;
+      classe = "log-pass";
     } else {
       texte = `📌 [${time}] ${entry.auteur || "?"} fait une action inconnue.`;
       classe = "log-inconnu";

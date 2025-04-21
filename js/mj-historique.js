@@ -199,6 +199,10 @@ function genererJournalCombat(log) {
               }
               classe = "log-soin";
               break;
+            case "passer_tour":
+              texte = `⏭️ [${time}] ${entry.auteur} passe son tour.`;
+              classe = "log-pass";
+              break;  
             case "mort":
               texte = `☠️ [${time}] ${entry.cible} est mort (par ${entry.auteur})`;
               classe = "log-mort";

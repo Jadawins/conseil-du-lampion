@@ -138,6 +138,7 @@ body[data-theme='light'] textarea:focus {
 .log-sortie { color: #fbbf24; }
 .log-victoire { color: #e9d8a6; font-weight: bold; }
 .log-inconnu { color: #9ca3af; font-style: italic; }
+.log-pass { color: #cbd5e1; font-style: italic;}
 
 /* Liste déroulante sessions */
 select.input-style {
