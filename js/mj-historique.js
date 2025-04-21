@@ -80,6 +80,7 @@ function afficherCombats(sessionData) {
       <td>${date}</td>
       <td>${joueursVivants} 🧝 / ${joueursMorts} 💀 / ${monstres} 👹</td>
       <td>${resultat}</td>
+      <td><button class="btn-style btn-purple btn-sm">Voir</button></td>
     `;
 
     const logRow = document.createElement("tr");
