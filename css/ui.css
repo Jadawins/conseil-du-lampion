@@ -112,20 +112,15 @@ body[data-theme='light'] textarea:focus {
   }
 }
 
-.journal-combat {
-  background-color: #1a1a1a;
-  padding: 10px 20px;
-  border-radius: 10px;
-  margin-top: 8px;
-}
 
-.journal-combat ul {
+
+.journal-combat-list {
   padding-left: 1.5rem;
   margin: 0;
   list-style: none;
 }
 
-.journal-combat li {
+.journal-combat-list li {
   line-height: 1.6;
   margin-bottom: 0.3rem;
   font-style: italic;
@@ -258,4 +253,18 @@ select.input-style:focus {
 
 .combat-table tbody tr:hover {
   background-color: rgba(255, 255, 255, 0.05);
+}
+
+
+/* 🔧 Clean override: enlever fond sombre de la section journal */
+section.journal-combat {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ✅ Liste spécifique du journal */
+.journal-combat-list {
+  padding-left: 1.5rem;
+  margin: 0;
+  list-style: none;
 }
