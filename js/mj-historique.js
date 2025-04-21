@@ -175,48 +175,40 @@ async function afficherJournalCombat() {
   });
 }
 
-function genererJournalCombat(log) {
-  if (!Array.isArray(log) || log.length === 0) return `<em>Journal vide</em>`;
+function afficherCombats(sessionData) {
+  const tableBody = document.getElementById("table-combats");
+  tableBody.innerHTML = "";
 
-  return `
-    <div class="journal-combat">
-      <ul class="journal-combat-list">
-        ${log.map(e => {
-          const time = e.timestamp
-            ? `<strong>[${new Date(e.timestamp).toLocaleTimeString("fr-FR")}]</strong>`
-            : "";
-          let texte = "";
-          let classe = "";
+  sessionData.combats.forEach((combat, index) => {
+    const tr = document.createElement("tr");
+    tr.className = "combat-entry";
+    tr.style.cursor = "pointer";
+    tr.addEventListener("click", () => {
+      const detailRow = tr.nextElementSibling;
+      if (detailRow.style.display === "table-row") {
+        detailRow.style.display = "none";
+      } else {
+        detailRow.style.display = "table-row";
+      }
+    });
 
-          if (e.type === "soin") {
-            texte = `🩹 ${e.auteur} soigne ${e.cible} de ${e.valeur} PV`;
-            if (e.overheal && e.overheal > 0) {
-              texte += ` dont ${e.overheal} en trop`;
-            }
-            classe = "log-soin";
-          } else if (e.type === "attaque") {
-            texte = `⚔️ ${e.auteur} attaque ${e.cible} pour ${e.degats} dégâts`;
-            classe = "log-attaque";
-          } else if (e.type === "mort") {
-            texte = `☠️ ${e.cible} est mort (par ${e.auteur})`;
-            classe = "log-mort";
-          } else if (e.type === "sortie_combat") {
-            texte = `🚪 ${e.cible} quitte le combat (PV à 0)`;
-            classe = "log-sortie";
-          } else if (e.type === "fin_combat") {
-            texte = `🏁 Fin du combat – ${e.resultat === "victoire" ? "Victoire !" : "Défaite..."}`;
-            classe = "log-victoire";
-          } else if (e.type === "passer_tour") {
-            texte = `⏭️ ${e.auteur} passe son tour.`;
-            classe = "log-pass";
-          } else {
-            texte = `${e.auteur || "?"} fait une action inconnue.`;
-            classe = "log-inconnu";
-          }
+    tr.innerHTML = `
+      <td><strong>Combat ${index + 1}</strong></td>
+      <td>${new Date(combat.date).toLocaleDateString("fr-FR")} ${new Date(combat.date).toLocaleTimeString("fr-FR")}</td>
+      <td>🧙 ${combat.nbJoueurs}</td>
+      <td>${combat.resultat === "victoire" ? "🏅 Victoire" : "☠️ Défaite"}</td>
+      <td>💀 ${combat.nbMorts} / 😈 ${combat.nbMonstres}</td>
+    `;
 
-          return `<li class="${classe}">${time} ${texte}</li>`;
-        }).join("")}
-      </ul>
-    </div>
-  `;
+    // Ligne cachée pour le journal
+    const detailTr = document.createElement("tr");
+    detailTr.style.display = "none";
+    detailTr.innerHTML = `
+      <td colspan="5">${genererJournalCombat(combat.logCombat)}</td>
+    `;
+
+    tableBody.appendChild(tr);
+    tableBody.appendChild(detailTr);
+  });
 }
+
