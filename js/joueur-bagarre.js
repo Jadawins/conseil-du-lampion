@@ -68,9 +68,14 @@ window.addEventListener("DOMContentLoaded", () => {
     if (tousJoueursMorts) {
       messageFin.textContent = "☠️ Défaite... Tous les joueurs sont à terre.";
       sectionFin.classList.remove("hidden");
+      document.getElementById("actions-joueur").style.display = "none";
     } else if (tousMonstresMorts && moi.pv > 0) {
       messageFin.textContent = "🎉 Victoire ! Tous les monstres ont été vaincus.";
       sectionFin.classList.remove("hidden");
+      document.getElementById("actions-joueur").style.display = "none";
+      document.getElementById("formulaire-attaque").classList.add("hidden");
+      document.getElementById("formulaire-soin").classList.add("hidden");
+      document.getElementById("confirmation-soin").classList.add("hidden");
     }
   }
 
