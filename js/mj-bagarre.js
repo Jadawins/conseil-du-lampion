@@ -53,14 +53,18 @@ function afficherTourActuel(ordre, indexTour) {
   const messageTour = document.getElementById("info-tour");
   messageTour.textContent = `🎯 C'est au tour de ${entite.pseudo || entite.nom} de jouer.`;
 
-  const estJoueur = !!entite.id;
-  const estMonstre = !estJoueur;
+  const estMonstre = entite && !("pseudo" in entite);
 
-  // Affiche ou masque les boutons MJ uniquement si c'est un monstre
   if (zoneActions) {
-    zoneActions.style.display = estMonstre ? "block" : "none";
+    if (estMonstre) {
+      zoneActions.style.display = "block";
+    } else {
+      zoneActions.style.display = "none";
+      masquerFormulairesMJ();
+    }
   }
 }
+
 
 boutonPasser.addEventListener("click", async () => {
   masquerFormulairesMJ();
@@ -136,6 +140,7 @@ async function afficherJournalCombat() {
     li.classList.add(classe);
     ul.appendChild(li);
   });
+  await afficherJournalCombat(); // sans paramètre, car déjà prévu ainsi dans ta version
 }
 
 boutonSoigner.addEventListener("click", async () => {
@@ -391,8 +396,7 @@ async function refreshCombat() {
     afficherOrdreCombat(data, ordre, indexTour);
     afficherTourActuel(data.ordreTour, data.indexTour);
     verifierFinCombat(data);
-    afficherJournalCombat(data.logCombat || []);
-  } catch (error) {
+    } catch (error) {
     console.error("❌ MJ - Erreur dans refreshCombat:", error);
   }
   }
@@ -403,6 +407,9 @@ async function refreshCombat() {
   
     if (formSoin) formSoin.classList.add("hidden");
     if (formAttaque) formAttaque.classList.add("hidden");
+  
+    document.getElementById("ordre-combat").style.display = "block";
+    document.getElementById("tour-actuel").style.display = "block";
   }
   
   document.getElementById("btn-attaquer").addEventListener("click", () => {
