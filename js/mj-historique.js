@@ -36,10 +36,14 @@ async function chargerDernieresSessions() {
 window.addEventListener("DOMContentLoaded", async () => {
   await chargerDernieresSessions();
 
-  document.getElementById("session-select").addEventListener("change", (e) => {
+  document.getElementById("session-select").addEventListener("change", async (e) => {
     const selectedId = e.target.value;
     if (selectedId) {
-      chargerHistoriquePourSession(selectedId);
+      const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${selectedId}`);
+      if (response.ok) {
+        const sessionData = await response.json();
+        afficherCombats(sessionData);
+      }
     }
   });
 
@@ -61,8 +65,8 @@ async function chargerHistoriquePourSession(sessionId) {
     if (combats.length === 0) {
       const tr = document.createElement("tr");
         tr.className = "combat-summary";
-        ligne.textContent = "Aucun combat enregistré.";
-        table.appendChild(ligne);
+        tr.textContent = "Aucun combat enregistré.";
+        table.appendChild(tr);
       return;
     }
 
@@ -94,9 +98,8 @@ async function chargerHistoriquePourSession(sessionId) {
         dateStyle: "short",
         timeStyle: "short",
       });
-      const tr = document.createElement("tr");
       tr.className = "combat-summary";
-      ligne.innerHTML = `
+      tr.innerHTML = `
         <span class="combat-id">${combat.id || `Combat ${index + 1}`}</span>
         <span class="combat-date">${horodatage}</span>
         <span class="combat-resultat">${resultat}</span>
@@ -176,39 +179,58 @@ async function afficherJournalCombat() {
 }
 
 function afficherCombats(sessionData) {
-  const tableBody = document.getElementById("table-combats");
-  tableBody.innerHTML = "";
+  const section = document.getElementById("liste-combats");
+  section.innerHTML = "";
 
-  sessionData.combats.forEach((combat, index) => {
-    const tr = document.createElement("tr");
-    tr.className = "combat-entry";
-    tr.style.cursor = "pointer";
-    tr.addEventListener("click", () => {
-      const detailRow = tr.nextElementSibling;
-      if (detailRow.style.display === "table-row") {
-        detailRow.style.display = "none";
-      } else {
-        detailRow.style.display = "table-row";
-      }
-    });
+  const combats = sessionData.combats || [];
+  if (combats.length === 0) {
+    section.innerHTML = "<p>Aucun combat enregistré pour cette session.</p>";
+    return;
+  }
 
-    tr.innerHTML = `
-      <td><strong>Combat ${index + 1}</strong></td>
-      <td>${new Date(combat.date).toLocaleDateString("fr-FR")} ${new Date(combat.date).toLocaleTimeString("fr-FR")}</td>
-      <td>🧙 ${combat.nbJoueurs}</td>
-      <td>${combat.resultat === "victoire" ? "🏅 Victoire" : "☠️ Défaite"}</td>
-      <td>💀 ${combat.nbMorts} / 😈 ${combat.nbMonstres}</td>
-    `;
+  const table = document.createElement("table");
+  table.className = "styled-table";
 
-    // Ligne cachée pour le journal
-    const detailTr = document.createElement("tr");
-    detailTr.style.display = "none";
-    detailTr.innerHTML = `
-      <td colspan="5">${genererJournalCombat(combat.logCombat)}</td>
-    `;
+  const thead = document.createElement("thead");
+  thead.innerHTML = `
+    <tr>
+      <th>Combat</th>
+      <th>Date</th>
+      <th>Participants</th>
+      <th>Résultat</th>
+      <th>Détails</th>
+    </tr>`;
+  table.appendChild(thead);
 
-    tableBody.appendChild(tr);
-    tableBody.appendChild(detailTr);
+  const tbody = document.createElement("tbody");
+
+  combats.forEach((combat, index) => {
+    const date = new Date(combat.timestamp).toLocaleString("fr-FR");
+    const resultat = combat.ordreTour?.length ? "Victoire" : "Défaite";
+    const joueurs = combat.ordreTour?.filter(e => e.type === "joueur")?.length || 0;
+    const morts = combat.ordreTour?.filter(e => e.type === "joueur" && e.pv === 0)?.length || 0;
+    const monstres = combat.ordreTour?.filter(e => e.type === "monstre")?.length || 0;
+
+    const ligne = document.createElement("tr");
+    ligne.innerHTML = `
+        <td><strong>Combat ${index + 1}</strong></td>
+        <td>${date}</td>
+        <td>🧙 ${joueurs} / ☠️ ${morts} / 👹 ${monstres}</td>
+        <td>${resultat === "Victoire" ? "🎉 Victoire" : "☠️ Défaite"}</td>
+        <td><button class="btn-style btn-purple btn-sm" onclick="toggleDetails(${index})">Détails</button></td>
+      `;
+      tbody.appendChild(ligne);
+
+    // Bloc pour afficher le journal de combat
+    const trDetails = document.createElement("tr");
+    trDetails.id = `details-${index}`;
+    trDetails.style.display = "none";
+    trDetails.innerHTML = `<td colspan="5">${genererJournalCombat(combat.logCombat)}</td>`;
+    tbody.appendChild(trDetails);
   });
+
+  table.appendChild(tbody);
+  section.appendChild(table);
 }
+
 
