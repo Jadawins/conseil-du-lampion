@@ -63,16 +63,31 @@ function afficherTourActuel(ordre, indexTour) {
 }
 
 boutonPasser.addEventListener("click", async () => {
-  masquerFormulairesMJ(); // 👈 Ajout ici
+  masquerFormulairesMJ();
 
-  const sessionId = localStorage.getItem("sessionId");
-  const response = await fetch(`https://lampion-api.azurewebsites.net/api/PasserTour/${sessionId}`, {
-    method: "POST",
-  });
-  const result = await response.json();
-  console.log("Tour passé :", result);
-  await refreshCombat(); // 🔁 pour mettre à jour l'affichage
+  try {
+    const sessionId = localStorage.getItem("sessionId");
+
+    const response = await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ sessionId }),
+    });
+
+    if (!response.ok) throw new Error("Erreur API");
+
+    const result = await response.json();
+    console.log("✅ Tour passé :", result);
+
+    await refreshCombat();
+  } catch (err) {
+    console.error("❌ Erreur PasserTour côté MJ :", err);
+    alert("Impossible de passer le tour.");
+  }
 });
+
 
 async function afficherJournalCombat() {
   const response = await fetch(`https://lampion-api.azurewebsites.net/api/GetSession/${sessionId}`);
