@@ -268,3 +268,10 @@ section.journal-combat {
   margin: 0;
   list-style: none;
 }
+.journal-combat-list .log-soin     { color: #34d399 !important; font-weight: bold; }
+.journal-combat-list .log-attaque  { color: #60a5fa !important; font-weight: bold; }
+.journal-combat-list .log-mort     { color: #f87171 !important; font-weight: bold; }
+.journal-combat-list .log-sortie   { color: #fbbf24 !important; }
+.journal-combat-list .log-victoire { color: #e9d8a6 !important; font-weight: bold; }
+.journal-combat-list .log-inconnu  { color: #9ca3af !important; font-style: italic; }
+.journal-combat-list .log-pass     { color: #cbd5e1 !important; font-style: italic; }
