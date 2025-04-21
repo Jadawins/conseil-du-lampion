@@ -404,10 +404,15 @@ async function refreshCombat() {
     afficherOrdreCombat(data, ordre, indexTour);
     afficherTourActuel(data.ordreTour, data.indexTour);
     verifierFinCombat(data);
-    } catch (error) {
+
+    // ✅ ➕ On affiche enfin le journal
+    await afficherJournalCombat();
+
+  } catch (error) {
     console.error("❌ MJ - Erreur dans refreshCombat:", error);
   }
-  }
+}
+
 
   function masquerFormulairesMJ() {
     const formSoin = document.getElementById("formulaire-soin");
