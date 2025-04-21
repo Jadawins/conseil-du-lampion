@@ -72,12 +72,21 @@ boutonPasser.addEventListener("click", async () => {
   try {
     const sessionId = localStorage.getItem("sessionId");
 
+    const entite = ordreCombat[currentTurnIndex]; // 👈 qui passe son tour
+    const nom = entite?.nom || entite?.pseudo || "inconnu"; // joueur ou monstre
+
     const response = await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ sessionId }),
+      body: JSON.stringify({
+        sessionId,
+        log: {
+          type: "passer_tour",
+          auteur: nom
+        }
+      }),
     });
 
     if (!response.ok) throw new Error("Erreur API");
@@ -140,7 +149,6 @@ async function afficherJournalCombat() {
     li.classList.add(classe);
     ul.appendChild(li);
   });
-  await afficherJournalCombat(); // sans paramètre, car déjà prévu ainsi dans ta version
 }
 
 boutonSoigner.addEventListener("click", async () => {
