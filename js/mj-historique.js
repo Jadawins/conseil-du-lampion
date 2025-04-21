@@ -59,9 +59,10 @@ async function chargerHistoriquePourSession(sessionId) {
     const combats = data.combats || [];
 
     if (combats.length === 0) {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td colspan="4">Aucun combat enregistré.</td>`;
-      table.appendChild(tr);
+      const ligne = document.createElement("div");
+        ligne.className = "combat-entry";
+        ligne.textContent = "Aucun combat enregistré.";
+        table.appendChild(ligne);
       return;
     }
 
@@ -93,14 +94,15 @@ async function chargerHistoriquePourSession(sessionId) {
         dateStyle: "short",
         timeStyle: "short",
       });
-
-      tr.innerHTML = `
-        <td>${combat.id || `Combat ${index + 1}`}</td>
-        <td>${horodatage}</td>
-        <td>${resultat}</td>
-        <td>${joueursVivants} 🧝 / ${joueursMorts} 💀 / ${nbMonstres} 👹</td>
+      const ligne = document.createElement("div");
+      ligne.className = "combat-entry";
+      ligne.innerHTML = `
+        <span class="combat-id">${combat.id || `Combat ${index + 1}`}</span>
+        <span class="combat-date">${horodatage}</span>
+        <span class="combat-resultat">${resultat}</span>
+        <span class="combat-stats">${joueursVivants} 🧝 / ${joueursMorts} 💀 / ${nbMonstres} 👹</span>
       `;
-
+      table.appendChild(ligne);
       const logRow = document.createElement("tr");
       logRow.classList.add("log-row");
       logRow.style.display = "none";
