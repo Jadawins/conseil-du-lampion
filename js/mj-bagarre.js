@@ -50,16 +50,16 @@ function afficherTourActuel(ordre, indexTour) {
   const entite = ordre[indexTour];
   if (!entite) return;
 
-  const estMonstre = !entite.id;
-
   const messageTour = document.getElementById("info-tour");
-  
   messageTour.textContent = `🎯 C'est au tour de ${entite.pseudo || entite.nom} de jouer.`;
 
-  console.log("🔍 MJ - estMonstre =", estMonstre); // DEBUG
+  const estJoueur = !!entite.id;
+  const estMonstre = !estJoueur;
 
-  // ✅ Affiche ou masque les boutons MJ
-  zoneActions.style.display = estMonstre ? "block" : "none";
+  // Affiche ou masque les boutons MJ uniquement si c'est un monstre
+  if (zoneActions) {
+    zoneActions.style.display = estMonstre ? "block" : "none";
+  }
 }
 
 boutonPasser.addEventListener("click", async () => {
