@@ -178,49 +178,41 @@ function genererJournalCombat(log) {
 
   return `
     <div class="journal-combat">
-      <ul>
-        ${log.map(entry => {
-          const time = new Date(entry.timestamp).toLocaleTimeString("fr-FR", {
-            hour: "2-digit", minute: "2-digit"
-          });
-
+      <ul class="journal-combat-list">
+        ${log.map(e => {
+          const time = e.timestamp
+            ? `<strong>[${new Date(e.timestamp).toLocaleTimeString("fr-FR")}]</strong>`
+            : "";
           let texte = "";
           let classe = "";
 
-          switch (entry.type) {
-            case "attaque":
-              texte = `⚔️ [${time}] ${entry.auteur} attaque ${entry.cible} pour ${entry.degats} dégâts`;
-              classe = "log-attaque";
-              break;
-            case "soin":
-              texte = `🩹 [${time}] ${entry.auteur} soigne ${entry.cible} de ${entry.valeur} PV`;
-              if (entry.overheal && entry.overheal > 0) {
-                texte += ` dont ${entry.overheal} en trop`;
-              }
-              classe = "log-soin";
-              break;
-            case "passer_tour":
-              texte = `⏭️ [${time}] ${entry.auteur} passe son tour.`;
-              classe = "log-pass";
-              break;  
-            case "mort":
-              texte = `☠️ [${time}] ${entry.cible} est mort (par ${entry.auteur})`;
-              classe = "log-mort";
-              break;
-            case "sortie_combat":
-              texte = `🚪 [${time}] ${entry.cible} quitte le combat (PV à 0)`;
-              classe = "log-sortie";
-              break;
-            case "fin_combat":
-              texte = `🏁 [${time}] Fin du combat – ${entry.resultat === "victoire" ? "Victoire !" : "Défaite..."}`;
-              classe = "log-victoire";
-              break;
-            default:
-              texte = `📌 [${time}] ${entry.auteur || "?"} fait une action inconnue.`;
-              classe = "log-inconnu";
+          if (e.type === "soin") {
+            texte = `🩹 ${e.auteur} soigne ${e.cible} de ${e.valeur} PV`;
+            if (e.overheal && e.overheal > 0) {
+              texte += ` dont ${e.overheal} en trop`;
+            }
+            classe = "log-soin";
+          } else if (e.type === "attaque") {
+            texte = `⚔️ ${e.auteur} attaque ${e.cible} pour ${e.degats} dégâts`;
+            classe = "log-attaque";
+          } else if (e.type === "mort") {
+            texte = `☠️ ${e.cible} est mort (par ${e.auteur})`;
+            classe = "log-mort";
+          } else if (e.type === "sortie_combat") {
+            texte = `🚪 ${e.cible} quitte le combat (PV à 0)`;
+            classe = "log-sortie";
+          } else if (e.type === "fin_combat") {
+            texte = `🏁 Fin du combat – ${e.resultat === "victoire" ? "Victoire !" : "Défaite..."}`;
+            classe = "log-victoire";
+          } else if (e.type === "passer_tour") {
+            texte = `⏭️ ${e.auteur} passe son tour.`;
+            classe = "log-pass";
+          } else {
+            texte = `${e.auteur || "?"} fait une action inconnue.`;
+            classe = "log-inconnu";
           }
 
-          return `<li class="${classe}">${texte}</li>`;
+          return `<li class="${classe}">${time} ${texte}</li>`;
         }).join("")}
       </ul>
     </div>
