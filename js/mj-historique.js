@@ -59,8 +59,8 @@ async function chargerHistoriquePourSession(sessionId) {
     const combats = data.combats || [];
 
     if (combats.length === 0) {
-      const ligne = document.createElement("div");
-        ligne.className = "combat-entry";
+      const tr = document.createElement("tr");
+        tr.className = "combat-summary";
         ligne.textContent = "Aucun combat enregistré.";
         table.appendChild(ligne);
       return;
@@ -94,8 +94,8 @@ async function chargerHistoriquePourSession(sessionId) {
         dateStyle: "short",
         timeStyle: "short",
       });
-      const ligne = document.createElement("div");
-      ligne.className = "combat-entry";
+      const tr = document.createElement("tr");
+      tr.className = "combat-summary";
       ligne.innerHTML = `
         <span class="combat-id">${combat.id || `Combat ${index + 1}`}</span>
         <span class="combat-date">${horodatage}</span>
