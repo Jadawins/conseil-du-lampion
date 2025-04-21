@@ -378,7 +378,13 @@ ordre.forEach((entite, index) => {
       const res = await fetch("https://lampion-api.azurewebsites.net/api/PasserTour", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId })
+        body: JSON.stringify({
+          sessionId,
+          log: {
+            type: "passer_tour",
+            auteur: pseudo
+          }
+        })
       });
   
       if (!res.ok) throw new Error("Erreur API PasserTour");
@@ -388,10 +394,12 @@ ordre.forEach((entite, index) => {
         clearTimeout(feedback._timeout);
         feedback._timeout = setTimeout(() => (feedback.textContent = ""), 4000);
       }
+  
+      // 🧼 Nettoyage des formulaires
       document.getElementById("formulaire-attaque").classList.add("hidden");
       document.getElementById("formulaire-soin").classList.add("hidden");
       document.getElementById("confirmation-soin").classList.add("hidden");
-
+  
       document.getElementById("message-tour").style.display = "block";
       document.getElementById("ordre-combat").style.display = "block";
   
@@ -401,5 +409,6 @@ ordre.forEach((entite, index) => {
       alert("Erreur lors du passage de tour. Veuillez réessayer.");
     }
   });
+  
 
 });
